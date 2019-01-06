@@ -1,0 +1,55 @@
+<head>
+    <title>Frontend</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<div class="sidenav">
+    <nav>
+        <!--<a routerLink="/edit" (click)="noWelcome()">Edit</a>
+        <br>-->
+        <a routerLink="/create">Create</a>
+        <br>
+        <a routerLink="/uploader">uploader</a>
+    </nav>
+</div>
+
+<div class="main">
+    <h3 >Welcome!!</h3>
+    <router-outlet></router-outlet>
+    
+    <p>
+        <button (click)="gotoindex()">Home</button>
+    </p>
+    <div ng-controller='myCtrl'>
+        <div js-tree="treeConfig" ng-model="treeData" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events="ready:readyCB;create_node:createNodeCB"></div>
+    </div>
+</div>
+
+
+
+<!--
+<form action="/Edit1Servlet" method="post">
+  <table class="table table-hover">
+    <tbody>
+      <tr>
+        <td><input type="button" name="path-input" value="choose path" size="24" (click)="path(this)">
+            <input id="pathInput" type="text" name="path-text" [(ngModel)]="pathValue"></td>
+      </tr>
+    </tbody>
+  </table>
+  <input type="submit" value="submit" />
+</form>
+-->
+<!--
+<table>
+    <tr>
+        <app-string></app-string>
+    </tr>
+    <tr>
+        <app-string></app-string>
+    </tr>
+    <tr>
+        <app-string></app-string>
+    </tr>
+</table>
+-->

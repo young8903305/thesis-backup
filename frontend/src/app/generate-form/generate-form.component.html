@@ -1,0 +1,18 @@
+<form [formGroup]="form_sub_receive" (ngSubmit)="output()">
+  <ng-container *ngFor="let key of classFields">
+    <label *ngIf="key!=='@id' && key!=='@type'">
+      {{ key }} :
+      <input type="{{ fieldStyle[key] }}" formControlName="{{ key }}">
+    </label>
+  </ng-container>
+  <button type="submit">Output Object</button>
+</form>
+<br>
+<br>
+<button (click)="sessionStorage()">store</button>
+<br>
+<button (click)="clear()">clear</button>
+
+<p>
+  Form Value: {{ form_sub_receive.value | json }}
+</p>

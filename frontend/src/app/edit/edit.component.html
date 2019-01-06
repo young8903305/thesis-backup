@@ -1,0 +1,48 @@
+<h3>Get from JSON file</h3>
+<div>
+  <button (click)="clear(); showConfigResponse()">getResponse</button>
+  <button (click)="clear()">clear</button>
+  <button (click)="clear(); getData()">Data</button>
+  <span *ngIf = "edit">
+    <div *ngIf = "headers">
+      Response headers:
+      <ul>
+        <li *ngFor = "let header of headers">{{ header }}</li>
+      </ul>
+    </div>
+  </span>
+</div>
+
+<nav>
+    <a routerLink="/uploader">uploader</a>
+</nav>
+
+<!-- <router-outlet></router-outlet> -->
+
+<!--<table>
+    <tr *ngFor = "let key of dataKeys">
+        <td *ngIf = "key!=='@id' && key!=='@type'">{{ key }}</td>
+        <td *ngIf = "key!=='@id' && key!=='@type'">{{ dataTypes[key] }}</td>
+        <td *ngIf = "key!=='@id' && key!=='@type'">{{ data[key] }}</td>
+    </tr>
+</table>
+-->
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+    <ng-container *ngFor="let key of dataKeys">
+        <label *ngIf="key!=='@id' && key!=='@type'">
+            {{ key }} : 
+            <input type="text" formControlName="{{ key }}">
+        </label>
+    </ng-container>
+
+    <button type="submit">Submit and Store</button>
+</form>
+
+<p>
+    Form Value: {{ dataForm.value | json }}
+</p>
+
+
+<!--<input type="text" [(ngModel)]="data.age">
+<input type="text" value="{{data.firstName}}">
+<input type="text" value="{{data.lastName}}">-->

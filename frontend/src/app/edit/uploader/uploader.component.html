@@ -1,0 +1,20 @@
+
+<!--<form [formGroup]="uploaderForm" (change)="onSubmit( $event.target.files )">
+    <label>
+      choose json file :
+        <input type="file" size="60">
+    </label>
+    <button type="submit">Submit and Store</button>
+</form> -->
+
+
+<form [formGroup]="uploader" (change)="fileChange( $event.target.files )" (ngSubmit)="submit()">
+  <label>
+    choose json file :
+    <input type="file" size="80" accept=".json" />
+  </label>
+  <button type="submit">Form it</button>
+</form>
+<br>
+
+<app-generate-form [generate_form_receive]="fileForm"></app-generate-form>

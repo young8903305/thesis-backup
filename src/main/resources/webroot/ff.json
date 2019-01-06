@@ -1,0 +1,1 @@
+{"@id":"1","father":{"@id":"2","age":50,"firstName":"John","lastName":"Chou","spouse":{"@id":"3","age":44,"firstName":"Lily","lastName":"Chou","spouse":{"@ref":"2"}}},"mother":{"@ref":"3"},"children":[{"@id":"4","age":18,"firstName":"Han","lastName":"Chou","spouse":null},{"@id":"5","age":10,"firstName":"Ann","lastName":"Chou","spouse":null}]}
