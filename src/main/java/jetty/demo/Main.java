@@ -104,6 +104,8 @@ public class Main {
 	
 	private static String[] arguments;
 	
+	private static String[] sessionStorage;
+	
 
 	@SuppressWarnings("serial")
 	public static class OutputFilePath extends HttpServlet {
@@ -582,6 +584,32 @@ public class Main {
 		}
 	}
 	
+	public static class ngSessionStorage extends HttpServlet {
+		public void init() throws ServletException{}
+		
+		@Override
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			StringBuilder sb = new StringBuilder();
+		    BufferedReader reader = request.getReader();
+		    try {
+		        String line;
+		        while ((line = reader.readLine()) != null) {
+		            sb.append(line).append('\n');
+		        }
+		    } finally {
+		        reader.close();
+		    }
+			String str = sb.toString();
+			System.out.println("request: "+ str);
+			
+			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
+			response.setContentType("text/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("asldkfjaslkjf");
+		}
+	}
+	
 	@MultipartConfig(
 			fileSizeThreshold = 1024 * 1024 * 2,
 			maxRequestSize = 1024 * 1024 * 10,
@@ -621,9 +649,13 @@ public class Main {
 				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
 				
 				for (Field f : fieldlist) {
-					System.out.println(f.getType());
+					System.out.println("field type: "+f.getType());
 					fieldClass.add(f.getType());
 					//objectNode.put(f.getName(), "");	// fix it
+				}
+				
+				for(int j = 0; j < fieldClass.size(); j++) {
+					System.out.println(fieldClass.toArray()[j]);
 				}
 				
 				ListIterator<Class> fieldClassIterator = fieldClass.listIterator();
@@ -636,7 +668,8 @@ public class Main {
 			        JsonNode jNode = node.getValue();
 			        Class<?> fieldClassElement = fieldClassIterator.next();
 			        if( !jNode.isObject() ) {	// array, string, number, true, false, null, @id, @ref, @type
-			        	if( jNode.isArray() ) {
+			        	if( jNode.isArray() ) {	// array
+			        		
 			        	}else {
 			        		if((!node.getKey().equals("@id")) && (!node.getKey().equals("@ref")) && (!node.getKey().equals("@type")) ) {
 		        				// string, number, true, false, null
@@ -673,7 +706,7 @@ public class Main {
 				ObjectMapper mapper = new ObjectMapper();
 				//mapper.writeValue(new File("/Users/yang/Desktop/output.json"), instance);
 				String jsonStr = mapper.writeValueAsString(instance);
-				System.out.println("ouput String" + jsonStr + "\ndone");
+				System.out.println("ouput String" + jsonStr + "\noutput.json done");
 				
 				
 			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException |
@@ -978,6 +1011,7 @@ public class Main {
 		servletContextHandler.addServlet(ngClassName.class, "/ngClassName");
 		servletContextHandler.addServlet(ngNameCreateForm.class, "/ngNameCreateForm");
 		servletContextHandler.addServlet(ngFormOutput.class, "/ngFormOutput");
+		servletContextHandler.addServlet(ngSessionStorage.class, "/ngSessionStorage");
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());
         fileUploadServletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement("data/tmp"));

@@ -36,7 +36,6 @@ public @interface AnnotationStyle {
 		none
 	}
 	
-	
 	InputTypeControl input() default InputTypeControl.none;
 	
 	String textarea() default "";

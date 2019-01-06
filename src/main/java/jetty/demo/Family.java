@@ -6,51 +6,49 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.*;
-//import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-//import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-//import com.voodoodyne.jackson.jsog.JSOGGenerator;
-//import com.voodoodyne.jackson.jsog.JSOGRefDeserializer;
+
+import jetty.demo.AnnotationStyle.InputTypeControl;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Family implements Serializable {
 	
-	@AnnotationForm()
-	private Person father;
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "father", value = "")
+	private PersonDemo father;
 	
-	@AnnotationForm()
-	private Person mother;
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "mother", value = "")
+	private PersonDemo mother;
 	
-	@AnnotationForm()
-	private List<Person> children = new ArrayList<Person>();
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "children", value = "")
+	private List<PersonDemo> children = new ArrayList<PersonDemo>();
 	
-	public Family(Person father, Person mother, Person... children ) {
+	public Family(PersonDemo father, PersonDemo mother, List<PersonDemo> children ) {
 		setFather(father);
 		setMother(mother);
 		setChildren(children);
 	}
 	
-	public void setFather(Person father) {
+	public void setFather(PersonDemo father) {
 		this.father = father;
 	}
 	
-	public Person getFather() {
+	public PersonDemo getFather() {
 		return this.father;
 	}
 	
-	public void setMother(Person mother) {
+	public void setMother(PersonDemo mother) {
 		this.mother = mother;
 	}
 	
-	public Person getMother() {
+	public PersonDemo getMother() {
 		return this.mother;
 	}
 	
-	public void setChildren(Person...persons) {
-		this.children = Arrays.asList(persons);
+	public void setChildren(List<PersonDemo> persons) {
+		this.children = persons;
 	}
 	
-	public List<Person> getChildren() {
+	public List<PersonDemo> getChildren() {
 		return this.children;
 	}
 }

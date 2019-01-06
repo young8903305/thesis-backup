@@ -38,7 +38,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _create_create_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./create/create.component */ "./src/app/create/create.component.ts");
 /* harmony import */ var _edit_edit_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./edit/edit.component */ "./src/app/edit/edit.component.ts");
-/* harmony import */ var _edit_uploader_uploader_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./edit/uploader/uploader.component */ "./src/app/edit/uploader/uploader.component.ts");
+/* harmony import */ var _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./uploader/uploader.component */ "./src/app/uploader/uploader.component.ts");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 
 
@@ -54,7 +54,7 @@ var routes = [
         path: 'edit',
         component: _edit_edit_component__WEBPACK_IMPORTED_MODULE_4__["EditComponent"],
     },
-    { path: 'uploader', component: _edit_uploader_uploader_component__WEBPACK_IMPORTED_MODULE_5__["UploaderComponent"] }
+    { path: 'uploader', component: _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_5__["UploaderComponent"] }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -164,7 +164,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
 /* harmony import */ var _edit_edit_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./edit/edit.component */ "./src/app/edit/edit.component.ts");
 /* harmony import */ var _create_create_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./create/create.component */ "./src/app/create/create.component.ts");
-/* harmony import */ var _edit_uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./edit/uploader/uploader.component */ "./src/app/edit/uploader/uploader.component.ts");
+/* harmony import */ var _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./uploader/uploader.component */ "./src/app/uploader/uploader.component.ts");
 /* harmony import */ var _generate_form_generate_form_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./generate-form/generate-form.component */ "./src/app/generate-form/generate-form.component.ts");
 
 
@@ -186,7 +186,7 @@ var AppModule = /** @class */ (function () {
                 _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"],
                 _edit_edit_component__WEBPACK_IMPORTED_MODULE_7__["EditComponent"],
                 _create_create_component__WEBPACK_IMPORTED_MODULE_8__["CreateComponent"],
-                _edit_uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__["UploaderComponent"],
+                _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__["UploaderComponent"],
                 _generate_form_generate_form_component__WEBPACK_IMPORTED_MODULE_10__["GenerateFormComponent"],
             ],
             imports: [
@@ -388,7 +388,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h3>Get from JSON file</h3>\n<div>\n  <button (click)=\"clear(); showConfigResponse()\">getResponse</button>\n  <button (click)=\"clear()\">clear</button>\n  <button (click)=\"clear(); getData()\">Data</button>\n  <span *ngIf = \"edit\">\n    <div *ngIf = \"headers\">\n      Response headers:\n      <ul>\n        <li *ngFor = \"let header of headers\">{{ header }}</li>\n      </ul>\n    </div>\n  </span>\n</div>\n\n<nav>\n    <a routerLink=\"/uploader\">uploader</a>\n</nav>\n\n<!-- <router-outlet></router-outlet> -->\n\n<!--<table>\n    <tr *ngFor = \"let key of dataKeys\">\n        <td *ngIf = \"key!=='@id' && key!=='@type'\">{{ key }}</td>\n        <td *ngIf = \"key!=='@id' && key!=='@type'\">{{ dataTypes[key] }}</td>\n        <td *ngIf = \"key!=='@id' && key!=='@type'\">{{ data[key] }}</td>\n    </tr>\n</table>\n-->\n<form [formGroup]=\"dataForm\" (ngSubmit)=\"onSubmit()\">\n    <ng-container *ngFor=\"let key of dataKeys\">\n        <label *ngIf=\"key!=='@id' && key!=='@type'\">\n            {{ key }} : \n            <input type=\"text\" formControlName=\"{{ key }}\">\n        </label>\n    </ng-container>\n\n    <button type=\"submit\">Submit and Store</button>\n</form>\n\n<p>\n    Form Value: {{ dataForm.value | json }}\n</p>\n\n\n<!--<input type=\"text\" [(ngModel)]=\"data.age\">\n<input type=\"text\" value=\"{{data.firstName}}\">\n<input type=\"text\" value=\"{{data.lastName}}\">-->"
+module.exports = "<h3>Get from JSON file</h3>\n<div>\n  <button (click)=\"clear(); showConfigResponse()\">getResponse</button>\n  <button (click)=\"clear()\">clear</button>\n  <button (click)=\"clear(); getData()\">Data</button>\n  <span *ngIf = \"edit\">\n    <div *ngIf = \"headers\">\n      Response headers:\n      <ul>\n        <li *ngFor = \"let header of headers\">{{ header }}</li>\n      </ul>\n    </div>\n  </span>\n</div>\n\n<nav>\n    <a routerLink=\"/uploader\">uploader</a>\n</nav>\n\n<!-- <router-outlet></router-outlet> -->\n\n<form [formGroup]=\"dataForm\" (ngSubmit)=\"onSubmit()\">\n    <ng-container *ngFor=\"let key of dataKeys\">\n        <label *ngIf=\"key!=='@id' && key!=='@type'\">\n            {{ key }} : \n            <input type=\"text\" formControlName=\"{{ key }}\">\n        </label>\n    </ng-container>\n\n    <button type=\"submit\">Submit and Store</button>\n</form>\n\n<p>\n    Form Value: {{ dataForm.value | json }}\n</p>\n\n\n<!--<input type=\"text\" [(ngModel)]=\"data.age\">\n<input type=\"text\" value=\"{{data.firstName}}\">\n<input type=\"text\" value=\"{{data.lastName}}\">-->"
 
 /***/ }),
 
@@ -513,127 +513,6 @@ var EditService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/edit/uploader/uploader.component.css":
-/*!******************************************************!*\
-  !*** ./src/app/edit/uploader/uploader.component.css ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2VkaXQvdXBsb2FkZXIvdXBsb2FkZXIuY29tcG9uZW50LmNzcyJ9 */"
-
-/***/ }),
-
-/***/ "./src/app/edit/uploader/uploader.component.html":
-/*!*******************************************************!*\
-  !*** ./src/app/edit/uploader/uploader.component.html ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n<!--<form [formGroup]=\"uploaderForm\" (change)=\"onSubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form> -->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"submit()\">\n  <label>\n    choose json file :\n    <input type=\"file\" size=\"80\" accept=\".json\" />\n  </label>\n  <button type=\"submit\">Form it</button>\n</form>\n<br>\n\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n"
-
-/***/ }),
-
-/***/ "./src/app/edit/uploader/uploader.component.ts":
-/*!*****************************************************!*\
-  !*** ./src/app/edit/uploader/uploader.component.ts ***!
-  \*****************************************************/
-/*! exports provided: UploaderComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UploaderComponent", function() { return UploaderComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _uploader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploader.service */ "./src/app/edit/uploader/uploader.service.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-
-
-
-
-
-var UploaderComponent = /** @class */ (function () {
-    function UploaderComponent(fb, uploaderService, http) {
-        this.fb = fb;
-        this.uploaderService = uploaderService;
-        this.http = http;
-        this.uploader = this.fb.group({});
-        this.fileForm = this.fb.group({});
-    }
-    UploaderComponent.prototype.ngOnInit = function () {
-    };
-    UploaderComponent.prototype.fileChange = function (fileList) {
-        this.fileList = fileList;
-    };
-    UploaderComponent.prototype.submit = function () {
-        var _this = this;
-        console.log('fileList', this.fileList);
-        this.fileToUpload = this.fileList[0];
-        var formData = new FormData();
-        formData.append('file', this.fileToUpload, this.fileToUpload.name);
-        console.log('formData', formData);
-        this.uploaderService.uploadFile(formData).subscribe(function (response) {
-            console.log('response', response);
-            _this.fileForm = _this.fb.group(response.body);
-        });
-    };
-    UploaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-uploader',
-            template: __webpack_require__(/*! ./uploader.component.html */ "./src/app/edit/uploader/uploader.component.html"),
-            styles: [__webpack_require__(/*! ./uploader.component.css */ "./src/app/edit/uploader/uploader.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
-            _uploader_service__WEBPACK_IMPORTED_MODULE_3__["UploaderService"],
-            _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]])
-    ], UploaderComponent);
-    return UploaderComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/edit/uploader/uploader.service.ts":
-/*!***************************************************!*\
-  !*** ./src/app/edit/uploader/uploader.service.ts ***!
-  \***************************************************/
-/*! exports provided: UploaderService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UploaderService", function() { return UploaderService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-
-
-
-var UploaderService = /** @class */ (function () {
-    function UploaderService(http) {
-        this.http = http;
-        this.uploadUrl = '/ngUploader';
-    }
-    UploaderService.prototype.uploadFile = function (upload) {
-        return this.http.post(this.uploadUrl, upload, { observe: 'response' });
-    };
-    UploaderService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
-    ], UploaderService);
-    return UploaderService;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/generate-form/generate-form.component.css":
 /*!***********************************************************!*\
   !*** ./src/app/generate-form/generate-form.component.css ***!
@@ -652,7 +531,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup]=\"form_sub_receive\" (ngSubmit)=\"output()\">\n  <ng-container *ngFor=\"let key of classFields\">\n    <label *ngIf=\"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n      <input type=\"{{ fieldStyle[key] }}\" formControlName=\"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStorage()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_sub_receive.value | json }}\n</p>"
+module.exports = "<form [formGroup]=\"form_receive\" (ngSubmit)=\"output()\">\n  <ng-container *ngFor=\"let key of classFields\">\n    <label *ngIf=\"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n      <input type=\"{{ fieldStyle[key] }}\" formControlName=\"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStorage()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
 
 /***/ }),
 
@@ -678,7 +557,7 @@ var GenerateFormComponent = /** @class */ (function () {
     function GenerateFormComponent(fb, subCreate) {
         this.fb = fb;
         this.subCreate = subCreate;
-        this.form_sub_receive = this.fb.group({});
+        this.form_receive = this.fb.group({});
         this.storageIndex = 0;
         this.display_storage = sessionStorage;
     }
@@ -688,7 +567,7 @@ var GenerateFormComponent = /** @class */ (function () {
         // this.classFields = Object.keys( this.sub_receive.value[0] );
         this.classFields = Object.keys(this.generate_form_receive[0]);
         this.fieldStyle = this.generate_form_receive[1];
-        this.form_sub_receive = this.fb.group(this.generate_form_receive[0]);
+        this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
         console.log('classFields: ', this.classFields);
         console.log('fieldStyle: ', this.fieldStyle);
@@ -700,23 +579,28 @@ var GenerateFormComponent = /** @class */ (function () {
         /*this.subCreate.ouputObject(this.sub_receive.value).subscribe( response => {
             console.log( 'out', response );
         });*/
-        console.log('form values', this.form_sub_receive);
-        this.subCreate.ouputObject(this.form_sub_receive.value).subscribe(function (response) {
+        console.log('form.value: ', this.form_receive.value);
+        this.subCreate.ouputObject(this.form_receive.value).subscribe(function (response) {
             console.log('output', response);
         });
+        console.log('sessionStorage', sessionStorage);
+        this.subCreate.outputsessionStorage(sessionStorage).subscribe(function (response) {
+            console.log('session response', response);
+        });
     };
+    // sessionStorage just accept string type key/value
     GenerateFormComponent.prototype.sessionStorage = function () {
-        console.log('this.form_sub_receive.value: ', JSON.stringify(this.form_sub_receive.value));
-        sessionStorage.setItem(this.storageIndex.toString(), JSON.stringify(this.form_sub_receive.value));
-        this.storageIndex++;
-        for (var i = 0; i < this.display_storage.length; i++) {
-            console.log('display_storage', i, JSON.parse(Object.values(this.display_storage)[i]));
+        console.log('this.form_sub_receive.value: ', JSON.stringify(this.form_receive.value));
+        sessionStorage.setItem(this.storageIndex.toString(), JSON.stringify(this.form_receive.value));
+        for (var i = 0; i < sessionStorage.length; i++) {
+            console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
         }
+        this.storageIndex++;
     };
     GenerateFormComponent.prototype.clear = function () {
         this.classFields = undefined;
         this.generate_form_receive.value = undefined;
-        this.form_sub_receive = this.fb.group({});
+        this.form_receive = this.fb.group({});
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -758,10 +642,16 @@ var GenerateFormService = /** @class */ (function () {
     function GenerateFormService(http) {
         this.http = http;
         this.outputUrl = '/ngFormOutput';
+        this.sessionStorageUrl = '/ngSessionStorage';
+        this.httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
     }
     GenerateFormService.prototype.ouputObject = function (output) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
-        return this.http.post(this.outputUrl, output, { headers: httpHeaders, observe: 'response' });
+        // const httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
+        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    };
+    GenerateFormService.prototype.outputsessionStorage = function (session) {
+        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/json' });
+        return this.http.post(this.sessionStorageUrl, session, { headers: httpHeaders, observe: 'response' });
     };
     GenerateFormService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -770,6 +660,129 @@ var GenerateFormService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], GenerateFormService);
     return GenerateFormService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/uploader/uploader.component.css":
+/*!*************************************************!*\
+  !*** ./src/app/uploader/uploader.component.css ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3VwbG9hZGVyL3VwbG9hZGVyLmNvbXBvbmVudC5jc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/uploader/uploader.component.html":
+/*!**************************************************!*\
+  !*** ./src/app/uploader/uploader.component.html ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"onSubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form> -->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"submit()\">\n  <label>\n    choose json file :\n    <input type=\"file\" size=\"80\" accept=\".json\" />\n  </label>\n  <button type=\"submit\">Form it</button>\n</form>\n<br>\n\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n"
+
+/***/ }),
+
+/***/ "./src/app/uploader/uploader.component.ts":
+/*!************************************************!*\
+  !*** ./src/app/uploader/uploader.component.ts ***!
+  \************************************************/
+/*! exports provided: UploaderComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UploaderComponent", function() { return UploaderComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _uploader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploader.service */ "./src/app/uploader/uploader.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
+
+
+
+
+var UploaderComponent = /** @class */ (function () {
+    function UploaderComponent(fb, uploaderService, http) {
+        this.fb = fb;
+        this.uploaderService = uploaderService;
+        this.http = http;
+        this.uploader = this.fb.group({});
+    }
+    UploaderComponent.prototype.ngOnInit = function () {
+    };
+    UploaderComponent.prototype.fileChange = function (fileList) {
+        this.fileList = fileList;
+        console.log('fileList', this.fileList);
+    };
+    UploaderComponent.prototype.submit = function () {
+        var _this = this;
+        console.log('fileList', this.fileList);
+        this.fileToUpload = this.fileList[0];
+        var formData = new FormData();
+        formData.append('file', this.fileToUpload, this.fileToUpload.name);
+        console.log('formData', formData);
+        this.uploaderService.uploadFile(formData).subscribe(function (response) {
+            console.log('response', response);
+            console.log('response.body', response.body);
+            // this.fileForm = this.fb.group(response.body);
+            _this.fileForm = response.body;
+        });
+    };
+    UploaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-uploader',
+            template: __webpack_require__(/*! ./uploader.component.html */ "./src/app/uploader/uploader.component.html"),
+            styles: [__webpack_require__(/*! ./uploader.component.css */ "./src/app/uploader/uploader.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
+            _uploader_service__WEBPACK_IMPORTED_MODULE_3__["UploaderService"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]])
+    ], UploaderComponent);
+    return UploaderComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/uploader/uploader.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/uploader/uploader.service.ts ***!
+  \**********************************************/
+/*! exports provided: UploaderService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UploaderService", function() { return UploaderService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
+
+
+var UploaderService = /** @class */ (function () {
+    function UploaderService(http) {
+        this.http = http;
+        this.uploadUrl = '/ngUploader';
+    }
+    UploaderService.prototype.uploadFile = function (upload) {
+        return this.http.post(this.uploadUrl, upload, { observe: 'response' });
+    };
+    UploaderService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+    ], UploaderService);
+    return UploaderService;
 }());
 
 

@@ -1,4 +1,4 @@
-<form [formGroup]="form_sub_receive" (ngSubmit)="output()">
+<form [formGroup]="form_receive" (ngSubmit)="output()">
   <ng-container *ngFor="let key of classFields">
     <label *ngIf="key!=='@id' && key!=='@type'">
       {{ key }} :
@@ -14,5 +14,5 @@
 <button (click)="clear()">clear</button>
 
 <p>
-  Form Value: {{ form_sub_receive.value | json }}
+  Form Value: {{ form_receive.value | json }}
 </p>

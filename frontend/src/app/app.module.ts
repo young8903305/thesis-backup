@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { EditComponent } from './edit/edit.component';
 import { CreateComponent } from './create/create.component';
-import { UploaderComponent } from './edit/uploader/uploader.component';
+import { UploaderComponent } from './uploader/uploader.component';
 import { GenerateFormComponent } from './generate-form/generate-form.component';
 
 @NgModule({

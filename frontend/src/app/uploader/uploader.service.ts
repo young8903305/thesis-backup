@@ -9,10 +9,9 @@ export class UploaderService {
 
     uploadUrl = '/ngUploader';
 
-    constructor( private http: HttpClient ) { }
+    constructor(private http: HttpClient) { }
 
-    uploadFile( upload ) {
+    uploadFile(upload) {
         return this.http.post(this.uploadUrl, upload, { observe: 'response' });
     }
 }
-

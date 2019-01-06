@@ -19,14 +19,6 @@
 
 <!-- <router-outlet></router-outlet> -->
 
-<!--<table>
-    <tr *ngFor = "let key of dataKeys">
-        <td *ngIf = "key!=='@id' && key!=='@type'">{{ key }}</td>
-        <td *ngIf = "key!=='@id' && key!=='@type'">{{ dataTypes[key] }}</td>
-        <td *ngIf = "key!=='@id' && key!=='@type'">{{ data[key] }}</td>
-    </tr>
-</table>
--->
 <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
     <ng-container *ngFor="let key of dataKeys">
         <label *ngIf="key!=='@id' && key!=='@type'">
