@@ -19,7 +19,7 @@ export class GenerateFormService {
     }
 
     outputsessionStorage(session) {
-        const httpHeaders = new HttpHeaders({ 'Content-Type': 'text/json' });
-        return this.http.post(this.sessionStorageUrl, session, { headers: httpHeaders, observe: 'response' });
+        // const httpHeaders = new HttpHeaders({ 'Content-Type': 'text/json' });
+        return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
     }
 }
