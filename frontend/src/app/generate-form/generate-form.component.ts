@@ -17,6 +17,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     storageIndex = 0;
     display_storage = sessionStorage;
+    storageMap = new Map<string, number>();
 
     constructor(private fb: FormBuilder,
         private subCreate: GenerateFormService) {
@@ -25,6 +26,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     ngOnInit() {
     }
 
+    // receieve the class info form create component
     ngOnChanges() {
         // this.classFields = Object.keys( this.sub_receive.value[0] );
         this.classFields = Object.keys(this.generate_form_receive[0]);
@@ -38,30 +40,46 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     }
 
     output() {
-        // console.log('origin', this.sub_receive.value);
-        /*this.subCreate.ouputObject(this.sub_receive.value).subscribe( response => {
-            console.log( 'out', response );
-        });*/
+
+        // simple output form value
         console.log('form.value: ', this.form_receive.value);
         this.subCreate.ouputObject(this.form_receive.value).subscribe(response => {
             console.log('output', response);
         });
 
-        console.log('sessionStorage', sessionStorage);
+        // pass the sessionStorage to the server
+        console.log('sessionStorage: ', sessionStorage);
         this.subCreate.outputsessionStorage(sessionStorage).subscribe(response => {
             console.log('session response', response);
         });
     }
 
     // sessionStorage just accept string type key/value
-    sessionStorage() {
-        console.log('this.form_sub_receive.value: ', JSON.stringify(this.form_receive.value));
-        sessionStorage.setItem(this.storageIndex.toString(), JSON.stringify(this.form_receive.value));
+    sessionStore() {
+        console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value));
+
+        // get object type => store object use its type-name and index, storageMap count the same class-name object
+        console.log('this.form_receive.get(type)', JSON.stringify(this.form_receive.value['@type']));
+        if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {
+            console.log(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+            let value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
+            value++;
+            this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
+            console.log('map', this.storageMap);
+        } else {
+            this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
+        }
+
+        const keytemp = this.form_receive.value['@type'].concat(
+            this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])).toString());
+        sessionStorage.setItem( keytemp, JSON.stringify(this.form_receive.value));
         for (let i = 0; i < sessionStorage.length; i++) {
             console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
         }
-        this.storageIndex++;
+        // this.storageIndex++;
     }
+
+    // clear the form data
     clear() {
         this.classFields = undefined;
         this.generate_form_receive.value = undefined;

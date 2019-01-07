@@ -300,6 +300,7 @@ var CreateComponent = /** @class */ (function () {
                 console.log(this.dataClassName);
             });
     }*/
+    // if user choose the different class, re-get from the server, and pass to the generate-form component
     CreateComponent.prototype.postClass = function (item) {
         var _this = this;
         var obItem = { 'name': item };
@@ -531,7 +532,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup]=\"form_receive\" (ngSubmit)=\"output()\">\n  <ng-container *ngFor=\"let key of classFields\">\n    <label *ngIf=\"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n      <input type=\"{{ fieldStyle[key] }}\" formControlName=\"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStorage()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
+module.exports = "<form [formGroup]=\"form_receive\" (ngSubmit)=\"output()\">\n  <ng-container *ngFor=\"let key of classFields\">\n    <label *ngIf=\"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n      <input type=\"{{ fieldStyle[key] }}\" formControlName=\"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
 
 /***/ }),
 
@@ -560,9 +561,11 @@ var GenerateFormComponent = /** @class */ (function () {
         this.form_receive = this.fb.group({});
         this.storageIndex = 0;
         this.display_storage = sessionStorage;
+        this.storageMap = new Map();
     }
     GenerateFormComponent.prototype.ngOnInit = function () {
     };
+    // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
         // this.classFields = Object.keys( this.sub_receive.value[0] );
         this.classFields = Object.keys(this.generate_form_receive[0]);
@@ -575,28 +578,40 @@ var GenerateFormComponent = /** @class */ (function () {
         console.log('this.generate_form_receive[1]', this.generate_form_receive[1]);
     };
     GenerateFormComponent.prototype.output = function () {
-        // console.log('origin', this.sub_receive.value);
-        /*this.subCreate.ouputObject(this.sub_receive.value).subscribe( response => {
-            console.log( 'out', response );
-        });*/
+        // simple output form value
         console.log('form.value: ', this.form_receive.value);
         this.subCreate.ouputObject(this.form_receive.value).subscribe(function (response) {
             console.log('output', response);
         });
-        console.log('sessionStorage', sessionStorage);
+        // pass the sessionStorage to the server
+        console.log('sessionStorage: ', sessionStorage);
         this.subCreate.outputsessionStorage(sessionStorage).subscribe(function (response) {
             console.log('session response', response);
         });
     };
     // sessionStorage just accept string type key/value
-    GenerateFormComponent.prototype.sessionStorage = function () {
-        console.log('this.form_sub_receive.value: ', JSON.stringify(this.form_receive.value));
-        sessionStorage.setItem(this.storageIndex.toString(), JSON.stringify(this.form_receive.value));
+    GenerateFormComponent.prototype.sessionStore = function () {
+        console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value));
+        // get object type => store object use its type-name and index, storageMap count the same class-name object
+        console.log('this.form_receive.get(type)', JSON.stringify(this.form_receive.value['@type']));
+        if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {
+            console.log(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+            var value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
+            value++;
+            this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
+            console.log('map', this.storageMap);
+        }
+        else {
+            this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
+        }
+        var keytemp = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])).toString());
+        sessionStorage.setItem(keytemp, JSON.stringify(this.form_receive.value));
         for (var i = 0; i < sessionStorage.length; i++) {
             console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
         }
-        this.storageIndex++;
+        // this.storageIndex++;
     };
+    // clear the form data
     GenerateFormComponent.prototype.clear = function () {
         this.classFields = undefined;
         this.generate_form_receive.value = undefined;
@@ -650,8 +665,8 @@ var GenerateFormService = /** @class */ (function () {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     };
     GenerateFormService.prototype.outputsessionStorage = function (session) {
-        var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/json' });
-        return this.http.post(this.sessionStorageUrl, session, { headers: httpHeaders, observe: 'response' });
+        // const httpHeaders = new HttpHeaders({ 'Content-Type': 'text/json' });
+        return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
     };
     GenerateFormService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

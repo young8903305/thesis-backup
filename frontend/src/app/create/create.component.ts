@@ -33,6 +33,7 @@ export class CreateComponent implements OnInit {
             });
     }*/
 
+    // if user choose the different class, re-get from the server, and pass to the generate-form component
     postClass(item) {
         const obItem = {'name': item};
         console.log(obItem);

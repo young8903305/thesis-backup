@@ -603,10 +603,10 @@ public class Main {
 			System.out.println("request: "+ str);
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
-			response.setContentType("text/json");
+			response.setContentType("text/plain");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("asldkfjaslkjf");
+			response.getWriter().write(str);
 		}
 	}
 	
