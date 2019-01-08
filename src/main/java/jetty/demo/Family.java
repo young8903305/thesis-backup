@@ -28,6 +28,8 @@ public class Family implements Serializable {
 		setChildren(children);
 	}
 	
+	public Family() {}
+	
 	public void setFather(PersonDemo father) {
 		this.father = father;
 	}

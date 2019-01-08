@@ -104,7 +104,7 @@ public class Main {
 	
 	private static String[] arguments;
 	
-	private static String[] sessionStorage;
+	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();
 	
 
 	@SuppressWarnings("serial")
@@ -602,12 +602,99 @@ public class Main {
 			String str = sb.toString();
 			System.out.println("request: "+ str);
 			
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper2 = new ObjectMapper();
+			JsonNode node = mapper.readTree(str);
+			
+			Iterator<Entry<String, JsonNode>> jsonNodes = node.fields();
+			while (jsonNodes.hasNext()) {  
+		        Entry<String, JsonNode> jnode = jsonNodes.next();
+		        JsonNode jNode = jnode.getValue();
+		        sessionStorage.put(jnode.getKey(), jnode.getValue().asText());
+			}
+			
+			sessionStorage.forEach((k, v) -> System.out.println(k + ":" + v));
+			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/plain");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(str);
 		}
+	}
+	
+	public static Object CreateOb (String obJson) throws IOException {
+		ObjectMapper ob = new ObjectMapper();
+	    JsonNode jsNode = ob.readTree(obJson);
+	    String className = jsNode.get("@type").asText();
+	    System.out.println("class name: " + className);
+	    
+	    // get field's type and put them into List, then change type into Class<?>[]
+	    Class<?> pClass = null;
+	    ArrayList<Class> fieldClass = new ArrayList<Class>();
+		try {	// get type from class structure
+			pClass = Class.forName(className);
+			// Field
+			Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+			
+			for (Field f : fieldlist) {
+				System.out.println("field type: "+f.getType());
+				fieldClass.add(f.getType());
+				//objectNode.put(f.getName(), "");	// fix it
+			}
+			
+			ListIterator<Class> fieldClassIterator = fieldClass.listIterator();
+			
+			// get json-form value
+		    List<Object> formValue = new ArrayList<Object>();	//
+		    Iterator<Entry<String, JsonNode>> jsonNodes = jsNode.fields();
+		    while (jsonNodes.hasNext() && fieldClassIterator.hasNext()) {  
+		    	Entry<String, JsonNode> node = jsonNodes.next();
+		        JsonNode jNode = node.getValue();
+		        Class<?> fieldClassElement = fieldClassIterator.next();
+		        if( !jNode.isObject() ) {	// array, string, number, true, false, null, @id, @ref, @type
+		        	if( jNode.isArray() ) {	// array
+		        		
+		        	}else {
+		        		if((!node.getKey().equals("@id")) && (!node.getKey().equals("@ref")) && (!node.getKey().equals("@type")) ) {
+	        				// string, number, true, false, null
+		        			if(fieldClassElement.equals(int.class) || fieldClassElement.equals(Integer.class)) {
+		        				System.out.println("int");
+		        				formValue.add(Integer.parseInt(node.getValue().asText()));
+		        			}else if(fieldClassElement.equals(String.class)) {
+		        				System.out.println("String");
+		        				formValue.add(node.getValue().asText());
+		        			}else {		//class type
+		        				formValue.add(null);
+		        			}
+	        			}else {		//@id, @ref, @type
+	        				fieldClassIterator.previous();
+	        			}
+		        	}
+		        }else {	// encount a new json object
+		        }
+		    }
+			
+			Class<?>[] classTypes = new Class<?>[ fieldClass.size() ];
+			classTypes = fieldClass.toArray(classTypes);
+			
+			//select constructor by argu's type
+			Constructor<?> baseConstructor = null;
+			baseConstructor = pClass.getDeclaredConstructor(classTypes);
+			baseConstructor.setAccessible(true);
+			
+			System.out.println("classTypes: " + classTypes.length);
+			System.out.println("value list: " + formValue.size());
+			
+			Object instance = baseConstructor.newInstance(formValue.toArray());
+			
+			return instance;
+			
+		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException |
+				 InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@MultipartConfig(
@@ -642,7 +729,6 @@ public class Main {
 		    // get field's type and put them into List, then change type into Class<?>[]
 		    Class<?> pClass = null;
 		    ArrayList<Class> fieldClass = new ArrayList<Class>();
-		    //ObjectNode objectNode = ob.createObjectNode();	// why???????
 			try {	// get type from class structure
 				pClass = Class.forName(className);
 				// Field
@@ -652,10 +738,6 @@ public class Main {
 					System.out.println("field type: "+f.getType());
 					fieldClass.add(f.getType());
 					//objectNode.put(f.getName(), "");	// fix it
-				}
-				
-				for(int j = 0; j < fieldClass.size(); j++) {
-					System.out.println(fieldClass.toArray()[j]);
 				}
 				
 				ListIterator<Class> fieldClassIterator = fieldClass.listIterator();
@@ -679,9 +761,13 @@ public class Main {
 			        			}else if(fieldClassElement.equals(String.class)) {
 			        				System.out.println("String");
 			        				formValue.add(node.getValue().asText());
-			        			}else {		//class type
-			        				System.out.println("class1");
-			        				formValue.add(null);
+			        			}else if(fieldClassElement.equals(PersonDemo.class)) {		//class type
+			        				System.out.println("PersonDemo");
+			        				String temp = sessionStorage.get(node.getValue().asText());
+			        				System.out.println("temp"+temp);
+			        				formValue.add( CreateOb(temp) );
+			        			}else {
+			        				formValue.add(new ArrayList<>());
 			        			}
 		        			}else {		//@id, @ref, @type
 		        				fieldClassIterator.previous();
@@ -694,7 +780,8 @@ public class Main {
 				Class<?>[] classTypes = new Class<?>[ fieldClass.size() ];
 				classTypes = fieldClass.toArray(classTypes);
 				
-				Constructor<?> baseConstructor = null;	//select constructor with argu's type
+				//select constructor by argu's type
+				Constructor<?> baseConstructor = null;
 				baseConstructor = pClass.getDeclaredConstructor(classTypes);
 				baseConstructor.setAccessible(true);
 				
@@ -704,9 +791,15 @@ public class Main {
 				Object instance = baseConstructor.newInstance(formValue.toArray());
 				
 				ObjectMapper mapper = new ObjectMapper();
-				//mapper.writeValue(new File("/Users/yang/Desktop/output.json"), instance);
-				String jsonStr = mapper.writeValueAsString(instance);
-				System.out.println("ouput String" + jsonStr + "\noutput.json done");
+				mapper.writeValue(new File("/Users/yang/Desktop/output.json"), instance);
+				String jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(instance);
+				System.out.println("ouput String\n" + jsonStr + "\noutput.json done");
+				
+				Family obj = mapper.readValue(jsonStr, Family.class);
+				System.out.println(obj.getFather().getAge());
+				System.out.println(obj.getMother().getColor());
+				System.out.println(obj.getChildren().size());
+				
 				
 				
 			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException |

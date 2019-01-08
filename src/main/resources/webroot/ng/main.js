@@ -91,7 +91,7 @@ module.exports = "h1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">uploader</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h3 >Welcome!!</h3>\n    <router-outlet></router-outlet>\n    \n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n</div>\n\n\n\n<!--\n<form action=\"/Edit1Servlet\" method=\"post\">\n  <table class=\"table table-hover\">\n    <tbody>\n      <tr>\n        <td><input type=\"button\" name=\"path-input\" value=\"choose path\" size=\"24\" (click)=\"path(this)\">\n            <input id=\"pathInput\" type=\"text\" name=\"path-text\" [(ngModel)]=\"pathValue\"></td>\n      </tr>\n    </tbody>\n  </table>\n  <input type=\"submit\" value=\"submit\" />\n</form>\n-->\n<!--\n<table>\n    <tr>\n        <app-string></app-string>\n    </tr>\n    <tr>\n        <app-string></app-string>\n    </tr>\n    <tr>\n        <app-string></app-string>\n    </tr>\n</table>\n-->"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n    \n<!--\n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n-->\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -583,7 +583,7 @@ var GenerateFormComponent = /** @class */ (function () {
         this.subCreate.ouputObject(this.form_receive.value).subscribe(function (response) {
             console.log('output', response);
         });
-        // pass the sessionStorage to the server
+        // sessionStorage pass to server
         console.log('sessionStorage: ', sessionStorage);
         this.subCreate.outputsessionStorage(sessionStorage).subscribe(function (response) {
             console.log('session response', response);
@@ -604,12 +604,14 @@ var GenerateFormComponent = /** @class */ (function () {
         else {
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
         }
-        var keytemp = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])).toString());
-        sessionStorage.setItem(keytemp, JSON.stringify(this.form_receive.value));
+        // temp: sessionStorage's type and index;
+        // key: split temp and use the last one be the real key
+        var temp = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        var key = temp.split('.')[temp.split('.').length - 1];
+        sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         for (var i = 0; i < sessionStorage.length; i++) {
             console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
         }
-        // this.storageIndex++;
     };
     // clear the form data
     GenerateFormComponent.prototype.clear = function () {

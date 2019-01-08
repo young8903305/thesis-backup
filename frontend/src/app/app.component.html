@@ -9,47 +9,22 @@
         <br>-->
         <a routerLink="/create">Create</a>
         <br>
-        <a routerLink="/uploader">uploader</a>
+        <a routerLink="/uploader">Uploader</a>
+        <br>
+        <a routerLink="/">Home</a>
     </nav>
 </div>
 
 <div class="main">
-    <h3 >Welcome!!</h3>
+    <h1>Welcome!!</h1>
     <router-outlet></router-outlet>
     
+<!--
     <p>
         <button (click)="gotoindex()">Home</button>
     </p>
+-->
     <div ng-controller='myCtrl'>
         <div js-tree="treeConfig" ng-model="treeData" should-apply="ignoreModelChanges()" tree="treeInstance" tree-events="ready:readyCB;create_node:createNodeCB"></div>
     </div>
 </div>
-
-
-
-<!--
-<form action="/Edit1Servlet" method="post">
-  <table class="table table-hover">
-    <tbody>
-      <tr>
-        <td><input type="button" name="path-input" value="choose path" size="24" (click)="path(this)">
-            <input id="pathInput" type="text" name="path-text" [(ngModel)]="pathValue"></td>
-      </tr>
-    </tbody>
-  </table>
-  <input type="submit" value="submit" />
-</form>
--->
-<!--
-<table>
-    <tr>
-        <app-string></app-string>
-    </tr>
-    <tr>
-        <app-string></app-string>
-    </tr>
-    <tr>
-        <app-string></app-string>
-    </tr>
-</table>
--->
