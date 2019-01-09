@@ -10,6 +10,7 @@ import { EditComponent } from './edit/edit.component';
 import { CreateComponent } from './create/create.component';
 import { UploaderComponent } from './uploader/uploader.component';
 import { GenerateFormComponent } from './generate-form/generate-form.component';
+import { JstreeComponent } from './jstree/jstree.component';
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import { GenerateFormComponent } from './generate-form/generate-form.component';
         CreateComponent,
         UploaderComponent,
         GenerateFormComponent,
+        JstreeComponent,
     ],
     imports: [
         BrowserModule,

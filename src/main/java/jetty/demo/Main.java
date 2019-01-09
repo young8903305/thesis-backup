@@ -623,7 +623,7 @@ public class Main {
 		}
 	}
 	
-	public static Object CreateOb (String obJson) throws IOException {
+	public static Object CreateOb (String obJson, String ancient) throws IOException {
 		ObjectMapper ob = new ObjectMapper();
 	    JsonNode jsNode = ob.readTree(obJson);
 	    String className = jsNode.get("@type").asText();
@@ -664,8 +664,16 @@ public class Main {
 		        			}else if(fieldClassElement.equals(String.class)) {
 		        				System.out.println("String");
 		        				formValue.add(node.getValue().asText());
-		        			}else {		//class type
-		        				formValue.add(null);
+		        			}else if(fieldClassElement.equals(PersonDemo.class)) {		// class type
+		        				//if(node.getKey() != ancient) {
+		        					System.out.println("PersonDemo");
+		        					String temp = sessionStorage.get(node.getValue().asText());
+			        				System.out.println("temp name: " + node.getKey() + "\ntemp value: " + temp);
+		        					formValue.add( CreateOb(temp, node.getKey()) );
+		        				//}else {
+		        				//}
+		        			}else {		// list
+		        				formValue.add(new ArrayList<>());
 		        			}
 	        			}else {		//@id, @ref, @type
 	        				fieldClassIterator.previous();
@@ -732,12 +740,11 @@ public class Main {
 			try {	// get type from class structure
 				pClass = Class.forName(className);
 				// Field
-				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+				Field[] fieldlist = pClass.getDeclaredFields(); // get include private members
 				
 				for (Field f : fieldlist) {
 					System.out.println("field type: "+f.getType());
 					fieldClass.add(f.getType());
-					//objectNode.put(f.getName(), "");	// fix it
 				}
 				
 				ListIterator<Class> fieldClassIterator = fieldClass.listIterator();
@@ -764,9 +771,9 @@ public class Main {
 			        			}else if(fieldClassElement.equals(PersonDemo.class)) {		//class type
 			        				System.out.println("PersonDemo");
 			        				String temp = sessionStorage.get(node.getValue().asText());
-			        				System.out.println("temp"+temp);
-			        				formValue.add( CreateOb(temp) );
-			        			}else {
+			        				System.out.println("temp name: " + node.getKey() + "\ntemp value: " + temp);
+			        				formValue.add( CreateOb(temp, node.getKey()) );
+			        			}else {		// list
 			        				formValue.add(new ArrayList<>());
 			        			}
 		        			}else {		//@id, @ref, @type
