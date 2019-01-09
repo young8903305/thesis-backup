@@ -91,7 +91,7 @@ module.exports = "h1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n    \n<!--\n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n-->\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n</div>\n"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n    \n<!--\n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n-->\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n\n    <app-jstree></app-jstree>\n</div>\n"
 
 /***/ }),
 
@@ -166,6 +166,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _create_create_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./create/create.component */ "./src/app/create/create.component.ts");
 /* harmony import */ var _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./uploader/uploader.component */ "./src/app/uploader/uploader.component.ts");
 /* harmony import */ var _generate_form_generate_form_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./generate-form/generate-form.component */ "./src/app/generate-form/generate-form.component.ts");
+/* harmony import */ var _jstree_jstree_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./jstree/jstree.component */ "./src/app/jstree/jstree.component.ts");
+
 
 
 
@@ -188,6 +190,7 @@ var AppModule = /** @class */ (function () {
                 _create_create_component__WEBPACK_IMPORTED_MODULE_8__["CreateComponent"],
                 _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__["UploaderComponent"],
                 _generate_form_generate_form_component__WEBPACK_IMPORTED_MODULE_10__["GenerateFormComponent"],
+                _jstree_jstree_component__WEBPACK_IMPORTED_MODULE_11__["JstreeComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -677,6 +680,82 @@ var GenerateFormService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], GenerateFormService);
     return GenerateFormService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/jstree/jstree.component.css":
+/*!*********************************************!*\
+  !*** ./src/app/jstree/jstree.component.css ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2pzdHJlZS9qc3RyZWUuY29tcG9uZW50LmNzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/jstree/jstree.component.html":
+/*!**********************************************!*\
+  !*** ./src/app/jstree/jstree.component.html ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"using_json\"></div>\n"
+
+/***/ }),
+
+/***/ "./src/app/jstree/jstree.component.ts":
+/*!********************************************!*\
+  !*** ./src/app/jstree/jstree.component.ts ***!
+  \********************************************/
+/*! exports provided: JstreeComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JstreeComponent", function() { return JstreeComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var JstreeComponent = /** @class */ (function () {
+    function JstreeComponent() {
+    }
+    JstreeComponent.prototype.ngOnInit = function () { };
+    JstreeComponent.prototype.ngAfterViewInit = function () {
+        $('#using_json').jstree({
+            'core': {
+                'check_callback': true,
+                'data': [
+                    'Simple root node',
+                    {
+                        'text': 'Root node 2',
+                        'state': {
+                            'opened': true,
+                            'selected': true
+                        },
+                        'children': [
+                            { 'text': 'Child 1' },
+                            'Child 2'
+                        ]
+                    }
+                ]
+            }
+        });
+    };
+    JstreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-jstree',
+            template: __webpack_require__(/*! ./jstree.component.html */ "./src/app/jstree/jstree.component.html"),
+            styles: [__webpack_require__(/*! ./jstree.component.css */ "./src/app/jstree/jstree.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], JstreeComponent);
+    return JstreeComponent;
 }());
 
 
