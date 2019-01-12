@@ -15,23 +15,23 @@ public @interface AnnotationStyle {
 		checkbox,	//for array/list
 		color,
 		date,
-		//datetime-local,
-		email,
+		datetime_local,	// only for chrome
+		email,	// no HTML default validate for angular
 		//file,
-		hidden,
-		image,
-		month,
+		//hidden,
+		//image,
+		month,	// only for chrome
 		number,
 		password,
 		radio,
 		range,
-		reset,
-		search,
+		//reset,
+		//search,
 		//submit,
-		tel,
+		//tel,
 		text,
 		time,
-		url,
+		//url,
 		week,
 		none
 	}

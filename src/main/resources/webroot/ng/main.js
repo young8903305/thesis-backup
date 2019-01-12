@@ -535,7 +535,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup]=\"form_receive\" (ngSubmit)=\"output()\">\n  <ng-container *ngFor=\"let key of classFields\">\n    <label *ngIf=\"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n      <input type=\"{{ fieldStyle[key] }}\" formControlName=\"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input type=\"{{ MemberStyle[key] }}\" formControlName = \"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
 
 /***/ }),
 
@@ -570,13 +570,12 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
-        // this.classFields = Object.keys( this.sub_receive.value[0] );
-        this.classFields = Object.keys(this.generate_form_receive[0]);
-        this.fieldStyle = this.generate_form_receive[1];
+        this.classMember = Object.keys(this.generate_form_receive[0]);
+        this.MemberStyle = this.generate_form_receive[1];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('classFields: ', this.classFields);
-        console.log('fieldStyle: ', this.fieldStyle);
+        console.log('classMember: ', this.classMember);
+        console.log('MemberStyle: ', this.MemberStyle);
         console.log('this.generate_form_receive[0]', this.generate_form_receive[0]);
         console.log('this.generate_form_receive[1]', this.generate_form_receive[1]);
     };
@@ -618,7 +617,7 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // clear the form data
     GenerateFormComponent.prototype.clear = function () {
-        this.classFields = undefined;
+        this.classMember = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
     };

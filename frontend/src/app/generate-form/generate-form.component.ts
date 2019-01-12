@@ -12,8 +12,8 @@ import { stringify } from 'querystring';
 export class GenerateFormComponent implements OnInit, OnChanges {
 
     @Input() generate_form_receive;
-    classFields;
-    fieldStyle;
+    classMember;
+    MemberStyle;
     form_receive = this.fb.group({});
 
     storageIndex = 0;
@@ -29,13 +29,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // receieve the class info form create component
     ngOnChanges() {
-        // this.classFields = Object.keys( this.sub_receive.value[0] );
-        this.classFields = Object.keys(this.generate_form_receive[0]);
-        this.fieldStyle = this.generate_form_receive[1];
+        this.classMember = Object.keys(this.generate_form_receive[0]);
+        this.MemberStyle = this.generate_form_receive[1];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('classFields: ', this.classFields);
-        console.log('fieldStyle: ', this.fieldStyle);
+        console.log('classMember: ', this.classMember);
+        console.log('MemberStyle: ', this.MemberStyle);
         console.log('this.generate_form_receive[0]', this.generate_form_receive[0]);
         console.log('this.generate_form_receive[1]', this.generate_form_receive[1]);
     }
@@ -84,7 +83,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // clear the form data
     clear() {
-        this.classFields = undefined;
+        this.classMember = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
     }

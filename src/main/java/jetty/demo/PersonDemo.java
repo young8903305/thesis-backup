@@ -33,8 +33,8 @@ public class PersonDemo implements Serializable{
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.color) }, name = "color", value = "#ff0000")
 	private String color;
 	
-	/*@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.checkbox) }, name = "id", value = {"1", "2"})
-	private List<?> id;*/
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.time) }, name = "id", value = "04:22")
+	private String test;
 	
 	public PersonDemo (int age, String firstname, String lastname, String description, String email, String color) {
 		setAge(age);

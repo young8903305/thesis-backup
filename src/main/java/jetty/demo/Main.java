@@ -970,7 +970,7 @@ public class Main {
 								objectNode.put(f.getName(), var.value()[0].toString());
 								styleNode.put(f.getName(), "color");
 								break;
-							case checkbox:
+							case checkbox:	// need to fix
 								ArrayNode aNode = ob.createArrayNode();
 								if(f.getType()==Array.class || f.getType()==List.class) {
 									for(int i = 0; i<var.value().length; i++) {
@@ -980,17 +980,49 @@ public class Main {
 								objectNode.set(f.getName(), aNode);
 								styleNode.put(f.getName(), "checkbox");
 								break;
-							case text :
+							case date:
 								objectNode.put(f.getName(), var.value()[0].toString());
-								styleNode.put(f.getName(), var.style()[0].input().toString());
+								styleNode.put(f.getName(), "date");
+								break;
+							case datetime_local:
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "datetime-local");
+								break;
+							case email:
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "email");
+								break;
+							case month:
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "month");
+								break;
+							case number:
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "number");
 								break;
 							case password :
 								objectNode.put(f.getName(), var.value()[0].toString());
 								styleNode.put(f.getName(), "password");
 								break;
-							case email :
+							case radio :	// need to fix
 								objectNode.put(f.getName(), var.value()[0].toString());
-								styleNode.put(f.getName(), "email");
+								styleNode.put(f.getName(), "radio");
+								break;
+							case range :	// need to fix
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "range");
+								break;
+							case text :
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
+								break;
+							case time :
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "time");
+								break;
+							case week :
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "week");
 								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
