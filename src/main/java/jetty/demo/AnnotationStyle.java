@@ -11,8 +11,8 @@ import java.lang.annotation.ElementType;
 public @interface AnnotationStyle {
 	
 	public enum InputTypeControl {
-		button,
-		checkbox,
+		// button,
+		checkbox,	//for array/list
 		color,
 		date,
 		//datetime-local,

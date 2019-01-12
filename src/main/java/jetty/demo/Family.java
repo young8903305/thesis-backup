@@ -28,7 +28,7 @@ public class Family implements Serializable {
 		setChildren(children);
 	}
 	
-	public Family() {}
+	public Family() {}	// need to add this non-argument constructor for jackson to deserialize
 	
 	public void setFather(PersonDemo father) {
 		this.father = father;

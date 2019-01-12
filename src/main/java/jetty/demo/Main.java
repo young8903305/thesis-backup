@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -938,6 +939,7 @@ public class Main {
 		        reader.close();
 		    }
 		    String classNameInJson = sb.toString();	// { name:className }. It's in json formula
+		    System.out.println(classNameInJson);
 		    
 		    // JsonNode : get class by jsNode.get("name").asText(), then create json string
 		    ObjectMapper ob = new ObjectMapper();
@@ -946,7 +948,7 @@ public class Main {
 		    String FirstId = "1";
 			
 		    Class<?> pClass = null;
-		    ObjectNode objectNode = ob.createObjectNode();	// make json string to output : [ fieldName : fieldValue ]
+		    ObjectNode objectNode = ob.createObjectNode();	// make json string to output : { fieldName : fieldValue }
 		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style]
 			try {
 				pClass = Class.forName(className);
@@ -964,6 +966,20 @@ public class Main {
 					System.out.println(var.style()[0]);
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
+							case color :
+								objectNode.put(f.getName(), var.value()[0].toString());
+								styleNode.put(f.getName(), "color");
+								break;
+							case checkbox:
+								ArrayNode aNode = ob.createArrayNode();
+								if(f.getType()==Array.class || f.getType()==List.class) {
+									for(int i = 0; i<var.value().length; i++) {
+										aNode.add(var.value()[i]);
+									}
+								}
+								objectNode.set(f.getName(), aNode);
+								styleNode.put(f.getName(), "checkbox");
+								break;
 							case text :
 								objectNode.put(f.getName(), var.value()[0].toString());
 								styleNode.put(f.getName(), var.style()[0].input().toString());
@@ -976,10 +992,6 @@ public class Main {
 								objectNode.put(f.getName(), var.value()[0].toString());
 								styleNode.put(f.getName(), "email");
 								break;
-							case color :
-								objectNode.put(f.getName(), var.value()[0].toString());
-								styleNode.put(f.getName(), "color");
-								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
 						objectNode.put(f.getName(), var.value()[0].toString());
@@ -991,15 +1003,16 @@ public class Main {
 				e.printStackTrace();
 			}
 			
+			// System.out.println("objectNode: " + ob.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode));
 			System.out.println("objectNode: " + objectNode.toString());
 			System.out.println("styleNode: " + styleNode.toString());
 			
-			String respjson = "[" + objectNode.toString() + "," + styleNode.toString() + "]";
+			String responce_json = "[" + objectNode.toString() + "," + styleNode.toString() + "]";
 			
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(respjson);
+			response.getWriter().write(responce_json);
 		}
 		
 		@Override

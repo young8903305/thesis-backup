@@ -203,6 +203,8 @@ public class JStree {
 			System.out.println(a.get(i));
 		}
 		
+		System.out.println(TypeFamily);
+		
 	    
 	    
 		// read back from string and deserialize
