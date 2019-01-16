@@ -65,9 +65,11 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             let value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
             value++;
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
+            this.form_receive.value['@id'] = value; // modified @id with class count
             console.log('map', this.storageMap);
         } else {
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
+            this.form_receive.value['@id'] = 1;
         }
 
         // temp: sessionStorage's type and index;
@@ -86,5 +88,10 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         this.classMember = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
+    }
+
+    clearSession() {
+        sessionStorage.clear();
+        this.storageMap.clear();
     }
 }

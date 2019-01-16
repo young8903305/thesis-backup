@@ -2,7 +2,8 @@
   <ng-container *ngFor = "let key of classMember">
     <label *ngIf = "key!=='@id' && key!=='@type'">
       {{ key }} :
-        <input type="{{ MemberStyle[key] }}" formControlName="{{ key }}" >
+    <input  type={{MemberStyle[key]}} formControlName={{key}}>
+    <textarea *ngIf=" MemberStyle[key] =='textarea'"></textarea>
     </label>
   </ng-container>
   <button type="submit">Output Object</button>
@@ -16,3 +17,4 @@
 <p>
   Form Value: {{ form_receive.value | json }}
 </p>
+<button (click)="clearSession()">clear sessionStorage</button>

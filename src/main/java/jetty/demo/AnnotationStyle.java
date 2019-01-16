@@ -12,7 +12,7 @@ public @interface AnnotationStyle {
 	
 	public enum InputTypeControl {
 		// button,
-		checkbox,	//for array/list
+		//checkbox,	// for array/list
 		color,
 		date,
 		datetime_local,	// only for chrome
@@ -23,8 +23,8 @@ public @interface AnnotationStyle {
 		month,	// only for chrome
 		number,
 		password,
-		radio,
-		range,
+		//radio,	// need other attribute
+		//range,	// need other attribute
 		//reset,
 		//search,
 		//submit,

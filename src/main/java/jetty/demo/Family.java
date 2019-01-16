@@ -19,13 +19,18 @@ public class Family implements Serializable {
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "mother")
 	private PersonDemo mother;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "children")
-	private List<PersonDemo> children = new ArrayList<PersonDemo>();
+	/*@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "children")
+	private List<PersonDemo> children = new ArrayList<PersonDemo>();*/
 	
 	public Family(PersonDemo father, PersonDemo mother, List<PersonDemo> children ) {
 		setFather(father);
 		setMother(mother);
-		setChildren(children);
+		//setChildren(children);
+	}
+	
+	public Family(PersonDemo father, PersonDemo mother) {
+		setFather(father);
+		setMother(mother);
 	}
 	
 	public Family() {}	// need to add this non-argument constructor for jackson to deserialize
@@ -46,11 +51,11 @@ public class Family implements Serializable {
 		return this.mother;
 	}
 	
-	public void setChildren(List<PersonDemo> persons) {
+	/*public void setChildren(List<PersonDemo> persons) {
 		this.children = persons;
 	}
 	
 	public List<PersonDemo> getChildren() {
 		return this.children;
-	}
+	}*/
 }

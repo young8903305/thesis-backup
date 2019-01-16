@@ -179,6 +179,7 @@ public class JStree {
 		String jsogFamily = "{\"@id\":\"1\",\"father\":{\"@id\":\"2\",\"age\":50,\"firstName\":\"John\",\"lastName\":\"Chou\",\"spouse\":{\"@id\":\"3\",\"age\":44,\"firstName\":\"Lily\",\"lastName\":\"Chou\",\"spouse\":{\"@ref\":\"2\"}}},\"mother\":{\"@ref\":\"3\"},\"children\":[{\"@id\":\"4\",\"age\":18,\"firstName\":\"Han\",\"lastName\":\"Chou\",\"spouse\":null},{\"@id\":\"5\",\"age\":10,\"firstName\":\"Ann\",\"lastName\":\"Chou\",\"spouse\":null}]}";
 		String TypeFamily = "{\"@id\": \"1\",\"@type\": \"jetty.demo.Family\",\"father\": {\"@id\": \"2\",\"@type\": \"jetty.demo.Person\",\"age\": 10,\"firstName\": \"dfga\",\"lastName\": \"alkjfg\",\"spouse\": {\"@id\": \"3\",\"@type\": \"jetty.demo.Person\",\"age\": 2,\"firstName\": \"22\",\"lastName\": \"22\",\"spouse\": {\"@ref\": \"2\",\"@type\": \"jetty.demo.Person\"}}},\"mother\": {\"@ref\": \"3\",\"@type\": \"jetty.demo.Person\"},\"children\": [{\"@id\": \"4\",\"@type\": \"jetty.demo.Person\",\"age\": 3,\"firstName\": \"33\",\"lastName\": \"333\",\"spouse\": null}, {\"@id\": \"5\",\"@type\": \"jetty.demo.Person\",\"age\": 4,\"firstName\": \"44\",\"lastName\": \"4444\",\"spouse\": null}]}";
 		String outputString = "";
+		String PersonDemo = "{\"@id\":\"5\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"yi\",\"firstName\":\"huang\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"test\":\"11:59\",\"spouse\":{\"@id\":\"2\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":2,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"test\":\"01:38\",\"spouse\":{\"@ref\": 5,\"@type\": \"jetty.demo.PersonDemo\"}}}";
 		String head = "{\n" + defaultJStreeState + "\"children\":[";
 		String tail ="\n]}";
 		
@@ -186,10 +187,11 @@ public class JStree {
 		//JsonNode node = mapper.readTree(jsogPerson);
 		//JsonNode node = mapper.readTree(jsogFamily);
 		JsonNode node = mapper.readTree(TypeFamily);
+		//JsonNode node = mapper.readTree(PersonDemo);
 		
 		// recursive
 		outputString = head + traverseJson3(node, Level) + tail;
-		// System.out.println(outputString);
+		System.out.println("out :\n" + outputString);
 
 		List<String> value = new ArrayList<String>();
 		List<String> variable = new ArrayList<String>();
@@ -197,18 +199,34 @@ public class JStree {
 		List<List<String>> a = new ArrayList<List<String>>();
 		a = formParse(node);
 
-		for (int i = 0; i < a.size(); i++) {
+		/*for (int i = 0; i < a.size(); i++) {
 			//System.out.println("variable : " + variable.get(i));
 			//System.out.println("value : " + value.get(i));
 			System.out.println(a.get(i));
-		}
+		}*/
 		
-		System.out.println(TypeFamily);
+		System.out.println("PD "+PersonDemo);
 		
 	    
 	    
 		// read back from string and deserialize
 		//Family ff = mapper.readerFor(Family.class).readValue(jsogFamily);
 		//System.out.println(ff.getFather().getAge());
+		
+		/*PersonDemo p1 = new PersonDemo();
+		p1.setAge(1);
+		p1.setLastName("yi");
+		p1.setFirstName("huang");
+		p1.setPassword("aaa");
+		p1.setEmail("123@gmail.com");
+		p1.setColor("#ff0000");
+		p1.setTest("11:59");
+		PersonDemo p2 = new PersonDemo(2, "yi", "huang", "aaa", "123@gmail.com", "#ff0000", "11:59", p1);
+		p1.setSpouse(p2);
+		String ps = mapper.writeValueAsString(p1);
+		System.out.println("ps "+ps);*/
+		
+		PersonDemo PD = mapper.readerFor(PersonDemo.class).readValue(PersonDemo);
+		System.out.println(PD.getSpouse().getAge());
 	}
 }

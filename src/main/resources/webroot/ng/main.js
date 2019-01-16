@@ -528,7 +528,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n        <input type=\"{{ MemberStyle[key] }}\" formControlName=\"{{ key }}\" >\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input  type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] =='textarea'\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
 
 /***/ }),
 
@@ -594,10 +594,12 @@ var GenerateFormComponent = /** @class */ (function () {
             var value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
             value++;
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
+            this.form_receive.value['@id'] = value; // modified @id with class count
             console.log('map', this.storageMap);
         }
         else {
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
+            this.form_receive.value['@id'] = 1;
         }
         // temp: sessionStorage's type and index;
         // key: split temp and use the last one be the real key
@@ -613,6 +615,10 @@ var GenerateFormComponent = /** @class */ (function () {
         this.classMember = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
+    };
+    GenerateFormComponent.prototype.clearSession = function () {
+        sessionStorage.clear();
+        this.storageMap.clear();
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),

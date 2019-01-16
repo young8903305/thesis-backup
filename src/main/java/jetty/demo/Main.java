@@ -586,10 +586,13 @@ public class Main {
 	}
 	
 	public static class ngSessionStorage extends HttpServlet {
-		public void init() throws ServletException{}
+		public void init() throws ServletException{
+			sessionStorage.clear();
+		}
 		
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
 			StringBuilder sb = new StringBuilder();
 		    BufferedReader reader = request.getReader();
 		    try {
@@ -601,7 +604,7 @@ public class Main {
 		        reader.close();
 		    }
 			String str = sb.toString();
-			System.out.println("request: "+ str);
+			System.out.println("sessionStorage: "+ str);
 			
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectMapper mapper2 = new ObjectMapper();
@@ -662,7 +665,7 @@ public class Main {
 		        			if(fieldClassElement.equals(int.class) || fieldClassElement.equals(Integer.class)) {
 		        				System.out.println("int");
 		        				formValue.add(Integer.parseInt(node.getValue().asText()));
-		        			}else if(fieldClassElement.equals(String.class)) {
+		        			}else if(fieldClassElement==String.class) {
 		        				System.out.println("String");
 		        				formValue.add(node.getValue().asText());
 		        			}else if(fieldClassElement.equals(PersonDemo.class)) {		// class type
@@ -803,10 +806,11 @@ public class Main {
 				String jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(instance);
 				System.out.println("ouput String\n" + jsonStr + "\noutput.json done");
 				
-				Family obj = mapper.readValue(jsonStr, Family.class);
+				// test for Family object
+				/*Family obj = mapper.readValue(jsonStr, Family.class);
 				System.out.println(obj.getFather().getAge());
 				System.out.println(obj.getMother().getColor());
-				System.out.println(obj.getChildren().size());
+				System.out.println(obj.getChildren().size());*/
 				
 				
 				
@@ -920,9 +924,10 @@ public class Main {
 	// use class name, get class member and send 
 	public static class ngNameCreateForm extends HttpServlet {
 		
-		String arjson;
+		int sessionID = 1;
 		
-		public void init() throws ServletException {}
+		public void init() throws ServletException {
+		}
 		
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -945,7 +950,7 @@ public class Main {
 		    ObjectMapper ob = new ObjectMapper();
 		    JsonNode jsNode = ob.readTree(classNameInJson);
 		    String className = jsNode.get("name").asText(); // transform json to java string
-		    String FirstId = "1";
+		    
 			
 		    Class<?> pClass = null;
 		    ObjectNode objectNode = ob.createObjectNode();	// make json string to output : { fieldName : fieldValue }
@@ -955,7 +960,7 @@ public class Main {
 				// Field
 				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
 				
-				objectNode.put("@id", FirstId);
+				objectNode.put("@id", sessionID);
 				objectNode.put("@type", className);
 				
 				Annotation annotation;
@@ -970,7 +975,7 @@ public class Main {
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());	// get default value
 								styleNode.put(f.getName(), "color");
 								break;
-							case checkbox:	// need to fix
+							/*case checkbox:	// need to fix
 								ArrayNode aNode = ob.createArrayNode();
 								//if(f.getType()==Array.class || f.getType()==List.class) {
 									for(int i = 0; i<var.style()[0].value().length; i++) {
@@ -980,7 +985,7 @@ public class Main {
 								//}
 								objectNode.set(f.getName(), aNode);
 								styleNode.put(f.getName(), "checkbox");
-								break;
+								break;*/
 							case date:
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "date");
@@ -1005,14 +1010,14 @@ public class Main {
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "password");
 								break;
-							case radio :	// need to fix
+							/*case radio :	// need to fix
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "radio");
 								break;
 							case range :	// need to fix
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "range");
-								break;
+								break;*/
 							case text :
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
