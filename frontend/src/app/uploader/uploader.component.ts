@@ -15,7 +15,7 @@ export class UploaderComponent implements OnInit {
 
     uploader = this.fb.group({});
     fileToUpload;
-    fileList;
+    fileList;   // upload file is stored by list type in js
 
     // fileForm = this.fb.group({});
     fileForm;
@@ -24,8 +24,7 @@ export class UploaderComponent implements OnInit {
         private uploaderService: UploaderService,
         private http: HttpClient) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {}
 
     fileChange(fileList) {
         this.fileList = fileList;

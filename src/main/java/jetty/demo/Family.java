@@ -13,13 +13,13 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Family implements Serializable {
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "father", value = "")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "father")
 	private PersonDemo father;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "mother", value = "")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "mother")
 	private PersonDemo mother;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "children", value = "")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "children")
 	private List<PersonDemo> children = new ArrayList<PersonDemo>();
 	
 	public Family(PersonDemo father, PersonDemo mother, List<PersonDemo> children ) {

@@ -25,14 +25,6 @@ export class CreateComponent implements OnInit {
 
     ngOnInit() {}
 
-    /*getClass() {
-        this.createService.getClassName()
-            .subscribe(response => {
-                this.dataClassName = Object.keys(response);
-                console.log(this.dataClassName);
-            });
-    }*/
-
     // if user choose the different class, re-get from the server, and pass to the generate-form component
     postClass(item) {
         const obItem = {'name': item};

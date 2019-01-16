@@ -15,16 +15,16 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable{
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "age", value = "1")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "age")
 	private int age;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "lastName", value = "1")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "lastName")
 	private String lastName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "firstName", value = "1")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "firstName")
 	private String firstName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "spouse", value = "1")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "spouse")
 	private Person spouse;
 	
 	public Person (int age, String firstname, String lastname, Person p) {

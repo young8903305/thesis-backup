@@ -15,25 +15,29 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonDemo implements Serializable{
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "age", value = "1")
+	@AnnotationForm(
+			style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") },
+			name = "age")
 	private int age;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "lastName", value = "huang")
+	@AnnotationForm(
+			style = { @AnnotationStyle(input=InputTypeControl.text, value = "huang") },
+			name = "lastName")
 	private String lastName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text) }, name = "firstName", value = "yi")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "yi") }, name = "firstName")
 	private String firstName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.password) }, name = "password", value = "aaa")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.password, value = "aaa") }, name = "password")
 	private String password;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.email) }, name = "email", value = "123@gmail.com")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.email, value = "123@gmail.com") }, name = "email")
 	private String email;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.color) }, name = "color", value = "#ff0000")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.color, value = "#ff0000") }, name = "color")
 	private String color;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.time) }, name = "id", value = "04:22")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.checkbox, value = "1" ) }, name = "id")
 	private String test;
 	
 	public PersonDemo (int age, String firstname, String lastname, String description, String email, String color) {

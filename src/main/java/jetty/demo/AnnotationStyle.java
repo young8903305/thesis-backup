@@ -38,6 +38,8 @@ public @interface AnnotationStyle {
 	
 	InputTypeControl input() default InputTypeControl.none;
 	
-	String textarea() default "";
+	String[] value() default {};
+	
+	String textarea() default "false";
 	
 }

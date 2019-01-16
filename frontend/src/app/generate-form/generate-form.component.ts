@@ -29,8 +29,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // receieve the class info form create component
     ngOnChanges() {
-        this.classMember = Object.keys(this.generate_form_receive[0]);
-        this.MemberStyle = this.generate_form_receive[1];
+        this.classMember = Object.keys(this.generate_form_receive[0]);  //
+        this.MemberStyle = this.generate_form_receive[1];   //
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
         console.log('classMember: ', this.classMember);

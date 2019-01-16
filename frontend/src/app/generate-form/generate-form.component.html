@@ -2,7 +2,7 @@
   <ng-container *ngFor = "let key of classMember">
     <label *ngIf = "key!=='@id' && key!=='@type'">
       {{ key }} :
-    <input type="{{ MemberStyle[key] }}" formControlName = "{{ key }}">
+        <input type="{{ MemberStyle[key] }}" formControlName="{{ key }}" >
     </label>
   </ng-container>
   <button type="submit">Output Object</button>

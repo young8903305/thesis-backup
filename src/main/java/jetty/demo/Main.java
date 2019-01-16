@@ -967,66 +967,67 @@ public class Main {
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
 							case color :
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());	// get default value
 								styleNode.put(f.getName(), "color");
 								break;
 							case checkbox:	// need to fix
 								ArrayNode aNode = ob.createArrayNode();
-								if(f.getType()==Array.class || f.getType()==List.class) {
-									for(int i = 0; i<var.value().length; i++) {
-										aNode.add(var.value()[i]);
+								//if(f.getType()==Array.class || f.getType()==List.class) {
+									for(int i = 0; i<var.style()[0].value().length; i++) {
+										System.out.println("checkbox value : " + var.style()[0].value()[i]);
+										aNode.add(var.style()[0].value()[i]);
 									}
-								}
+								//}
 								objectNode.set(f.getName(), aNode);
 								styleNode.put(f.getName(), "checkbox");
 								break;
 							case date:
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "date");
 								break;
 							case datetime_local:
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "datetime-local");
 								break;
 							case email:
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "email");
 								break;
 							case month:
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "month");
 								break;
 							case number:
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "number");
 								break;
 							case password :
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "password");
 								break;
 							case radio :	// need to fix
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "radio");
 								break;
 							case range :	// need to fix
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "range");
 								break;
 							case text :
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
 								break;
 							case time :
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "time");
 								break;
 							case week :
-								objectNode.put(f.getName(), var.value()[0].toString());
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "week");
 								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
-						objectNode.put(f.getName(), var.value()[0].toString());
+						objectNode.put(f.getName(), var.style()[0].value()[0].toString());
 						styleNode.put(f.getName(), "textarea");
 					}
 				}

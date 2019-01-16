@@ -14,8 +14,6 @@ public @interface AnnotationForm {
 	
 	String name() default "";
 	
-	String[] value() default {};
-	
 }
 
 

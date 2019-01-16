@@ -296,13 +296,6 @@ var CreateComponent = /** @class */ (function () {
         });
     }
     CreateComponent.prototype.ngOnInit = function () { };
-    /*getClass() {
-        this.createService.getClassName()
-            .subscribe(response => {
-                this.dataClassName = Object.keys(response);
-                console.log(this.dataClassName);
-            });
-    }*/
     // if user choose the different class, re-get from the server, and pass to the generate-form component
     CreateComponent.prototype.postClass = function (item) {
         var _this = this;
@@ -535,7 +528,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input type=\"{{ MemberStyle[key] }}\" formControlName = \"{{ key }}\">\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n        <input type=\"{{ MemberStyle[key] }}\" formControlName=\"{{ key }}\" >\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>"
 
 /***/ }),
 
@@ -570,8 +563,8 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
-        this.classMember = Object.keys(this.generate_form_receive[0]);
-        this.MemberStyle = this.generate_form_receive[1];
+        this.classMember = Object.keys(this.generate_form_receive[0]); //
+        this.MemberStyle = this.generate_form_receive[1]; //
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
         console.log('classMember: ', this.classMember);
@@ -810,8 +803,7 @@ var UploaderComponent = /** @class */ (function () {
         this.http = http;
         this.uploader = this.fb.group({});
     }
-    UploaderComponent.prototype.ngOnInit = function () {
-    };
+    UploaderComponent.prototype.ngOnInit = function () { };
     UploaderComponent.prototype.fileChange = function (fileList) {
         this.fileList = fileList;
         console.log('fileList', this.fileList);
