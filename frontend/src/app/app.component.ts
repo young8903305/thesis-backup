@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -14,7 +14,7 @@ declare var jquery: any; // 這邊用 var
     providers: [ AppService ]
 })
 
-export class AppComponent {
+export class AppComponent implements OnChanges {
 
     title = 'ng-test';
     pathValue = '';
@@ -32,6 +32,9 @@ export class AppComponent {
     gotoindex() {
         this.welcomeMessage = true;
         this.router.navigate(['/']);
+    }
+
+    ngOnChanges() {
     }
 
 }

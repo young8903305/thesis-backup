@@ -17,7 +17,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     form_receive = this.fb.group({});
 
     storageIndex = 0;
-    display_storage = sessionStorage;
+    // display_storage = sessionStorage;
     storageMap = new Map<string, number>();
 
     constructor(private fb: FormBuilder,
@@ -78,9 +78,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
         const key = temp.split('.')[temp.split('.').length - 1];
         sessionStorage.setItem( key, JSON.stringify(this.form_receive.value));
-        for (let i = 0; i < sessionStorage.length; i++) {
+        /*for (let i = 0; i < sessionStorage.length; i++) {
             console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
-        }
+        }*/
     }
 
     // clear the form data

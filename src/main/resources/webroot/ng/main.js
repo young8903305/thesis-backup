@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\"></tree-root>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" ></tree-root>\n<!--\n<ng-container *ngIf=\"temp.length!==0\">\n    <p *ngFor=\"let item of temp\">\n        temp Value: {{ item }}\n    </p>\n</ng-container>\n-->"
 
 /***/ }),
 
@@ -61,9 +61,10 @@ __webpack_require__.r(__webpack_exports__);
 
 var AngularTreeComponent = /** @class */ (function () {
     function AngularTreeComponent() {
-        this.nodes = [
+        this.storageLength = 0;
+        /*nodes = [
             {
-                name: 'PersonDemo',
+                name: 'PersonDemo1',
                 'children': [
                     {
                         name: '@id'
@@ -73,28 +74,88 @@ var AngularTreeComponent = /** @class */ (function () {
                     },
                     {
                         name: 'lastName',
+    
                     },
                     {
                         name: 'firstName',
+    
                     },
                     {
                         name: 'password',
+    
                     },
                     {
                         name: 'email',
+    
                     },
                     {
                         name: 'color',
+    
+                    },
+                    {
+                        name: 'test',
+                    },
+                ]
+            },
+            {
+                name: 'PersonDemo2',
+                'children': [
+                    {
+                        name: '@id'
+                    },
+                    {
+                        name: 'age',
+                    },
+                    {
+                        name: 'lastName',
+    
+                    },
+                    {
+                        name: 'firstName',
+    
+                    },
+                    {
+                        name: 'password',
+    
+                    },
+                    {
+                        name: 'email',
+    
+                    },
+                    {
+                        name: 'color',
+    
                     },
                     {
                         name: 'test',
                     },
                 ]
             }
-        ];
+        ];*/
         this.options = {};
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
+    };
+    AngularTreeComponent.prototype.ngDoCheck = function () {
+        if (this.storageLength !== sessionStorage.length) {
+            // console.log('length: ', this.temp);
+            this.nodes = [];
+            for (var i = 0; i < sessionStorage.length; i++) {
+                // console.log('Key: ', Object.keys(sessionStorage)[i]);
+                var parent_1 = { name: '', 'children': [] };
+                parent_1['name'] = Object.keys(sessionStorage)[i];
+                for (var _i = 0, _a = Object.keys(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
+                    var item = _a[_i];
+                    console.log('content: ', item);
+                    parent_1.children.push({ name: item });
+                }
+                this.nodes.push(parent_1);
+            }
+            console.log(this.nodes);
+        }
+        this.storageLength = sessionStorage.length;
+    };
+    AngularTreeComponent.prototype.ngOnChanges = function () {
     };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -215,6 +276,8 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.gotoindex = function () {
         this.welcomeMessage = true;
         this.router.navigate(['/']);
+    };
+    AppComponent.prototype.ngOnChanges = function () {
     };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -650,7 +713,7 @@ var GenerateFormComponent = /** @class */ (function () {
         this.subCreate = subCreate;
         this.form_receive = this.fb.group({});
         this.storageIndex = 0;
-        this.display_storage = sessionStorage;
+        // display_storage = sessionStorage;
         this.storageMap = new Map();
     }
     GenerateFormComponent.prototype.ngOnInit = function () {
@@ -700,9 +763,9 @@ var GenerateFormComponent = /** @class */ (function () {
         var temp = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
         var key = temp.split('.')[temp.split('.').length - 1];
         sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
-        for (var i = 0; i < sessionStorage.length; i++) {
+        /*for (let i = 0; i < sessionStorage.length; i++) {
             console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
-        }
+        }*/
     };
     // clear the form data
     GenerateFormComponent.prototype.clear = function () {
