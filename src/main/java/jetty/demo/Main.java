@@ -106,6 +106,7 @@ public class Main {
 	private static String[] arguments;
 	
 	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();
+	private static HashMap<String, String> objectMap = new HashMap<String, String>();
 	
 
 	@SuppressWarnings("serial")
@@ -673,7 +674,7 @@ public class Main {
 		        					System.out.println("PersonDemo");
 		        					String temp = sessionStorage.get(node.getValue().asText());
 			        				System.out.println("temp name: " + node.getKey() + "\ntemp value: " + temp);
-		        					formValue.add( CreateOb(temp, node.getKey()) );
+		        					//formValue.add( CreateOb(temp, node.getKey()) );
 		        				//}else {
 		        				//}
 		        			}else {		// list
@@ -738,6 +739,7 @@ public class Main {
 		    String className = jsNode.get("@type").asText();
 		    System.out.println("class name: " + className);
 		    
+		    /*
 		    // get field's type and put them into List, then change type into Class<?>[]
 		    Class<?> pClass = null;
 		    ArrayList<Class> fieldClass = new ArrayList<Class>();
@@ -806,18 +808,19 @@ public class Main {
 				String jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(instance);
 				System.out.println("ouput String\n" + jsonStr + "\noutput.json done");
 				
-				// test for Family object
-				/*Family obj = mapper.readValue(jsonStr, Family.class);
-				System.out.println(obj.getFather().getAge());
-				System.out.println(obj.getMother().getColor());
-				System.out.println(obj.getChildren().size());*/
-				
 				
 				
 			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalArgumentException |
 					 InstantiationException | IllegalAccessException | InvocationTargetException e) {
 				e.printStackTrace();
-			}
+			}*/
+			
+			FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
+		    byte[] strToBytes = str.getBytes();
+		    outputStream.write(strToBytes);
+		    outputStream.close();
+				
+			
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
@@ -953,15 +956,16 @@ public class Main {
 		    
 			
 		    Class<?> pClass = null;
-		    ObjectNode objectNode = ob.createObjectNode();	// make json string to output : { fieldName : fieldValue }
-		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style]
+		    ObjectNode defaultValueNode = ob.createObjectNode();	// make json string to output : { fieldName : fieldDefaultValue }
+		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style ]
+		    ObjectNode typeNode = ob.createObjectNode();	// [ fieldName : type ]
 			try {
 				pClass = Class.forName(className);
 				// Field
 				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
 				
-				objectNode.put("@id", sessionID);
-				objectNode.put("@type", className);
+				defaultValueNode.put("@id", sessionID);
+				defaultValueNode.put("@type", className);
 				
 				Annotation annotation;
 				AnnotationForm var;
@@ -972,8 +976,9 @@ public class Main {
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
 							case color :
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());	// get default value
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());	// get default value
 								styleNode.put(f.getName(), "color");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							/*case checkbox:	// need to fix
 								ArrayNode aNode = ob.createArrayNode();
@@ -987,28 +992,34 @@ public class Main {
 								styleNode.put(f.getName(), "checkbox");
 								break;*/
 							case date:
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "date");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case datetime_local:
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "datetime-local");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case email:
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "email");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case month:
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "month");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case number:
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "number");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case password :
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "password");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							/*case radio :	// need to fix
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
@@ -1019,21 +1030,25 @@ public class Main {
 								styleNode.put(f.getName(), "range");
 								break;*/
 							case text :
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case time :
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "time");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case week :
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "week");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
-						objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+						defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 						styleNode.put(f.getName(), "textarea");
+						typeNode.put(f.getName(), f.getType().getSimpleName());
 					}
 				}
 				
@@ -1042,10 +1057,10 @@ public class Main {
 			}
 			
 			// System.out.println("objectNode: " + ob.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode));
-			System.out.println("objectNode: " + objectNode.toString());
+			System.out.println("objectNode: " + defaultValueNode.toString());
 			System.out.println("styleNode: " + styleNode.toString());
 			
-			String responce_json = "[" + objectNode.toString() + "," + styleNode.toString() + "]";
+			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + "]";
 			
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");

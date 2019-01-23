@@ -96,13 +96,13 @@ export class AngularTreeComponent implements OnInit, OnChanges, DoCheck {
               // console.log('Key: ', Object.keys(sessionStorage)[i]);
               const parent = { name: '', 'children': [] };
               parent['name'] = Object.keys(sessionStorage)[i];
-              for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
-                  console.log('content: ', item);
+              for (const item of Object.keys(JSON.parse( Object.values(sessionStorage)[i]) )) {
+                  // console.log('content: ', item);
                   parent.children.push({ name: item });
               }
               this.nodes.push(parent);
           }
-          console.log(this.nodes);
+          // console.log(this.nodes);
       }
       this.storageLength = sessionStorage.length;
   }

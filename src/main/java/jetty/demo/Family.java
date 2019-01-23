@@ -19,8 +19,8 @@ public class Family implements Serializable {
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "mother")
 	private PersonDemo mother;
 	
-	/*@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "children")
-	private List<PersonDemo> children = new ArrayList<PersonDemo>();*/
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "children")
+	private List<PersonDemo> children = new ArrayList<PersonDemo>();
 	
 	public Family(PersonDemo father, PersonDemo mother, List<PersonDemo> children ) {
 		setFather(father);

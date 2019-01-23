@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" ></tree-root>\n<!--\n<ng-container *ngIf=\"temp.length!==0\">\n    <p *ngFor=\"let item of temp\">\n        temp Value: {{ item }}\n    </p>\n</ng-container>\n-->"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" ></tree-root>\n"
 
 /***/ }),
 
@@ -146,12 +146,12 @@ var AngularTreeComponent = /** @class */ (function () {
                 parent_1['name'] = Object.keys(sessionStorage)[i];
                 for (var _i = 0, _a = Object.keys(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
                     var item = _a[_i];
-                    console.log('content: ', item);
+                    // console.log('content: ', item);
                     parent_1.children.push({ name: item });
                 }
                 this.nodes.push(parent_1);
             }
-            console.log(this.nodes);
+            // console.log(this.nodes);
         }
         this.storageLength = sessionStorage.length;
     };
@@ -685,7 +685,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input  type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] =='textarea'\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"sessionStore()\">store</button>\n<br>\n<button (click)=\"clear()\">clear</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input  type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] =='textarea'\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
 
 /***/ }),
 
@@ -712,9 +712,10 @@ var GenerateFormComponent = /** @class */ (function () {
         this.fb = fb;
         this.subCreate = subCreate;
         this.form_receive = this.fb.group({});
-        this.storageIndex = 0;
-        // display_storage = sessionStorage;
-        this.storageMap = new Map();
+        this.storageIndex = 1;
+        this.storageMap = new Map(); // <class-name, count>
+        this.idMap = new Map(); // <sessionStorage-key, @id>
+        this.checkMap = new Map(); // <sessionStorage-key, used/wait>
     }
     GenerateFormComponent.prototype.ngOnInit = function () {
     };
@@ -722,53 +723,92 @@ var GenerateFormComponent = /** @class */ (function () {
     GenerateFormComponent.prototype.ngOnChanges = function () {
         this.classMember = Object.keys(this.generate_form_receive[0]); //
         this.MemberStyle = this.generate_form_receive[1]; //
+        this.MemberType = this.generate_form_receive[2];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
         console.log('classMember: ', this.classMember);
         console.log('MemberStyle: ', this.MemberStyle);
-        console.log('this.generate_form_receive[0]', this.generate_form_receive[0]);
-        console.log('this.generate_form_receive[1]', this.generate_form_receive[1]);
+        console.log('MemberType: ', this.MemberType);
+    };
+    GenerateFormComponent.prototype.jsogGen = function (form) {
+        this.jsog = {};
+        /* temp: sessionStorage's class type and index;
+           key: split temp and use the last one be the real key */
+        var tempType = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        var key = tempType.split('.')[tempType.split('.').length - 1];
+        console.log('key: ', key);
+        this.checkMap.set(key, true);
+        for (var i = 0; i < Object.keys(form).length; i++) {
+            var tempKey = Object.keys(form)[i];
+            if ((tempKey !== '@id') && (tempKey !== '@type')) {
+                if (sessionStorage.getItem(form[tempKey]) !== null) { // sessionStorage has it.
+                    if (this.checkMap.has(form[tempKey])) { // used
+                        var temp = {};
+                        temp['@ref'] = this.idMap.get(form[tempKey]);
+                        temp['@type'] = 'jetty.demo.PersonDemo'; // sessionStorage.getItem(form[tempKey];
+                        form[tempKey] = temp;
+                    }
+                    else { // haven't used it yet
+                        console.log('PersonDemo1 ', sessionStorage.getItem(form[tempKey]));
+                        this.checkMap.set(form[tempKey], true);
+                        this.jsogGen(JSON.parse(sessionStorage.getItem(form[tempKey])));
+                        form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                        console.log('checkMap', this.checkMap);
+                    }
+                }
+            }
+            this.jsog[tempKey] = form[tempKey];
+        }
     };
     GenerateFormComponent.prototype.output = function () {
-        // simple output form value
+        for (var i = 0; i < sessionStorage.length; i++) {
+            this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
+            // this.checkMap.set(Object.keys(sessionStorage)[i], false);
+        }
+        console.log('idMap ', this.idMap);
+        console.log('checkMap', this.checkMap);
+        console.log('length ', this.form_receive.value);
+        this.jsogGen(this.form_receive.value);
+        this.checkMap.clear();
+        console.log('jsog ', this.jsog);
+        // output form value to ngFormOutput
         console.log('form.value: ', this.form_receive.value);
-        this.subCreate.ouputObject(this.form_receive.value).subscribe(function (response) {
+        // this.subCreate.ouputObject(this.form_receive.value).subscribe(response => {
+        this.subCreate.ouputObject(this.jsog).subscribe(function (response) {
             console.log('output', response);
         });
-        // sessionStorage pass to server
-        console.log('sessionStorage: ', sessionStorage);
+        // sessionStorage pass to server ngSessionStorage
+        // console.log('sessionStorage: ', sessionStorage);
         this.subCreate.outputsessionStorage(sessionStorage).subscribe(function (response) {
-            console.log('session response', response);
+            console.log('ngSessionStorage response', response);
         });
     };
     // sessionStorage just accept string type key/value
-    GenerateFormComponent.prototype.sessionStore = function () {
-        console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value));
+    GenerateFormComponent.prototype.store = function () {
+        console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value['@type']));
         // get object type => store object use its type-name and index, storageMap count the same class-name object
-        console.log('this.form_receive.get(type)', JSON.stringify(this.form_receive.value['@type']));
+        // console.log('this.form_receive.get(type)', JSON.stringify(this.form_receive.value['@type']));
         if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {
-            console.log(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+            // console.log(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
             var value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
             value++;
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
-            this.form_receive.value['@id'] = value; // modified @id with class count
-            console.log('map', this.storageMap);
+            // this.form_receive.value['@id'] = value; // modified @id with class count
         }
         else {
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
-            this.form_receive.value['@id'] = 1;
+            // this.form_receive.value['@id'] = 1;
         }
-        // temp: sessionStorage's type and index;
-        // key: split temp and use the last one be the real key
+        this.form_receive.value['@id'] = this.storageIndex;
+        this.storageIndex++;
+        /* temp: sessionStorage's class type and index;
+           key: split temp and use the last one be the real key */
         var temp = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
         var key = temp.split('.')[temp.split('.').length - 1];
         sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
-        /*for (let i = 0; i < sessionStorage.length; i++) {
-            console.log('display_storage', i, JSON.parse(Object.values(sessionStorage)[i]));
-        }*/
     };
     // clear the form data
-    GenerateFormComponent.prototype.clear = function () {
+    GenerateFormComponent.prototype.clearForm = function () {
         this.classMember = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
@@ -776,6 +816,7 @@ var GenerateFormComponent = /** @class */ (function () {
     GenerateFormComponent.prototype.clearSession = function () {
         sessionStorage.clear();
         this.storageMap.clear();
+        this.storageIndex = 1;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),

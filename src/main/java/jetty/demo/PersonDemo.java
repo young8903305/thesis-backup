@@ -25,7 +25,7 @@ public class PersonDemo implements Serializable{
 			name = "lastName")
 	private String lastName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "yi") }, name = "firstName")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "yi") }, name = "First Name")
 	private String firstName;
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.password, value = "aaa") }, name = "password")
@@ -43,10 +43,10 @@ public class PersonDemo implements Serializable{
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "spouse")
 	private PersonDemo spouse;
 	
-	public PersonDemo (int age, String firstname, String lastname, String description, String email, String color, String test, PersonDemo p) {
+	public PersonDemo (int age, String lastname, String firstname, String description, String email, String color, String test, PersonDemo p) {
 		setAge(age);
-		setFirstName(firstname);
 		setLastName(lastname);
+		setFirstName(firstname);
 		setPassword(description);
 		setEmail(email);
 		setColor(color);
