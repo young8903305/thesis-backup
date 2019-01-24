@@ -957,7 +957,7 @@ public class Main {
 		    
 			
 		    Class<?> pClass = null;
-		    ObjectNode defaultValueNode = ob.createObjectNode();	// make json string to output : { fieldName : fieldDefaultValue }
+		    ObjectNode defaultValueNode = ob.createObjectNode();	// make json string to output : { fieldName : formDisplyName }
 		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style ]
 		    ObjectNode typeNode = ob.createObjectNode();	// [ fieldName : type ]
 			try {
