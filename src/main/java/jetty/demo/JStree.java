@@ -205,7 +205,7 @@ public class JStree {
 			System.out.println(a.get(i));
 		}*/
 		
-		System.out.println("PD "+ PersonDemo);
+		//System.out.println("PD "+ PersonDemo);
 		
 	    
 	    
@@ -223,10 +223,8 @@ public class JStree {
 		p1.setTest("11:59");
 		PersonDemo p2 = new PersonDemo(2, "yi", "huang", "aaa", "123@gmail.com", "#ff0000", "11:59", p1);
 		p1.setSpouse(p2);
-		
 		String ps = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(p1);
 		//System.out.println("ps "+ps);
-		
 		Family f = new Family();
 		f.setFather(p1);
 		f.setMother(p2);
@@ -234,8 +232,8 @@ public class JStree {
 		persons.add(p1);
 		persons.add(p2);
 		//f.setChildren(persons);
-		
 		String pf = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(f);
-		System.out.println("pf\n"+pf);
+		//System.out.println("pf\n"+pf);
+		
 	}
 }

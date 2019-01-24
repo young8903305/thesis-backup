@@ -819,6 +819,7 @@ public class Main {
 		    byte[] strToBytes = str.getBytes();
 		    outputStream.write(strToBytes);
 		    outputStream.close();
+		    System.out.println("done.");
 				
 			
 			
@@ -927,7 +928,7 @@ public class Main {
 	// use class name, get class member and send 
 	public static class ngNameCreateForm extends HttpServlet {
 		
-		int sessionID = 1;
+		String sessionID = "1";
 		
 		public void init() throws ServletException {
 		}

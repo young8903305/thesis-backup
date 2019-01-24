@@ -43,16 +43,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('MemberType: ', this.MemberType);
     }
 
-    jsogGen(form) {   // form = this.form_receive.value
-        this.jsog = {};
-
-        /* temp: sessionStorage's class type and index;
-           key: split temp and use the last one be the real key */
-        const tempType = this.form_receive.value['@type'].concat(
-            this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
-        const key = tempType.split('.')[tempType.split('.').length - 1];
-        console.log('key: ', key);
-        this.checkMap.set(key, true);
+    jsogGen(form) {   // form = this.form_receive.value (object)
+        const jsogS = {};
 
         for (let i = 0; i < Object.keys(form).length; i++) {
             const tempKey = Object.keys(form)[i];
@@ -63,17 +55,19 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         temp['@ref'] = this.idMap.get(form[tempKey]);
                         temp['@type'] = 'jetty.demo.PersonDemo'; // sessionStorage.getItem(form[tempKey];
                         form[tempKey] = temp;
+                        console.log('form[tempKey]: ', form[tempKey]);
                     } else {    // haven't used it yet
                         console.log('PersonDemo1 ', sessionStorage.getItem(form[tempKey]));
                         this.checkMap.set(form[tempKey], true);
-                        this.jsogGen(JSON.parse(sessionStorage.getItem(form[tempKey])));
-                        form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                        form[tempKey] = this.jsogGen(JSON.parse(sessionStorage.getItem(form[tempKey])));
+                        // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
                         console.log('checkMap', this.checkMap);
                     }
                 }
             }
-            this.jsog[tempKey] = form[tempKey];
+                jsogS[tempKey] = form[tempKey];
         }
+        return jsogS;
     }
 
     output() {
@@ -85,7 +79,15 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('idMap ', this.idMap);
         console.log('checkMap', this.checkMap);
         console.log('length ', this.form_receive.value);
-        this.jsogGen( this.form_receive.value );
+
+        /* temp: sessionStorage's class type and index;
+           key: split temp and use the last one be the real key */
+        const tempType = this.form_receive.value['@type'].concat(
+            this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        const key = tempType.split('.')[tempType.split('.').length - 1];
+        console.log('key: ', key);
+        this.checkMap.set(key, true);
+        this.jsog = this.jsogGen( this.form_receive.value );
         this.checkMap.clear();
         console.log('jsog ', this.jsog);
 
@@ -119,7 +121,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
             // this.form_receive.value['@id'] = 1;
         }
-        this.form_receive.value['@id'] = this.storageIndex;
+        this.form_receive.value['@id'] = this.storageIndex.toString();
         this.storageIndex++;
 
         /* temp: sessionStorage's class type and index;

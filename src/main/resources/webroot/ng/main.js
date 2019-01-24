@@ -731,13 +731,7 @@ var GenerateFormComponent = /** @class */ (function () {
         console.log('MemberType: ', this.MemberType);
     };
     GenerateFormComponent.prototype.jsogGen = function (form) {
-        this.jsog = {};
-        /* temp: sessionStorage's class type and index;
-           key: split temp and use the last one be the real key */
-        var tempType = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
-        var key = tempType.split('.')[tempType.split('.').length - 1];
-        console.log('key: ', key);
-        this.checkMap.set(key, true);
+        var jsogS = {};
         for (var i = 0; i < Object.keys(form).length; i++) {
             var tempKey = Object.keys(form)[i];
             if ((tempKey !== '@id') && (tempKey !== '@type')) {
@@ -747,18 +741,20 @@ var GenerateFormComponent = /** @class */ (function () {
                         temp['@ref'] = this.idMap.get(form[tempKey]);
                         temp['@type'] = 'jetty.demo.PersonDemo'; // sessionStorage.getItem(form[tempKey];
                         form[tempKey] = temp;
+                        console.log('form[tempKey]: ', form[tempKey]);
                     }
                     else { // haven't used it yet
                         console.log('PersonDemo1 ', sessionStorage.getItem(form[tempKey]));
                         this.checkMap.set(form[tempKey], true);
-                        this.jsogGen(JSON.parse(sessionStorage.getItem(form[tempKey])));
-                        form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                        form[tempKey] = this.jsogGen(JSON.parse(sessionStorage.getItem(form[tempKey])));
+                        // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
                         console.log('checkMap', this.checkMap);
                     }
                 }
             }
-            this.jsog[tempKey] = form[tempKey];
+            jsogS[tempKey] = form[tempKey];
         }
+        return jsogS;
     };
     GenerateFormComponent.prototype.output = function () {
         for (var i = 0; i < sessionStorage.length; i++) {
@@ -768,7 +764,13 @@ var GenerateFormComponent = /** @class */ (function () {
         console.log('idMap ', this.idMap);
         console.log('checkMap', this.checkMap);
         console.log('length ', this.form_receive.value);
-        this.jsogGen(this.form_receive.value);
+        /* temp: sessionStorage's class type and index;
+           key: split temp and use the last one be the real key */
+        var tempType = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        var key = tempType.split('.')[tempType.split('.').length - 1];
+        console.log('key: ', key);
+        this.checkMap.set(key, true);
+        this.jsog = this.jsogGen(this.form_receive.value);
         this.checkMap.clear();
         console.log('jsog ', this.jsog);
         // output form value to ngFormOutput
@@ -799,7 +801,7 @@ var GenerateFormComponent = /** @class */ (function () {
             this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
             // this.form_receive.value['@id'] = 1;
         }
-        this.form_receive.value['@id'] = this.storageIndex;
+        this.form_receive.value['@id'] = this.storageIndex.toString();
         this.storageIndex++;
         /* temp: sessionStorage's class type and index;
            key: split temp and use the last one be the real key */
