@@ -72,6 +72,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.tomcat.util.scan.StandardJarScanner;
@@ -716,6 +717,10 @@ public class Main {
 			maxFileSize = 1024 * 1024 * 50
 	)
 	public static class ngFormOutput extends HttpServlet{
+		
+		JFrame parentFrame = new JFrame();
+	    JFileChooser fileChooser = new JFileChooser();
+	    
 		public void init() throws ServletException{}
 		
 		@Override
@@ -815,14 +820,28 @@ public class Main {
 				e.printStackTrace();
 			}*/
 			
-			FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
+		    
+		    fileChooser.setDialogTitle("Specify a file to save");   
+		     
+		    int userSelection = fileChooser.showSaveDialog(parentFrame);
+		    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    File fileToSave = null;
+		     
+		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+		        fileToSave = fileChooser.getSelectedFile();
+		        System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+		    }
+		    
+		    // write json string out to the file
+			//FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
+			FileOutputStream outputStream = new FileOutputStream(fileToSave.getAbsolutePath());
 		    byte[] strToBytes = str.getBytes();
 		    outputStream.write(strToBytes);
 		    outputStream.close();
 		    System.out.println("done.");
-				
-			
-			
+		    
+		    
+		    
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
@@ -957,7 +976,7 @@ public class Main {
 		    
 			
 		    Class<?> pClass = null;
-		    ObjectNode defaultValueNode = ob.createObjectNode();	// make json string to output : { fieldName : formDisplyName }
+		    ObjectNode defaultValueNode = ob.createObjectNode();	// make json string to output : { fieldName : field  DefaultValue }
 		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style ]
 		    ObjectNode typeNode = ob.createObjectNode();	// [ fieldName : type ]
 			try {

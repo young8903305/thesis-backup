@@ -57,8 +57,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AngularTreeComponent", function() { return AngularTreeComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
+
+var _a;
 
 
+var actionMapping = {
+    mouse: {
+        contextMenu: function (tree, node, $event) {
+            $event.preventDefault();
+            alert("context menu for " + node.data.name);
+        },
+        dblClick: function (tree, node, $event) {
+            if (node.hasChildren) {
+                angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_EXPANDED(tree, node, $event);
+            }
+        },
+        click: function (tree, node, $event) {
+            $event.shiftKey
+                ? angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE_MULTI(tree, node, $event)
+                : angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(tree, node, $event);
+        }
+    },
+    keys: (_a = {},
+        _a[angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["KEYS"].ENTER] = function (tree, node, $event) { return alert("This is " + node.data.name); },
+        _a)
+};
 var AngularTreeComponent = /** @class */ (function () {
     function AngularTreeComponent() {
         this.storageLength = 0;
@@ -132,7 +156,9 @@ var AngularTreeComponent = /** @class */ (function () {
                 ]
             }
         ];*/
-        this.options = {};
+        this.options = {
+            actionMapping: actionMapping
+        };
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
     };
