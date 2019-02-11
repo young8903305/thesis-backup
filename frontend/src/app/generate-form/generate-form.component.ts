@@ -13,9 +13,9 @@ import { store } from '@angular/core/src/render3';
 export class GenerateFormComponent implements OnInit, OnChanges {
 
     @Input() generate_form_receive;
-    classMember;
-    MemberStyle;
-    MemberType; // use for list, not yet
+    Member;         // defaultValueNode
+    MemberStyle;    // styleNode
+    MemberType;     // typeNode. use for list, not yet
     form_receive = this.fb.group({});
 
     storageIndex = 1;
@@ -33,12 +33,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // receieve the class info form create component
     ngOnChanges() {
-        this.classMember = Object.keys(this.generate_form_receive[0]);  //
-        this.MemberStyle = this.generate_form_receive[1];   //
-        this.MemberType = this.generate_form_receive[2];
+        this.Member = Object.keys(this.generate_form_receive[0]);  // defaultValueNode
+        this.MemberStyle = this.generate_form_receive[1];   // styleNode
+        this.MemberType = this.generate_form_receive[2];    // typeNode
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('classMember: ', this.classMember);
+        console.log('Member: ', this.Member);
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
     }
@@ -134,7 +134,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // clear the form data
     clearForm() {
-        this.classMember = undefined;
+        this.Member = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
     }

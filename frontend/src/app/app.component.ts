@@ -31,6 +31,7 @@ export class AppComponent implements OnChanges {
 
     gotoindex() {
         this.welcomeMessage = true;
+        sessionStorage.clear();
         this.router.navigate(['/']);
     }
 

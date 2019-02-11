@@ -17,8 +17,8 @@ export class UploaderComponent implements OnInit {
     fileToUpload;
     fileList;   // upload file is stored by list type in js
 
-    // fileForm = this.fb.group({});
-    fileForm;
+    fileForm = this.fb.group({});
+    // fileForm;
 
     constructor(private fb: FormBuilder,
         private uploaderService: UploaderService,
@@ -40,8 +40,8 @@ export class UploaderComponent implements OnInit {
         this.uploaderService.uploadFile(formData).subscribe(response => {
             console.log('response', response);
             console.log('response.body', response.body);
-            // this.fileForm = this.fb.group(response.body);
-            this.fileForm = response.body;
+            this.fileForm = this.fb.group(response.body);
+            // this.fileForm = response.body;
         });
     }
 }

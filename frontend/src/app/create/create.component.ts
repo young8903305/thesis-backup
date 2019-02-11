@@ -21,12 +21,12 @@ export class CreateComponent implements OnInit {
     }
 
     dataClassName: any;
-    receive;
+    receive: any;
 
     ngOnInit() {}
 
     // if user choose the different class, re-get from the server, and pass to the generate-form component
-    postClass(item) {
+    postClass(item: any) {
         const obItem = {'name': item};
         console.log(obItem);
         this.createService.postClass(obItem).subscribe(response => {

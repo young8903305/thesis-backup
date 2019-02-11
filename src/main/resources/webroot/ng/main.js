@@ -57,31 +57,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AngularTreeComponent", function() { return AngularTreeComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
-
-var _a;
 
 
 var actionMapping = {
     mouse: {
         contextMenu: function (tree, node, $event) {
+            // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
             $event.preventDefault();
-            alert("context menu for " + node.data.name);
-        },
-        dblClick: function (tree, node, $event) {
-            if (node.hasChildren) {
-                angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_EXPANDED(tree, node, $event);
+            if (node.isRoot) {
+                var x = confirm('Delete ?');
+                if (x) {
+                    // remove from original nodes array
+                    // _.remove(node.parent.data.children, node.data);
+                    sessionStorage.removeItem(node.data.name);
+                }
             }
-        },
-        click: function (tree, node, $event) {
-            $event.shiftKey
-                ? angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE_MULTI(tree, node, $event)
-                : angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(tree, node, $event);
+            tree.update();
         }
-    },
-    keys: (_a = {},
-        _a[angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["KEYS"].ENTER] = function (tree, node, $event) { return alert("This is " + node.data.name); },
-        _a)
+    }
 };
 var AngularTreeComponent = /** @class */ (function () {
     function AngularTreeComponent() {
@@ -172,16 +165,17 @@ var AngularTreeComponent = /** @class */ (function () {
                 parent_1['name'] = Object.keys(sessionStorage)[i];
                 for (var _i = 0, _a = Object.keys(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
                     var item = _a[_i];
-                    // console.log('content: ', item);
-                    parent_1.children.push({ name: item });
+                    // console.log('content: ', item, '\nvalue: ', item.toString());
+                    parent_1.children.push({ name: item, val: item.toString() });
                 }
                 this.nodes.push(parent_1);
             }
-            // console.log(this.nodes);
+            // console.log('nodes: ', this.nodes);
         }
         this.storageLength = sessionStorage.length;
     };
-    AngularTreeComponent.prototype.ngOnChanges = function () {
+    AngularTreeComponent.prototype.sessionForm = function () {
+        console.log();
     };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -266,7 +260,7 @@ module.exports = "h1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n    \n<!--\n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n-->\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n\n<!--\n    <app-jstree></app-jstree>\n-->\n    <app-angular-tree></app-angular-tree>\n</div>\n"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n    \n<!--\n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n-->\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n\n<!--\n    <app-jstree></app-jstree>\n-->\n    <app-angular-tree></app-angular-tree>\n</div>\n"
 
 /***/ }),
 
@@ -301,6 +295,7 @@ var AppComponent = /** @class */ (function () {
     }
     AppComponent.prototype.gotoindex = function () {
         this.welcomeMessage = true;
+        sessionStorage.clear();
         this.router.navigate(['/']);
     };
     AppComponent.prototype.ngOnChanges = function () {
@@ -529,7 +524,7 @@ __webpack_require__.r(__webpack_exports__);
 var CreateService = /** @class */ (function () {
     function CreateService(http) {
         this.http = http;
-        this.createUrl = '/ngClassName';
+        this.createUrl = '/ngClassNames';
         this.sendUrl = '/ngNameCreateForm';
     }
     CreateService.prototype.getClassName = function () {
@@ -711,7 +706,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of classMember\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input  type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] =='textarea'\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input  type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] =='textarea'\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
 
 /***/ }),
 
@@ -747,12 +742,12 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
-        this.classMember = Object.keys(this.generate_form_receive[0]); //
-        this.MemberStyle = this.generate_form_receive[1]; //
-        this.MemberType = this.generate_form_receive[2];
+        this.Member = Object.keys(this.generate_form_receive[0]); // defaultValueNode
+        this.MemberStyle = this.generate_form_receive[1]; // styleNode
+        this.MemberType = this.generate_form_receive[2]; // typeNode
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('classMember: ', this.classMember);
+        console.log('Member: ', this.Member);
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
     };
@@ -837,7 +832,7 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {
-        this.classMember = undefined;
+        this.Member = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
     };
@@ -1004,7 +999,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"onSubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form> -->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"submit()\">\n  <label>\n    choose json file :\n    <input type=\"file\" size=\"80\" accept=\".json\" />\n  </label>\n  <button type=\"submit\">Form it</button>\n</form>\n<br>\n\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n"
+module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"submit()\">\n  <label>\n    choose json file :\n    <input type=\"file\" size=\"80\" accept=\".json\" />\n  </label>\n  <button type=\"submit\">Form it</button>\n</form>\n<br>\n\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n"
 
 /***/ }),
 
@@ -1029,11 +1024,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var UploaderComponent = /** @class */ (function () {
+    // fileForm;
     function UploaderComponent(fb, uploaderService, http) {
         this.fb = fb;
         this.uploaderService = uploaderService;
         this.http = http;
         this.uploader = this.fb.group({});
+        this.fileForm = this.fb.group({});
     }
     UploaderComponent.prototype.ngOnInit = function () { };
     UploaderComponent.prototype.fileChange = function (fileList) {
@@ -1050,8 +1047,8 @@ var UploaderComponent = /** @class */ (function () {
         this.uploaderService.uploadFile(formData).subscribe(function (response) {
             console.log('response', response);
             console.log('response.body', response.body);
-            // this.fileForm = this.fb.group(response.body);
-            _this.fileForm = response.body;
+            _this.fileForm = _this.fb.group(response.body);
+            // this.fileForm = response.body;
         });
     };
     UploaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

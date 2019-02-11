@@ -1,5 +1,5 @@
 <form [formGroup] = "form_receive" (ngSubmit) = "output()">
-  <ng-container *ngFor = "let key of classMember">
+  <ng-container *ngFor = "let key of Member">
     <label *ngIf = "key!=='@id' && key!=='@type'">
       {{ key }} :
     <input  type={{MemberStyle[key]}} formControlName={{key}}>

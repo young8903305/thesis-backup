@@ -10,7 +10,7 @@ import { Observable, throwError } from 'rxjs';
 @Injectable()
 export class CreateService {
 
-    createUrl = '/ngClassName';
+    createUrl = '/ngClassNames';
     sendUrl = '/ngNameCreateForm';
 
     constructor( private http: HttpClient ) { }

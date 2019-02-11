@@ -577,7 +577,8 @@ public class Main {
 				System.out.println("from file: " + fileContentStr);
 			} finally {
 			   fileContent.close();
-			}  
+			}
+			
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
@@ -587,6 +588,115 @@ public class Main {
 		}
 	}
 	
+	public static class ngEditSessionStorage extends HttpServlet {
+		public void init() throws ServletException {
+		}
+		
+		
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+		}
+		
+		@Override
+		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = mapper.readTree();
+			String className = node.get("@type").asText();
+			System.out.println("Class Name: " + className);
+			
+			Class<?> pClass = null;
+		    ObjectNode defaultValueNode = mapper.createObjectNode();	// make json string to output : { fieldName : field  DefaultValue }
+		    ObjectNode styleNode = mapper.createObjectNode();	// [ fieldName : style ]
+		    ObjectNode typeNode = mapper.createObjectNode();	// [ fieldName : type ]
+			try {
+				pClass = Class.forName(className);
+				// Field
+				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+				
+				Annotation annotation;
+				AnnotationForm var;
+				for (Field f : fieldlist) {
+					annotation = f.getAnnotation(AnnotationForm.class);
+					var = (AnnotationForm) annotation;
+					System.out.println(var.style()[0]);
+					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
+						switch (var.style()[0].input()) {
+							case color :
+								styleNode.put(f.getName(), "color");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							/*case checkbox:	// need to fix
+								ArrayNode aNode = ob.createArrayNode();
+								//if(f.getType()==Array.class || f.getType()==List.class) {
+									for(int i = 0; i<var.style()[0].value().length; i++) {
+										System.out.println("checkbox value : " + var.style()[0].value()[i]);
+										aNode.add(var.style()[0].value()[i]);
+									}
+								//}
+								objectNode.set(f.getName(), aNode);
+								styleNode.put(f.getName(), "checkbox");
+								break;*/
+							case date:
+								styleNode.put(f.getName(), "date");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case datetime_local:
+								styleNode.put(f.getName(), "datetime-local");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case email:
+								styleNode.put(f.getName(), "email");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case month:
+								styleNode.put(f.getName(), "month");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case number:
+								styleNode.put(f.getName(), "number");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case password :
+								styleNode.put(f.getName(), "password");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							/*case radio :	// need to fix
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								styleNode.put(f.getName(), "radio");
+								break;
+							case range :	// need to fix
+								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
+								styleNode.put(f.getName(), "range");
+								break;*/
+							case text :
+								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case time :
+								styleNode.put(f.getName(), "time");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case week :
+								styleNode.put(f.getName(), "week");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+						}
+					}else if(var.style()[0].textarea().length() > 0) {
+						styleNode.put(f.getName(), "textarea");
+						typeNode.put(f.getName(), f.getType().getSimpleName());
+					}
+				}
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + "]";
+		}
+		
+	}
+	
+	// when output json, need sessionStorage to create object's json-string
 	public static class ngSessionStorage extends HttpServlet {
 		public void init() throws ServletException{
 			sessionStorage.clear();
@@ -927,7 +1037,7 @@ public class Main {
 	}
 	
 	// parse arguments, make class pool
-	public static class ngClassName extends HttpServlet {
+	public static class ngClassNames extends HttpServlet {
 		public void init() throws ServletException {}
 		
 		@Override
@@ -1077,8 +1187,9 @@ public class Main {
 			}
 			
 			// System.out.println("objectNode: " + ob.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode));
-			System.out.println("objectNode: " + defaultValueNode.toString());
+			System.out.println("defaultValueNode: " + defaultValueNode.toString());
 			System.out.println("styleNode: " + styleNode.toString());
+			System.out.println("typeNode: " + typeNode.toString());
 			
 			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + "]";
 			
@@ -1194,7 +1305,7 @@ public class Main {
 		servletContextHandler.addServlet(InputFilePath.class, "/InputFilePath");
 		servletContextHandler.addServlet(EditFinish.class, "/EditFinish");
 		servletContextHandler.addServlet(ngEdit.class, "/ngEdit");
-		servletContextHandler.addServlet(ngClassName.class, "/ngClassName");
+		servletContextHandler.addServlet(ngClassNames.class, "/ngClassNames");
 		servletContextHandler.addServlet(ngNameCreateForm.class, "/ngNameCreateForm");
 		servletContextHandler.addServlet(ngFormOutput.class, "/ngFormOutput");
 		servletContextHandler.addServlet(ngSessionStorage.class, "/ngSessionStorage");
