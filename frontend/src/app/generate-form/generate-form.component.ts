@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output} from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { FormGroupName } from '@angular/forms';
 import { GenerateFormService } from './generate-form.service';
@@ -92,8 +92,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('jsog ', this.jsog);
 
         // output form value to ngFormOutput
-        console.log('form.value: ', this.form_receive.value);
-        // this.subCreate.ouputObject(this.form_receive.value).subscribe(response => {
+        // console.log('form.value: ', this.form_receive.value);
         this.subCreate.ouputObject( this.jsog ).subscribe(response => {
             console.log('output', response);
         });

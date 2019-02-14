@@ -592,17 +592,24 @@ public class Main {
 		public void init() throws ServletException {
 		}
 		
-		
-		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-		}
-		
 		@Override
-		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			StringBuilder sb = new StringBuilder();
+		    BufferedReader reader = request.getReader();
+		    try {
+		        String line;
+		        while ((line = reader.readLine()) != null) {
+		            sb.append(line).append('\n');
+		        }
+		    } finally {
+		        reader.close();
+		    }
+			String str = sb.toString();
 			
 			ObjectMapper mapper = new ObjectMapper();
-			JsonNode node = mapper.readTree();
+			JsonNode node = mapper.readTree(str);
 			String className = node.get("@type").asText();
-			System.out.println("Class Name: " + className);
 			
 			Class<?> pClass = null;
 		    ObjectNode defaultValueNode = mapper.createObjectNode();	// make json string to output : { fieldName : field  DefaultValue }
@@ -618,7 +625,7 @@ public class Main {
 				for (Field f : fieldlist) {
 					annotation = f.getAnnotation(AnnotationForm.class);
 					var = (AnnotationForm) annotation;
-					System.out.println(var.style()[0]);
+					//System.out.println(var.style()[0]);
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
 							case color :
@@ -680,6 +687,8 @@ public class Main {
 								styleNode.put(f.getName(), "week");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
+							default:
+								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
 						styleNode.put(f.getName(), "textarea");
@@ -692,6 +701,12 @@ public class Main {
 			}
 			
 			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + "]";
+			
+			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
+			response.setContentType("text/plain");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write(responce_json);
 		}
 		
 	}
@@ -725,11 +740,11 @@ public class Main {
 			Iterator<Entry<String, JsonNode>> jsonNodes = node.fields();
 			while (jsonNodes.hasNext()) {  
 		        Entry<String, JsonNode> jnode = jsonNodes.next();
-		        JsonNode jNode = jnode.getValue();
+		        // JsonNode jNode = jnode.getValue();
 		        sessionStorage.put(jnode.getKey(), jnode.getValue().asText());
 			}
 			
-			sessionStorage.forEach((k, v) -> System.out.println(k + ":" + v));
+			sessionStorage.forEach((k, v) -> System.out.println(k + " : " + v));
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/plain");
@@ -849,10 +864,10 @@ public class Main {
 			String str = sb.toString();
 			System.out.println("form value: "+ str);
 			
-			ObjectMapper ob = new ObjectMapper();
+			/*ObjectMapper ob = new ObjectMapper();
 		    JsonNode jsNode = ob.readTree(str);
 		    String className = jsNode.get("@type").asText();
-		    System.out.println("class name: " + className);
+		    System.out.println("class name: " + className);*/
 		    
 		    /*
 		    // get field's type and put them into List, then change type into Class<?>[]
@@ -1309,6 +1324,7 @@ public class Main {
 		servletContextHandler.addServlet(ngNameCreateForm.class, "/ngNameCreateForm");
 		servletContextHandler.addServlet(ngFormOutput.class, "/ngFormOutput");
 		servletContextHandler.addServlet(ngSessionStorage.class, "/ngSessionStorage");
+		servletContextHandler.addServlet(ngEditSessionStorage.class, "/ngEditSessionStorage");
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());
         fileUploadServletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement("data/tmp"));

@@ -1,24 +1,39 @@
-import { Component, OnInit, DoCheck, OnChanges } from '@angular/core';
+import { Component, OnInit, DoCheck, Output, EventEmitter } from '@angular/core';
 import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions } from 'angular-tree-component';
-import * as _ from 'lodash'; // _.remove.......
+// import * as _ from 'lodash'; // _.remove.......
 
-const actionMapping: IActionMapping = {
-    mouse: {    // mouse action
-        contextMenu: (tree, node, $event) => {  // right click
-            // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
-            $event.preventDefault();
-            if (node.isRoot) {
-                const x = confirm('Delete ?');
-                if (x) {
-                    // remove from original nodes array
-                    // _.remove(node.parent.data.children, node.data);
-                    sessionStorage.removeItem(node.data.name);
+    let a;
+
+    const actionMapping: IActionMapping = {
+        mouse: {    // mouse action
+            contextMenu: (tree, node, $event) => {  // right click
+                // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
+                $event.preventDefault();
+                if (node.isRoot) {
+                    const x = confirm('Delete ?');
+                    if (x) {
+                        // remove from original nodes array
+                        // _.remove(node.parent.data.children, node.data);
+                        sessionStorage.removeItem(node.data.name);
+                    }
+                }
+                tree.update();
+            },
+            click: (tree, node, $event) => {    // click root node, pass to server and parse the node storage
+                $event.preventDefault();
+                if (node.isRoot) {
+                    const xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState === 4 && this.status === 200) {
+                            a = xhttp.responseText;     // universal variable for catch the response, then form the sessionStorage
+                        }
+                    };
+                    xhttp.open('POST', '/ngEditSessionStorage', true);
+                    xhttp.send(sessionStorage.getItem(node.data.name));
                 }
             }
-            tree.update();
         }
-    }
-};
+    };
 
 @Component({
   selector: 'app-angular-tree',
@@ -27,10 +42,14 @@ const actionMapping: IActionMapping = {
 })
 export class AngularTreeComponent implements OnInit, DoCheck {
 
+
   constructor() { }
 
   storageLength = 0;
   nodes;
+  str;
+
+    @Output() sessionStorageEditInfo: EventEmitter<number> = new EventEmitter<number>();
 
     /*nodes = [
         {
@@ -125,13 +144,13 @@ export class AngularTreeComponent implements OnInit, DoCheck {
               }
               this.nodes.push(parent);
           }
-          // console.log('nodes: ', this.nodes);
       }
       this.storageLength = sessionStorage.length;
   }
 
-  sessionForm() {
-      console.log();
+  onEditClick() {
+      this.sessionStorageEditInfo = a;
+      console.log('sessionStorageEditInfo: ', this.sessionStorageEditInfo);
   }
 
 }

@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" ></tree-root>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" ></tree-root>\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit sessionStorage</button>\n"
 
 /***/ }),
 
@@ -59,6 +59,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 
 
+// import * as _ from 'lodash'; // _.remove.......
+var a;
 var actionMapping = {
     mouse: {
         contextMenu: function (tree, node, $event) {
@@ -73,12 +75,26 @@ var actionMapping = {
                 }
             }
             tree.update();
+        },
+        click: function (tree, node, $event) {
+            $event.preventDefault();
+            if (node.isRoot) {
+                var xhttp_1 = new XMLHttpRequest();
+                xhttp_1.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        a = xhttp_1.responseText; // universal variable for catch the response, then form the sessionStorage
+                    }
+                };
+                xhttp_1.open('POST', '/ngEditSessionStorage', true);
+                xhttp_1.send(sessionStorage.getItem(node.data.name));
+            }
         }
     }
 };
 var AngularTreeComponent = /** @class */ (function () {
     function AngularTreeComponent() {
         this.storageLength = 0;
+        this.sessionStorageEditInfo = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         /*nodes = [
             {
                 name: 'PersonDemo1',
@@ -170,13 +186,17 @@ var AngularTreeComponent = /** @class */ (function () {
                 }
                 this.nodes.push(parent_1);
             }
-            // console.log('nodes: ', this.nodes);
         }
         this.storageLength = sessionStorage.length;
     };
-    AngularTreeComponent.prototype.sessionForm = function () {
-        console.log();
+    AngularTreeComponent.prototype.onEditClick = function () {
+        this.sessionStorageEditInfo = a;
+        console.log('sessionStorageEditInfo: ', this.sessionStorageEditInfo);
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
+    ], AngularTreeComponent.prototype, "sessionStorageEditInfo", void 0);
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-angular-tree',
@@ -795,8 +815,7 @@ var GenerateFormComponent = /** @class */ (function () {
         this.checkMap.clear();
         console.log('jsog ', this.jsog);
         // output form value to ngFormOutput
-        console.log('form.value: ', this.form_receive.value);
-        // this.subCreate.ouputObject(this.form_receive.value).subscribe(response => {
+        // console.log('form.value: ', this.form_receive.value);
         this.subCreate.ouputObject(this.jsog).subscribe(function (response) {
             console.log('output', response);
         });

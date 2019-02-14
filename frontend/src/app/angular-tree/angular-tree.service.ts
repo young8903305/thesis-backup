@@ -9,5 +9,5 @@ export class AngularTreeService {
     constructor() { }
 
     httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
-    sessionFormUrl = '/ngSessionForm';
+    EditSessionUrl = '/ngEditSessionStorage';
 }
