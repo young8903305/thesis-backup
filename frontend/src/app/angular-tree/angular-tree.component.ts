@@ -1,8 +1,7 @@
 import { Component, OnInit, DoCheck, Output, EventEmitter } from '@angular/core';
 import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions } from 'angular-tree-component';
+import { FormDataService } from '../form-data.service';
 // import * as _ from 'lodash'; // _.remove.......
-
-    let a;
 
     const actionMapping: IActionMapping = {
         mouse: {    // mouse action
@@ -19,9 +18,10 @@ import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions }
                 }
                 tree.update();
             },
-            click: (tree, node, $event) => {    // click root node, pass to server and parse the node storage
+            click: (tree, node, $event) => {    // click root node, active and pass to server and parse the node storage
                 $event.preventDefault();
                 if (node.isRoot) {
+                    TREE_ACTIONS.TOGGLE_ACTIVE(tree, node, $event);
                     const xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
                         if (this.readyState === 4 && this.status === 200) {
@@ -35,6 +35,8 @@ import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions }
         }
     };
 
+    let a;
+
 @Component({
   selector: 'app-angular-tree',
   templateUrl: './angular-tree.component.html',
@@ -43,13 +45,13 @@ import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions }
 export class AngularTreeComponent implements OnInit, DoCheck {
 
 
-  constructor() { }
+    constructor(private data: FormDataService) {
+    }
 
   storageLength = 0;
   nodes;
   str;
-
-    @Output() sessionStorageEditInfo: EventEmitter<number> = new EventEmitter<number>();
+  sessionStorageTemp;
 
     /*nodes = [
         {
@@ -123,7 +125,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     ];*/
 
     options: ITreeOptions = {
-        actionMapping
+        actionMapping,
+        allowDrag: (node) => node.isRoot,
     };
 
   ngOnInit() {
@@ -148,9 +151,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
       this.storageLength = sessionStorage.length;
   }
 
-  onEditClick() {
-      this.sessionStorageEditInfo = a;
-      console.log('sessionStorageEditInfo: ', this.sessionStorageEditInfo);
+  onEditClick() {   // edit sessionStorage, transmit info upward
+      this.sessionStorageTemp = a;
+      this.data.changeMessage(JSON.parse(this.sessionStorageTemp.toString()));
   }
 
 }

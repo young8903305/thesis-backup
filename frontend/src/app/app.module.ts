@@ -13,6 +13,7 @@ import { GenerateFormComponent } from './generate-form/generate-form.component';
 import { JstreeComponent } from './jstree/jstree.component';
 import { TreeModule } from 'angular-tree-component';
 import { AngularTreeComponent } from './angular-tree/angular-tree.component';
+import { FormDataService } from './form-data.service';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,7 @@ import { AngularTreeComponent } from './angular-tree/angular-tree.component';
         TreeModule.forRoot(),
         AppRoutingModule,
     ],
-    providers: [],
-    bootstrap: [ AppComponent ]
+    providers: [ FormDataService ],
+    bootstrap: [ AppComponent ],
 })
 export class AppModule { }

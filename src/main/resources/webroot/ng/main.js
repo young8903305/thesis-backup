@@ -57,10 +57,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AngularTreeComponent", function() { return AngularTreeComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
+
+
 
 
 // import * as _ from 'lodash'; // _.remove.......
-var a;
 var actionMapping = {
     mouse: {
         contextMenu: function (tree, node, $event) {
@@ -79,6 +82,7 @@ var actionMapping = {
         click: function (tree, node, $event) {
             $event.preventDefault();
             if (node.isRoot) {
+                angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(tree, node, $event);
                 var xhttp_1 = new XMLHttpRequest();
                 xhttp_1.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
@@ -91,10 +95,11 @@ var actionMapping = {
         }
     }
 };
+var a;
 var AngularTreeComponent = /** @class */ (function () {
-    function AngularTreeComponent() {
+    function AngularTreeComponent(data) {
+        this.data = data;
         this.storageLength = 0;
-        this.sessionStorageEditInfo = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         /*nodes = [
             {
                 name: 'PersonDemo1',
@@ -166,7 +171,8 @@ var AngularTreeComponent = /** @class */ (function () {
             }
         ];*/
         this.options = {
-            actionMapping: actionMapping
+            actionMapping: actionMapping,
+            allowDrag: function (node) { return node.isRoot; },
         };
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
@@ -190,20 +196,16 @@ var AngularTreeComponent = /** @class */ (function () {
         this.storageLength = sessionStorage.length;
     };
     AngularTreeComponent.prototype.onEditClick = function () {
-        this.sessionStorageEditInfo = a;
-        console.log('sessionStorageEditInfo: ', this.sessionStorageEditInfo);
+        this.sessionStorageTemp = a;
+        this.data.changeMessage(JSON.parse(this.sessionStorageTemp.toString()));
     };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
-    ], AngularTreeComponent.prototype, "sessionStorageEditInfo", void 0);
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-angular-tree',
             template: __webpack_require__(/*! ./angular-tree.component.html */ "./src/app/angular-tree/angular-tree.component.html"),
             styles: [__webpack_require__(/*! ./angular-tree.component.css */ "./src/app/angular-tree/angular-tree.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_form_data_service__WEBPACK_IMPORTED_MODULE_3__["FormDataService"]])
     ], AngularTreeComponent);
     return AngularTreeComponent;
 }());
@@ -280,7 +282,7 @@ module.exports = "h1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav>\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n    \n<!--\n    <p>\n        <button (click)=\"gotoindex()\">Home</button>\n    </p>\n-->\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n\n<!--\n    <app-jstree></app-jstree>\n-->\n    <app-angular-tree></app-angular-tree>\n</div>\n"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav >\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\" >Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n<!--\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n-->\n\n<!--<app-angular-tree (sessionStorageEditInfo)=\"childEventClicked($event)\"></app-angular-tree>-->\n    <app-angular-tree></app-angular-tree>\n</div>\n"
 
 /***/ }),
 
@@ -319,6 +321,10 @@ var AppComponent = /** @class */ (function () {
         this.router.navigate(['/']);
     };
     AppComponent.prototype.ngOnChanges = function () {
+    };
+    AppComponent.prototype.childEventClicked = function (event) {
+        this.clickedEvent = event;
+        console.log('app print: ', this.clickedEvent);
     };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -361,6 +367,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _jstree_jstree_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./jstree/jstree.component */ "./src/app/jstree/jstree.component.ts");
 /* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
 /* harmony import */ var _angular_tree_angular_tree_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./angular-tree/angular-tree.component */ "./src/app/angular-tree/angular-tree.component.ts");
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./form-data.service */ "./src/app/form-data.service.ts");
+
 
 
 
@@ -397,8 +405,8 @@ var AppModule = /** @class */ (function () {
                 angular_tree_component__WEBPACK_IMPORTED_MODULE_12__["TreeModule"].forRoot(),
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_6__["AppRoutingModule"],
             ],
-            providers: [],
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
+            providers: [_form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"]],
+            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]],
         })
     ], AppModule);
     return AppModule;
@@ -478,30 +486,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _create_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./create.service */ "./src/app/create/create.service.ts");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
+
 
 
 
 
 var CreateComponent = /** @class */ (function () {
-    function CreateComponent(createService, fb) {
+    function CreateComponent(createService, fb, data) {
         var _this = this;
         this.createService = createService;
         this.fb = fb;
+        this.data = data;
         this.createService.getClassName()
             .subscribe(function (response) {
             _this.dataClassName = Object.values(response);
-            console.log('className', _this.dataClassName);
+            // console.log('classNames', this.dataClassName);
         });
     }
-    CreateComponent.prototype.ngOnInit = function () { };
-    // if user choose the different class, re-get from the server, and pass to the generate-form component
+    CreateComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.data.currentMessage.subscribe(function (message) { return _this.receive = message; });
+    };
+    /* if user choose the different class, re-get from the server, and pass to the generate-form component
+     * item: the object which user clicked, { name: classname }
+     */
     CreateComponent.prototype.postClass = function (item) {
         var _this = this;
         var obItem = { 'name': item };
         console.log(obItem);
         this.createService.postClass(obItem).subscribe(function (response) {
             console.log('response: ', response);
-            _this.receive = response.body;
+            _this.receive = response.body; // [] consist of three object from server： {defaultValue}, {styleNode}, {typeNode}
             console.log('receive.body: ', _this.receive);
         });
     };
@@ -513,7 +529,8 @@ var CreateComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./create.component.css */ "./src/app/create/create.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_create_service__WEBPACK_IMPORTED_MODULE_2__["CreateService"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"]])
+            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
+            _form_data_service__WEBPACK_IMPORTED_MODULE_4__["FormDataService"]])
     ], CreateComponent);
     return CreateComponent;
 }());
@@ -553,6 +570,8 @@ var CreateService = /** @class */ (function () {
     CreateService.prototype.postClass = function (input) {
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
         return this.http.post(this.sendUrl, input, { headers: httpHeaders, observe: 'response' });
+    };
+    CreateService.prototype.ngOnInit = function () {
     };
     CreateService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
@@ -708,6 +727,44 @@ var EditService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/form-data.service.ts":
+/*!**************************************!*\
+  !*** ./src/app/form-data.service.ts ***!
+  \**************************************/
+/*! exports provided: FormDataService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormDataService", function() { return FormDataService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+/*@Injectable({
+  providedIn: 'root'
+})*/
+var FormDataService = /** @class */ (function () {
+    function FormDataService() {
+        this.messageSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.currentMessage = this.messageSource.asObservable();
+    }
+    FormDataService.prototype.changeMessage = function (message) {
+        this.messageSource.next(message);
+    };
+    FormDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], FormDataService);
+    return FormDataService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/generate-form/generate-form.component.css":
 /*!***********************************************************!*\
   !*** ./src/app/generate-form/generate-form.component.css ***!
@@ -754,7 +811,7 @@ var GenerateFormComponent = /** @class */ (function () {
         this.subCreate = subCreate;
         this.form_receive = this.fb.group({});
         this.storageIndex = 1;
-        this.storageMap = new Map(); // <class-name, count>
+        this.storageMap = new Map(); // <class-name, count> : record class' count
         this.idMap = new Map(); // <sessionStorage-key, @id>
         this.checkMap = new Map(); // <sessionStorage-key, used/wait>
     }
@@ -780,7 +837,7 @@ var GenerateFormComponent = /** @class */ (function () {
                     if (this.checkMap.has(form[tempKey])) { // used
                         var temp = {};
                         temp['@ref'] = this.idMap.get(form[tempKey]);
-                        temp['@type'] = 'jetty.demo.PersonDemo'; // sessionStorage.getItem(form[tempKey];
+                        temp['@type'] = 'jetty.demo.PersonDemo'; // sessionStorage.getItem(form[tempKey]);
                         form[tempKey] = temp;
                         console.log('form[tempKey]: ', form[tempKey]);
                     }
@@ -797,6 +854,7 @@ var GenerateFormComponent = /** @class */ (function () {
         }
         return jsogS;
     };
+    // output object and transmit sessionStorage/form value to server
     GenerateFormComponent.prototype.output = function () {
         for (var i = 0; i < sessionStorage.length; i++) {
             this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
@@ -805,7 +863,7 @@ var GenerateFormComponent = /** @class */ (function () {
         console.log('idMap ', this.idMap);
         console.log('checkMap', this.checkMap);
         console.log('length ', this.form_receive.value);
-        /* temp: sessionStorage's class type and index;
+        /* tempType: sessionStorage's class type and index;
            key: split temp and use the last one be the real key */
         var tempType = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
         var key = tempType.split('.')[tempType.split('.').length - 1];
@@ -814,13 +872,11 @@ var GenerateFormComponent = /** @class */ (function () {
         this.jsog = this.jsogGen(this.form_receive.value);
         this.checkMap.clear();
         console.log('jsog ', this.jsog);
-        // output form value to ngFormOutput
-        // console.log('form.value: ', this.form_receive.value);
+        // output form value to server ngFormOutput
         this.subCreate.ouputObject(this.jsog).subscribe(function (response) {
             console.log('output', response);
         });
         // sessionStorage pass to server ngSessionStorage
-        // console.log('sessionStorage: ', sessionStorage);
         this.subCreate.outputsessionStorage(sessionStorage).subscribe(function (response) {
             console.log('ngSessionStorage response', response);
         });
@@ -828,26 +884,41 @@ var GenerateFormComponent = /** @class */ (function () {
     // sessionStorage just accept string type key/value
     GenerateFormComponent.prototype.store = function () {
         console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value['@type']));
-        // get object type => store object use its type-name and index, storageMap count the same class-name object
-        // console.log('this.form_receive.get(type)', JSON.stringify(this.form_receive.value['@type']));
-        if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {
-            // console.log(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
-            var value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
-            value++;
-            this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
-            // this.form_receive.value['@id'] = value; // modified @id with class count
+        /* get object type => store object use its type-name and index
+         * storageMap count the same class-name object
+         */
+        var aaa = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
+        console.log('aaa: ', aaa);
+        var bbb = aaa.split('.')[aaa.split('.').length - 1];
+        console.log('bbb: ', bbb);
+        console.log('storage: ', sessionStorage.getItem(bbb));
+        if (sessionStorage.getItem(bbb) === null) {
+            if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {
+                // console.log(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+                var value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
+                value++;
+                this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
+                // this.form_receive.value['@id'] = value; // modified @id with class count
+            }
+            else {
+                this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
+                // this.form_receive.value['@id'] = 1;
+            }
+            this.form_receive.value['@id'] = this.storageIndex.toString();
+            /* temp: sessionStorage's class type and index;
+            key: split temp and use the last one be the tree-root/sessionStorage key */
+            /*const temp = this.form_receive.value['@type'].concat(
+                this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));*/
+            var temp = this.form_receive.value['@type'].concat(this.storageIndex);
+            var key = temp.split('.')[temp.split('.').length - 1];
+            sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.storageIndex++;
         }
         else {
-            this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
-            // this.form_receive.value['@id'] = 1;
+            var temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
+            var key = temp.split('.')[temp.split('.').length - 1];
+            sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
-        this.form_receive.value['@id'] = this.storageIndex.toString();
-        this.storageIndex++;
-        /* temp: sessionStorage's class type and index;
-           key: split temp and use the last one be the real key */
-        var temp = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
-        var key = temp.split('.')[temp.split('.').length - 1];
-        sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {
@@ -904,11 +975,9 @@ var GenerateFormService = /** @class */ (function () {
         this.httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
     }
     GenerateFormService.prototype.ouputObject = function (output) {
-        // const httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     };
     GenerateFormService.prototype.outputsessionStorage = function (session) {
-        // const httpHeaders = new HttpHeaders({ 'Content-Type': 'text/json' });
         return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
     };
     GenerateFormService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

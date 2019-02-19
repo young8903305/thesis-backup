@@ -1,6 +1,6 @@
 import { Component, OnChanges} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { analyzeAndValidateNgModules, ConditionalExpr } from '@angular/compiler';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { AppService } from './app.service';
 
@@ -22,6 +22,8 @@ export class AppComponent implements OnChanges {
     welcomeMessage = true;
     dataClassShow = false;
 
+    clickedEvent: Event;
+
     constructor(
         private router: Router,
         private appService: AppService
@@ -36,6 +38,11 @@ export class AppComponent implements OnChanges {
     }
 
     ngOnChanges() {
+    }
+
+    childEventClicked(event: Event) {
+        this.clickedEvent = event;
+        console.log('app print: ', this.clickedEvent);
     }
 
 }

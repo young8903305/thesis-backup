@@ -107,7 +107,7 @@ public class Main {
 	private static String[] arguments;
 	
 	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();
-	private static HashMap<String, String> objectMap = new HashMap<String, String>();
+	//private static HashMap<String, String> objectMap = new HashMap<String, String>();
 	
 
 	@SuppressWarnings("serial")
@@ -700,10 +700,10 @@ public class Main {
 				e.printStackTrace();
 			}
 			
-			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + "]";
+			String responce_json = "[" + str + "," + styleNode.toString() + "," + typeNode.toString() + "]";
 			
-			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
-			response.setContentType("text/plain");
+			// response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
+			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(responce_json);
@@ -1072,7 +1072,7 @@ public class Main {
 	// use class name, get class member and send 
 	public static class ngNameCreateForm extends HttpServlet {
 		
-		String sessionID = "1";
+		String sessionID = "0";
 		
 		public void init() throws ServletException {
 		}

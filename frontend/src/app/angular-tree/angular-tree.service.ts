@@ -7,7 +7,4 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class AngularTreeService {
 
     constructor() { }
-
-    httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
-    EditSessionUrl = '/ngEditSessionStorage';
 }
