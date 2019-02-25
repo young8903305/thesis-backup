@@ -1,4 +1,4 @@
-<tree-root [options]="options" [nodes]="nodes">
+<tree-root [focused]="true" [options]="options" [nodes]="nodes">
   <ng-template #treeNodeTemplate let-node="node">
     <span *ngIf="node === editNode">
       <input autofocus [(ngModel)]="node.data.name" (blur)="stopEdit()" (keyup.enter)="stopEdit()" />

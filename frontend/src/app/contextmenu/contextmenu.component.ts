@@ -3,8 +3,8 @@ import { ITreeOptions, TREE_ACTIONS, TreeNode, TreeModel } from 'angular-tree-co
 
 @Component({
   selector: 'app-contextmenu',
-  template: './contextmenu.component.html',
-  styles: ['./contextmenu.component.css']
+  templateUrl: './contextmenu.component.html',
+  styleUrls: [ './contextmenu.component.css' ]
 })
 export class ContextmenuComponent {
   contextMenu: {node: TreeNode, x: number, y: number} = null;
