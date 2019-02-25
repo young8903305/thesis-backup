@@ -4,6 +4,7 @@ import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
 import { UploaderComponent } from './uploader/uploader.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { ContextmenuComponent } from './contextmenu/contextmenu.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/', pathMatch: 'full' },
@@ -15,7 +16,8 @@ const routes: Routes = [
             { path: 'uploader', component: UploaderComponent }
         ]*/
     },
-    { path: 'uploader', component: UploaderComponent }
+    { path: 'uploader', component: UploaderComponent },
+    { path: 'contextmenu', component: ContextmenuComponent }
 ];
 
 @NgModule({

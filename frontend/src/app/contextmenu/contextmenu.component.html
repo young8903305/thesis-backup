@@ -1,0 +1,21 @@
+<tree-root [options]="options" [nodes]="nodes">
+  <ng-template #treeNodeTemplate let-node="node">
+    <span *ngIf="node === editNode">
+      <input autofocus [(ngModel)]="node.data.name" (blur)="stopEdit()" (keyup.enter)="stopEdit()" />
+    </span>
+    <span *ngIf="node !== editNode">{{ node.data.name }}</span>
+  </ng-template>
+</tree-root>
+<div class="menu" *ngIf="contextMenu" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
+  <div>Menu for {{ contextMenu.node.data.name }}</div>
+  <hr>
+  <ul>
+    <li (click)="edit()"><a>Edit</a></li>
+    <li (click)="copy()"><a>Copy</a></li>
+    <li (click)="cut()"><a>Cut</a></li>
+    <li (click)="paste()"><a [style.opacity]="canPaste() && 1 || 0.3">Paste</a></li>
+  </ul>
+</div>
+<br>
+<p>Keys:</p>
+down | up | left | right | space | enter

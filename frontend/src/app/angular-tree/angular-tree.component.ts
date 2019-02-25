@@ -3,7 +3,7 @@ import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions }
 import { FormDataService } from '../form-data.service';
 // import * as _ from 'lodash'; // _.remove.......
 
-    const actionMapping: IActionMapping = {
+    /*const actionMapping: IActionMapping = {
         mouse: {    // mouse action
             contextMenu: (tree, node, $event) => {  // right click
                 // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
@@ -33,7 +33,7 @@ import { FormDataService } from '../form-data.service';
                 }
             }
         }
-    };
+    };*/
 
     let a;
 
@@ -48,10 +48,11 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     constructor(private data: FormDataService) {
     }
 
-  storageLength = 0;
-  nodes;
-  str;
-  sessionStorageTemp;
+    storageLength = 0;
+    nodes;
+    str;
+    sessionStorageTemp;
+    contextMenu: { node: TreeNode, x: number, y: number } = null;
 
     /*nodes = [
         {
@@ -125,7 +126,37 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     ];*/
 
     options: ITreeOptions = {
-        actionMapping,
+        actionMapping: {
+            mouse: {    // mouse action
+                contextMenu: (tree, node, $event) => {  // right click
+                    // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
+                    $event.preventDefault();
+                    if (node.isRoot) {
+                        const x = confirm('Delete ?');
+                        if (x) {
+                            // remove from original nodes array
+                            // _.remove(node.parent.data.children, node.data);
+                            sessionStorage.removeItem(node.data.name);
+                        }
+                    }
+                    tree.update();
+                },
+                click: (tree, node, $event) => {    // click root node, active and pass to server and parse the node storage
+                    $event.preventDefault();
+                    if (node.isRoot) {
+                        TREE_ACTIONS.TOGGLE_ACTIVE(tree, node, $event);
+                        const xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState === 4 && this.status === 200) {
+                                a = xhttp.responseText;     // a: universal variable for catch the response, then form the sessionStorage
+                            }
+                        };
+                        xhttp.open('POST', '/ngEditSessionStorage', true);
+                        xhttp.send(sessionStorage.getItem(node.data.name));
+                    }
+                }
+            }
+        },
         allowDrag: (node) => node.isRoot,
     };
 

@@ -14,6 +14,7 @@ import { JstreeComponent } from './jstree/jstree.component';
 import { TreeModule } from 'angular-tree-component';
 import { AngularTreeComponent } from './angular-tree/angular-tree.component';
 import { FormDataService } from './form-data.service';
+import { ContextmenuComponent } from './contextmenu/contextmenu.component';
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { FormDataService } from './form-data.service';
         GenerateFormComponent,
         JstreeComponent,
         AngularTreeComponent,
+        ContextmenuComponent,
     ],
     imports: [
         BrowserModule,
