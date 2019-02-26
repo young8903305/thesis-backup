@@ -51,11 +51,11 @@ public class Family implements Serializable {
 		return this.mother;
 	}
 	
-	/*public void setChildren(List<PersonDemo> persons) {
+	public void setChildren(List<PersonDemo> persons) {
 		this.children = persons;
 	}
 	
 	public List<PersonDemo> getChildren() {
 		return this.children;
-	}*/
+	}
 }
