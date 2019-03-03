@@ -18,7 +18,7 @@ public class PersonDemo implements Serializable{
 	@AnnotationForm(
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") },
 			name = "age")
-	private int age;
+	private long age;
 	
 	@AnnotationForm(
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "huang") },
@@ -60,7 +60,7 @@ public class PersonDemo implements Serializable{
 		this.age = age;
 	}
 	
-	public int getAge() {
+	public long getAge() {
 		return this.age;
 	}
 	

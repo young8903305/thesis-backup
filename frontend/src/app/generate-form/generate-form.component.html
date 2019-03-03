@@ -2,8 +2,8 @@
   <ng-container *ngFor = "let key of Member">
     <label *ngIf = "key!=='@id' && key!=='@type'">
       {{ key }} :
-    <input  type={{MemberStyle[key]}} formControlName={{key}}>
-    <textarea *ngIf=" MemberStyle[key] =='textarea'"></textarea>
+    <input *ngIf="MemberStyle[key] !== 'textarea'" type={{MemberStyle[key]}} formControlName={{key}}>
+    <textarea *ngIf=" MemberStyle[key] ==='textarea'" formControlName={{key}}></textarea>
     </label>
   </ng-container>
   <button type="submit">Output Object</button>

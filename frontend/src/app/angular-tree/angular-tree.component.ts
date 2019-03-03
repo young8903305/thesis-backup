@@ -3,7 +3,7 @@ import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions }
 import { FormDataService } from '../form-data.service';
 // import * as _ from 'lodash'; // _.remove.......
 
-    const actionMapping: IActionMapping = {
+    /*const actionMapping: IActionMapping = {
         mouse: {    // mouse action
             contextMenu: (tree, node, $event) => {  // right click
                 // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
@@ -33,7 +33,7 @@ import { FormDataService } from '../form-data.service';
                 }
             }
         }
-    };
+    };*/
 
     let a;
 

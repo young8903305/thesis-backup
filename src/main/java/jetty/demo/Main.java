@@ -1189,6 +1189,10 @@ public class Main {
 								styleNode.put(f.getName(), "week");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
+							case none :
+								break;
+							default :
+								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
 						defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());

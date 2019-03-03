@@ -64,13 +64,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // import * as _ from 'lodash'; // _.remove.......
-var actionMapping = {
-    mouse: {
-        contextMenu: function (tree, node, $event) {
+/*const actionMapping: IActionMapping = {
+    mouse: {    // mouse action
+        contextMenu: (tree, node, $event) => {  // right click
             // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
             $event.preventDefault();
             if (node.isRoot) {
-                var x = confirm('Delete ?');
+                const x = confirm('Delete ?');
                 if (x) {
                     // remove from original nodes array
                     // _.remove(node.parent.data.children, node.data);
@@ -79,22 +79,22 @@ var actionMapping = {
             }
             tree.update();
         },
-        click: function (tree, node, $event) {
+        click: (tree, node, $event) => {    // click root node, active and pass to server and parse the node storage
             $event.preventDefault();
             if (node.isRoot) {
-                angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(tree, node, $event);
-                var xhttp_1 = new XMLHttpRequest();
-                xhttp_1.onreadystatechange = function () {
+                TREE_ACTIONS.TOGGLE_ACTIVE(tree, node, $event);
+                const xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
-                        a = xhttp_1.responseText; // universal variable for catch the response, then form the sessionStorage
+                        a = xhttp.responseText;     // universal variable for catch the response, then form the sessionStorage
                     }
                 };
-                xhttp_1.open('POST', '/ngEditSessionStorage', true);
-                xhttp_1.send(sessionStorage.getItem(node.data.name));
+                xhttp.open('POST', '/ngEditSessionStorage', true);
+                xhttp.send(sessionStorage.getItem(node.data.name));
             }
         }
     }
-};
+};*/
 var a;
 var AngularTreeComponent = /** @class */ (function () {
     function AngularTreeComponent(data) {
@@ -196,14 +196,14 @@ var AngularTreeComponent = /** @class */ (function () {
                         _this.closeMenu();
                         if (treeNode.isRoot) {
                             angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
-                            var xhttp_2 = new XMLHttpRequest();
-                            xhttp_2.onreadystatechange = function () {
+                            var xhttp_1 = new XMLHttpRequest();
+                            xhttp_1.onreadystatechange = function () {
                                 if (this.readyState === 4 && this.status === 200) {
-                                    a = xhttp_2.responseText; // universal variable for catch the response, then form the sessionStorage
+                                    a = xhttp_1.responseText; // universal variable for catch the response, then form the sessionStorage
                                 }
                             };
-                            xhttp_2.open('POST', '/ngEditSessionStorage', true);
-                            xhttp_2.send(sessionStorage.getItem(treeNode.data.name));
+                            xhttp_1.open('POST', '/ngEditSessionStorage', true);
+                            xhttp_1.send(sessionStorage.getItem(treeNode.data.name));
                         }
                     }
                 }
@@ -986,7 +986,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input  type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] =='textarea'\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}}></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
 
 /***/ }),
 
@@ -1017,11 +1017,24 @@ var GenerateFormComponent = /** @class */ (function () {
         this.storageMap = new Map(); // <class-name, count> : record class' count
         this.idMap = new Map(); // <sessionStorage-key, @id>
         this.checkMap = new Map(); // <sessionStorage-key, used/wait>: for @ref
+        this.storageTypeMap = new Map(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
     }
     GenerateFormComponent.prototype.ngOnInit = function () {
     };
+    GenerateFormComponent.prototype.CheckStrToNum = function (input) {
+        for (var key in this.MemberType) { // change string default value to number
+            if (this.MemberType[key] === 'byte' || this.MemberType[key] === 'short' || this.MemberType[key] === 'int' ||
+                this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
+                this.MemberType[key] === 'Byte' || this.MemberType[key] === 'Short' || this.MemberType[key] === 'Integer' ||
+                this.MemberType[key] === 'Long' || this.MemberType[key] === 'Float' || this.MemberType[key] === 'Double') {
+                input[key] = +input[key];
+            }
+        }
+        return input;
+    };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
+        // this.defaultValueTemp = this.generate_form_receive[0];
         this.Member = Object.keys(this.generate_form_receive[0]); // defaultValueNode
         this.MemberStyle = this.generate_form_receive[1]; // styleNode
         this.MemberType = this.generate_form_receive[2]; // typeNode
@@ -1034,48 +1047,51 @@ var GenerateFormComponent = /** @class */ (function () {
     GenerateFormComponent.prototype.jsogForSessionStorage = function (jsonInput) {
         var tempArray = [];
         console.log('jsonInput: ', jsonInput);
-        tempArray = jsonInput.split(', ');
-        console.log('tempArray: ', tempArray);
-        if (tempArray.length > 1) {
-            for (var i = 0; i < tempArray.length; i++) {
-                if (sessionStorage.getItem(tempArray[i]) !== null) { // sessionStorage has it.
-                    if (this.checkMap.has(tempArray[i])) { // used, add as @ref
+        if (isNaN(jsonInput)) { // skip number, ouput number directly
+            tempArray = jsonInput.split(', ');
+            console.log('tempArray: ', tempArray);
+            if (tempArray.length > 1) { // list variable
+                for (var i = 0; i < tempArray.length; i++) {
+                    if (sessionStorage.getItem(tempArray[i]) !== null) { // sessionStorage has it.
+                        if (this.checkMap.has(tempArray[i])) { // used, add as @ref
+                            var temp = {};
+                            var refType = JSON.parse(sessionStorage.getItem(tempArray[i]))['@type'];
+                            temp['@ref'] = this.idMap.get(tempArray[i]);
+                            temp['@type'] = refType;
+                            tempArray[i] = temp;
+                            console.log('tempArray[i]: ', tempArray[i]);
+                        }
+                        else { // haven't used it yet, set checkMap to true, and write it
+                            // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
+                            this.checkMap.set(tempArray[i], true);
+                            tempArray[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempArray[i])));
+                            // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                            console.log('checkMap', this.checkMap);
+                        }
+                    }
+                }
+                return tempArray;
+            }
+            else { // not list variable
+                if (sessionStorage.getItem(jsonInput) !== null) { // sessionStorage has it.
+                    if (this.checkMap.has(jsonInput)) { // used, add as @ref
                         var temp = {};
-                        var refType = JSON.parse(sessionStorage.getItem(tempArray[i]))['@type'];
-                        temp['@ref'] = this.idMap.get(tempArray[i]);
+                        var refType = JSON.parse(sessionStorage.getItem(jsonInput))['@type'];
+                        temp['@ref'] = this.idMap.get(jsonInput);
                         temp['@type'] = refType;
-                        tempArray[i] = temp;
-                        console.log('tempArray[i]: ', tempArray[i]);
+                        jsonInput = temp;
+                        console.log('jsonInput: ', jsonInput);
                     }
                     else { // haven't used it yet, set checkMap to true, and write it
-                        // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                        this.checkMap.set(tempArray[i], true);
-                        tempArray[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempArray[i])));
-                        // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                        this.checkMap.set(jsonInput, true);
+                        jsonInput = this.jsogGen(JSON.parse(sessionStorage.getItem(jsonInput)));
                         console.log('checkMap', this.checkMap);
                     }
                 }
+                return jsonInput;
             }
-            return tempArray;
         }
         else {
-            if (sessionStorage.getItem(jsonInput) !== null) { // sessionStorage has it.
-                if (this.checkMap.has(jsonInput)) { // used, add as @ref
-                    var temp = {};
-                    var refType = JSON.parse(sessionStorage.getItem(jsonInput))['@type'];
-                    temp['@ref'] = this.idMap.get(jsonInput);
-                    temp['@type'] = refType;
-                    jsonInput = temp;
-                    console.log('jsonInput: ', jsonInput);
-                }
-                else { // haven't used it yet, set checkMap to true, and write it
-                    // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                    this.checkMap.set(jsonInput, true);
-                    jsonInput = this.jsogGen(JSON.parse(sessionStorage.getItem(jsonInput)));
-                    // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
-                    console.log('checkMap', this.checkMap);
-                }
-            }
             return jsonInput;
         }
     };
@@ -1088,6 +1104,7 @@ var GenerateFormComponent = /** @class */ (function () {
                 console.log('formInput[tempKey]: ', formInput[tempKey]);
                 tempArray = formInput[tempKey].split(', ');
                 console.log('tempArray: ', tempArray);*/
+                console.log('type: ', this.MemberStyle[tempKey]);
                 formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey]);
                 /*if (sessionStorage.getItem(formInput[tempKey]) !== null) {   // sessionStorage has it.
                     if (this.checkMap.has(formInput[tempKey])) { // used, add as @ref
@@ -1163,13 +1180,18 @@ var GenerateFormComponent = /** @class */ (function () {
                 this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));*/
             var temp = this.form_receive.value['@type'].concat(this.storageIndex); // use storage count as id postfix
             var key = temp.split('.')[temp.split('.').length - 1];
-            sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
+            // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.storageTypeMap.set(key, this.MemberType);
             this.storageIndex++;
         }
         else { // sessioinStorage had this item, edit object, overwrite old value
             var temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
             var key = temp.split('.')[temp.split('.').length - 1];
-            sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
+            // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
     };
     // clear the form data

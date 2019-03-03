@@ -16,12 +16,14 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     Member;         // defaultValueNode
     MemberStyle;    // styleNode
     MemberType;     // typeNode. use for list, not yet
+    ValueTemp;
     form_receive = this.fb.group({});
 
     storageIndex = 1;
     storageMap = new Map<string, number>(); // <class-name, count> : record class' count
     idMap = new Map<string, string>();      // <sessionStorage-key, @id>
     checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref
+    storageTypeMap = new Map<string, Object>(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
     jsog;
 
     constructor(private fb: FormBuilder,
@@ -31,8 +33,21 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     ngOnInit() {
     }
 
+    CheckStrToNum(input) {
+        for (const key in this.MemberType) { // change string default value to number
+            if (this.MemberType[key] === 'byte' || this.MemberType[key] === 'short' || this.MemberType[key] === 'int' ||
+                this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
+                this.MemberType[key] === 'Byte' || this.MemberType[key] === 'Short' || this.MemberType[key] === 'Integer' ||
+                this.MemberType[key] === 'Long' || this.MemberType[key] === 'Float' || this.MemberType[key] === 'Double') {
+                input[key] = +input[key];
+            }
+        }
+        return input;
+    }
+
     // receieve the class info form create component
     ngOnChanges() {
+        // this.defaultValueTemp = this.generate_form_receive[0];
         this.Member = Object.keys(this.generate_form_receive[0]);  // defaultValueNode
         this.MemberStyle = this.generate_form_receive[1];   // styleNode
         this.MemberType = this.generate_form_receive[2];    // typeNode
@@ -46,45 +61,47 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     jsogForSessionStorage(jsonInput: any) { // jsonInput: the value of each key in json
         let tempArray = [];
         console.log('jsonInput: ', jsonInput);
-        tempArray = jsonInput.split(', ');
-        console.log('tempArray: ', tempArray);
-        if (tempArray.length > 1) { // list variable
-            for (let i = 0; i < tempArray.length; i++ ) {
-                if (sessionStorage.getItem(tempArray[i]) !== null) {   // sessionStorage has it.
-                    if (this.checkMap.has(tempArray[i])) { // used, add as @ref
+        if (isNaN(jsonInput)) { // skip number, ouput number directly
+            tempArray = jsonInput.split(', ');
+            console.log('tempArray: ', tempArray);
+            if (tempArray.length > 1) { // list variable
+                for (let i = 0; i < tempArray.length; i++ ) {
+                    if (sessionStorage.getItem(tempArray[i]) !== null) {   // sessionStorage has it.
+                        if (this.checkMap.has(tempArray[i])) { // used, add as @ref
+                            const temp = {};
+                            const refType = JSON.parse(sessionStorage.getItem(tempArray[i]))['@type'];
+                            temp['@ref'] = this.idMap.get(tempArray[i]);
+                            temp['@type'] = refType;
+                            tempArray[i] = temp;
+                            console.log('tempArray[i]: ', tempArray[i]);
+                        } else {    // haven't used it yet, set checkMap to true, and write it
+                            // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
+                            this.checkMap.set(tempArray[i], true);
+                            tempArray[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempArray[i])));
+                            // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                            console.log('checkMap', this.checkMap);
+                        }
+                    }
+                }
+                return tempArray;
+            } else {    // not list variable
+                if (sessionStorage.getItem(jsonInput) !== null) {   // sessionStorage has it.
+                    if (this.checkMap.has(jsonInput)) { // used, add as @ref
                         const temp = {};
-                        const refType = JSON.parse(sessionStorage.getItem(tempArray[i]))['@type'];
-                        temp['@ref'] = this.idMap.get(tempArray[i]);
+                        const refType = JSON.parse(sessionStorage.getItem(jsonInput))['@type'];
+                        temp['@ref'] = this.idMap.get(jsonInput);
                         temp['@type'] = refType;
-                        tempArray[i] = temp;
-                        console.log('tempArray[i]: ', tempArray[i]);
+                        jsonInput = temp;
+                        console.log('jsonInput: ', jsonInput);
                     } else {    // haven't used it yet, set checkMap to true, and write it
-                        // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                        this.checkMap.set(tempArray[i], true);
-                        tempArray[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempArray[i])));
-                        // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                        this.checkMap.set(jsonInput, true);
+                        jsonInput = this.jsogGen(JSON.parse(sessionStorage.getItem(jsonInput)));
                         console.log('checkMap', this.checkMap);
                     }
                 }
+                return jsonInput;
             }
-            return tempArray;
-        } else {    // not list variable
-            if (sessionStorage.getItem(jsonInput) !== null) {   // sessionStorage has it.
-                if (this.checkMap.has(jsonInput)) { // used, add as @ref
-                    const temp = {};
-                    const refType = JSON.parse(sessionStorage.getItem(jsonInput))['@type'];
-                    temp['@ref'] = this.idMap.get(jsonInput);
-                    temp['@type'] = refType;
-                    jsonInput = temp;
-                    console.log('jsonInput: ', jsonInput);
-                } else {    // haven't used it yet, set checkMap to true, and write it
-                    // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                    this.checkMap.set(jsonInput, true);
-                    jsonInput = this.jsogGen(JSON.parse(sessionStorage.getItem(jsonInput)));
-                    // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
-                    console.log('checkMap', this.checkMap);
-                }
-            }
+        } else {
             return jsonInput;
         }
     }
@@ -184,12 +201,17 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));*/
             const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
-            sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
+            // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.storageTypeMap.set(key, this.MemberType);
             this.storageIndex++;
         } else {    // sessioinStorage had this item, edit object, overwrite old value
             const temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
             const key = temp.split('.')[temp.split('.').length - 1];
-            sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
+            // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
     }
 
