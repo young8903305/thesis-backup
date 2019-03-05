@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit sessionStorage</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div>Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copy()\"><a>Copy</a></li>\n    <li (click)=\"delete(contextMenu.node)\"><a>Delete</a></li>\n  </ul>\n</div>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit sessionStorage</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div>Menu for {{ contextMenu.node.data.pureName }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"delete(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete</a></li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -183,7 +183,7 @@ var AngularTreeComponent = /** @class */ (function () {
                         if (_this.contextMenu && treeNode === _this.contextMenu.node) {
                             return _this.closeMenu();
                         }
-                        if (treeNode.isRoot) {
+                        if ((treeNode.data.pureName !== '@type') && (treeNode.data.pureName !== '@id')) {
                             _this.contextMenu = {
                                 node: treeNode,
                                 x: e.pageX,
@@ -194,7 +194,7 @@ var AngularTreeComponent = /** @class */ (function () {
                     click: function (treeModel, treeNode, e) {
                         e.preventDefault();
                         _this.closeMenu();
-                        if (treeNode.isRoot) {
+                        if (treeNode.isRoot) { // root node to form
                             angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
                             var xhttp_1 = new XMLHttpRequest();
                             xhttp_1.onreadystatechange = function () {
@@ -213,23 +213,103 @@ var AngularTreeComponent = /** @class */ (function () {
         this.closeMenu = function () {
             _this.contextMenu = null;
         };
+        // no use
         this.edit = function () {
             _this.editNode = _this.contextMenu.node;
             _this.closeMenu();
         };
+        // no use
         this.stopEdit = function () {
             _this.editNode = null;
         };
-        this.copy = function () {
+        this.copyValue = function () {
             _this.sourceNode = _this.contextMenu.node;
+            _this.doCut = true;
+            _this.closeMenu();
+        };
+        this.copyObj = function () {
+            if (!_this.isRoot) {
+                return false;
+            }
+            // this.sourceNode = this.contextMenu.node;
             _this.doCut = false;
             var itemCopy = sessionStorage.getItem(_this.contextMenu.node.data.name);
-            sessionStorage.setItem(_this.contextMenu.node.data.name + '123', itemCopy); // need to set an unique seiral id
+            var itemCopyJson = JSON.parse(itemCopy);
+            var temp = {};
+            for (var _i = 0, _a = Object.entries(itemCopyJson); _i < _a.length; _i++) {
+                var _b = _a[_i], k = _b[0], v = _b[1];
+                if (k === '@id') {
+                    v = v + '123';
+                }
+                temp[k] = v;
+            }
+            sessionStorage.setItem(_this.contextMenu.node.data.name + '123', JSON.stringify(temp)); // need to set an unique seiral id
             _this.closeMenu();
+        };
+        this.isRoot = function () {
+            if (_this.contextMenu.node.isRoot) {
+                return true;
+            }
+            return false;
+        };
+        this.notRoot = function () {
+            if (_this.contextMenu.node.isRoot) {
+                return false;
+            }
+            return true;
         };
         this.delete = function (node) {
             sessionStorage.removeItem(node.data.name);
             _this.closeMenu();
+        };
+        this.pasteValue = function () {
+            if (!_this.canPaste()) {
+                return;
+            }
+            /*this.doCut
+                ? this.sourceNode.treeModel.moveNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 })
+                : this.sourceNode.treeModel.copyNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 });*/
+            if (_this.doCut) {
+                // console.log('this.contextMenu.node.parent.data.children', this.contextMenu.node.parent.data.children);
+                var _a = Object.entries(_this.contextMenu.node.parent.data.children[1]), name_1 = _a[0], pureName = _a[1], val = _a[2]; // index 1: @type
+                var _b = Object.entries(_this.sourceNode.parent.data.children[1]), sourceName = _b[0], sourcePureName = _b[1], sourceVal = _b[2]; // index 1: @type
+                if (val[1].toString() === sourceVal[1].toString()) {
+                    // if (this.contextMenu.node.parent.data.children[i]['type'] === this.sourceNode.parent.data.children[i]['type']) {
+                    if (_this.contextMenu.node.data.pureName === _this.sourceNode.data.pureName) {
+                        _this.contextMenu.node.data.val = _this.sourceNode.data.val; // node's val
+                        // node's view
+                        _this.contextMenu.node.data.name = _this.contextMenu.node.data.pureName + ': ' + _this.contextMenu.node.data.val;
+                        var temp = {};
+                        console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ', sessionStorage.getItem(_this.contextMenu.node.parent.data.name));
+                        for (var _i = 0, _c = Object.entries(JSON.parse(sessionStorage.getItem(_this.contextMenu.node.parent.data.name))); _i < _c.length; _i++) {
+                            var _d = _c[_i], key = _d[0], value = _d[1];
+                            if (key === _this.contextMenu.node.data.pureName) {
+                                value = _this.sourceNode.data.val;
+                            }
+                            temp[key] = value;
+                        }
+                        sessionStorage.setItem(_this.contextMenu.node.parent.data.name, JSON.stringify(temp));
+                        console.log('this.sourceNode.parent.data.children: ', _this.sourceNode.parent.data.children);
+                        console.log('this.contextMenu.node.parent: ', _this.contextMenu.node.parent);
+                    }
+                    else {
+                        alert('not the same attribute');
+                    }
+                }
+                else {
+                    alert('not the same type object');
+                }
+            }
+            _this.doCut = false;
+            _this.sourceNode = null;
+            _this.closeMenu();
+            _this.ngDoCheck();
+        };
+        this.canPaste = function () {
+            if (!_this.sourceNode) {
+                return false;
+            }
+            return _this.sourceNode.treeModel.canMoveNode(_this.sourceNode, { parent: _this.contextMenu.node, index: 0 });
         };
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
@@ -239,13 +319,27 @@ var AngularTreeComponent = /** @class */ (function () {
             // console.log('length: ', this.temp);
             this.nodes = [];
             for (var i = 0; i < sessionStorage.length; i++) {
-                // console.log('Key: ', Object.keys(sessionStorage)[i]);
-                var parent_1 = { name: '', 'children': [] };
+                var parent_1 = {
+                    name: '',
+                    'children': []
+                };
                 parent_1['name'] = Object.keys(sessionStorage)[i];
-                for (var _i = 0, _a = Object.keys(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
-                    var item = _a[_i];
-                    parent_1.children.push({ name: item, val: item.toString() });
+                for (var _i = 0, _a = Object.entries(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
+                    var _b = _a[_i], key = _b[0], value = _b[1];
+                    // if (key !== '@id' && key !== '@type') {
+                    parent_1.children.push({
+                        name: key + ': ' + value,
+                        pureName: key,
+                        val: value
+                    });
+                    // }
                 }
+                /*for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
+                    parent.children.push({
+                        name: item,
+                        val: item.toString()
+                    });
+                }*/
                 this.nodes.push(parent_1);
             }
         }
@@ -1027,7 +1121,7 @@ var GenerateFormComponent = /** @class */ (function () {
                 this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
                 this.MemberType[key] === 'Byte' || this.MemberType[key] === 'Short' || this.MemberType[key] === 'Integer' ||
                 this.MemberType[key] === 'Long' || this.MemberType[key] === 'Float' || this.MemberType[key] === 'Double') {
-                input[key] = +input[key];
+                input[key] = +input[key]; // string to number
             }
         }
         return input;
@@ -1044,13 +1138,13 @@ var GenerateFormComponent = /** @class */ (function () {
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
     };
-    GenerateFormComponent.prototype.jsogForSessionStorage = function (jsonInput) {
+    GenerateFormComponent.prototype.jsogForSessionStorage = function (jsonInput, typeCheck) {
         var tempArray = [];
         console.log('jsonInput: ', jsonInput);
         if (isNaN(jsonInput)) { // skip number, ouput number directly
-            tempArray = jsonInput.split(', ');
-            console.log('tempArray: ', tempArray);
-            if (tempArray.length > 1) { // list variable
+            tempArray = jsonInput.split(', '); // it will split the value
+            // console.log('tempArray: ', tempArray);
+            if (tempArray.length > 1) { // list variable, need to fix this condition
                 for (var i = 0; i < tempArray.length; i++) {
                     if (sessionStorage.getItem(tempArray[i]) !== null) { // sessionStorage has it.
                         if (this.checkMap.has(tempArray[i])) { // used, add as @ref
@@ -1104,8 +1198,9 @@ var GenerateFormComponent = /** @class */ (function () {
                 console.log('formInput[tempKey]: ', formInput[tempKey]);
                 tempArray = formInput[tempKey].split(', ');
                 console.log('tempArray: ', tempArray);*/
-                console.log('type: ', this.MemberStyle[tempKey]);
-                formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey]);
+                // console.log('type: ', this.MemberStyle[tempKey]);
+                console.log('type input', this.storageTypeMap.get(formInput[tempKey]));
+                formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey], this.storageTypeMap.get(formInput[tempKey]));
                 /*if (sessionStorage.getItem(formInput[tempKey]) !== null) {   // sessionStorage has it.
                     if (this.checkMap.has(formInput[tempKey])) { // used, add as @ref
                         const temp = {};
@@ -1138,7 +1233,10 @@ var GenerateFormComponent = /** @class */ (function () {
         console.log('length ', this.form_receive.value);
         /* tempType: sessionStorage's class type and index;
            key: split temp and use the last one be the real key */
-        var tempType = this.form_receive.value['@type'].concat(this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        /*const tempType = this.form_receive.value['@type'].concat(
+            this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        const key = tempType.split('.')[tempType.split('.').length - 1];*/
+        var tempType = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
         var key = tempType.split('.')[tempType.split('.').length - 1];
         console.log('key: ', key); // print object with class and its class' count
         this.checkMap.set(key, true);
@@ -1184,6 +1282,7 @@ var GenerateFormComponent = /** @class */ (function () {
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             this.storageTypeMap.set(key, this.MemberType);
+            console.log('this.storageTypeMap: ', this.storageTypeMap);
             this.storageIndex++;
         }
         else { // sessioinStorage had this item, edit object, overwrite old value
@@ -1193,6 +1292,7 @@ var GenerateFormComponent = /** @class */ (function () {
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
+        this.clearForm();
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {

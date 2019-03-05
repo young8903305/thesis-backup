@@ -38,12 +38,12 @@ public class PersonDemo implements Serializable{
 	private String color;
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.time, value = "" ) }, name = "id")
-	private String test;
+	private List<String> test;
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "spouse")
 	private PersonDemo spouse;
 	
-	public PersonDemo (int age, String lastname, String firstname, String description, String email, String color, String test, PersonDemo p) {
+	public PersonDemo (int age, String lastname, String firstname, String description, String email, String color, List<String> test, PersonDemo p) {
 		setAge(age);
 		setLastName(lastname);
 		setFirstName(firstname);
@@ -104,11 +104,11 @@ public class PersonDemo implements Serializable{
 		return this.color;
 	}
 	
-	public void setTest(String test) {
+	public void setTest(List<String> test) {
 		this.test = test;
 	}
 	
-	public String getTest() {
+	public List<String> getTest() {
 		return this.test;
 	}
 	

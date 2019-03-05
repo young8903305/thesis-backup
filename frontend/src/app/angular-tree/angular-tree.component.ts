@@ -139,7 +139,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     if (this.contextMenu && treeNode === this.contextMenu.node) {
                         return this.closeMenu();
                     }
-                    if (treeNode.isRoot) {
+                    if ((treeNode.data.pureName !== '@type') && (treeNode.data.pureName !== '@id') ) {
                         this.contextMenu = {
                             node: treeNode,
                             x: e.pageX,
@@ -150,7 +150,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 click: (treeModel: TreeModel, treeNode: TreeNode, e: MouseEvent) => {
                     e.preventDefault();
                     this.closeMenu();
-                    if (treeNode.isRoot) {
+                    if (treeNode.isRoot) {  // root node to form
                         TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
                         const xhttp = new XMLHttpRequest();
                         xhttp.onreadystatechange = function () {
@@ -173,15 +173,29 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     ngDoCheck() {     // check sessionStorage's length and generate ng-tree view
         if (this.storageLength !== sessionStorage.length) {
             // console.log('length: ', this.temp);
-
             this.nodes = [];
             for (let i = 0; i < sessionStorage.length; i++) {
-                // console.log('Key: ', Object.keys(sessionStorage)[i]);
-                const parent = { name: '', 'children': [] };
+                const parent = {
+                    name: '',
+                    'children': []
+                };
                 parent['name'] = Object.keys(sessionStorage)[i];
-                for (const item of Object.keys(JSON.parse( Object.values(sessionStorage)[i])) ) {
-                    parent.children.push({ name: item, val: item.toString()});
+
+                for (const [key, value] of Object.entries(JSON.parse(Object.values(sessionStorage)[i]))) {
+                    // if (key !== '@id' && key !== '@type') {
+                        parent.children.push({
+                            name: key + ': ' + value,
+                            pureName: key,
+                            val: value
+                        });
+                    // }
                 }
+                /*for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
+                    parent.children.push({
+                        name: item,
+                        val: item.toString()
+                    });
+                }*/
                 this.nodes.push(parent);
             }
         }
@@ -199,26 +213,109 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.contextMenu = null;
     }
 
+    // no use
     edit = () => {
         this.editNode = this.contextMenu.node;
         this.closeMenu();
     }
 
+    // no use
     stopEdit = () => {
         this.editNode = null;
     }
 
-    copy = () => {
+    copyValue = () => {
         this.sourceNode = this.contextMenu.node;
+        this.doCut = true;
+        this.closeMenu();
+    }
+
+    copyObj = () => {
+        if (!this.isRoot) {
+            return false;
+        }
+        // this.sourceNode = this.contextMenu.node;
         this.doCut = false;
         const itemCopy = sessionStorage.getItem(this.contextMenu.node.data.name);
-        sessionStorage.setItem(this.contextMenu.node.data.name + '123', itemCopy);  // need to set an unique seiral id
+        const itemCopyJson = JSON.parse(itemCopy);
+        const temp = {};
+        for (let [k, v] of Object.entries(itemCopyJson )) {
+            if (k === '@id') {
+                v = v + '123';
+            }
+            temp[k] = v;
+        }
+        sessionStorage.setItem(this.contextMenu.node.data.name + '123', JSON.stringify(temp));  // need to set an unique seiral id
         this.closeMenu();
+    }
+
+    isRoot = () => {
+        if (this.contextMenu.node.isRoot) {
+            return true;
+        }
+        return false;
+    }
+
+    notRoot = () => {
+        if (this.contextMenu.node.isRoot) {
+            return false;
+        }
+        return true;
     }
 
     delete = (node) => {
         sessionStorage.removeItem(node.data.name);
         this.closeMenu();
+    }
+
+    pasteValue = () => {
+        if (!this.canPaste()) {
+            return;
+        }
+        /*this.doCut
+            ? this.sourceNode.treeModel.moveNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 })
+            : this.sourceNode.treeModel.copyNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 });*/
+        if (this.doCut) {
+            // console.log('this.contextMenu.node.parent.data.children', this.contextMenu.node.parent.data.children);
+                const [name, pureName, val] = Object.entries(this.contextMenu.node.parent.data.children[1]);    // index 1: @type
+                const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);  // index 1: @type
+                if (val[1].toString() === sourceVal[1].toString()) {
+                // if (this.contextMenu.node.parent.data.children[i]['type'] === this.sourceNode.parent.data.children[i]['type']) {
+                    if (this.contextMenu.node.data.pureName === this.sourceNode.data.pureName) {
+                        this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
+                        // node's view
+                        this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
+                        const temp = {};
+                        console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
+                        sessionStorage.getItem(this.contextMenu.node.parent.data.name));
+                        for ( let [key, value] of Object.entries(
+                            JSON.parse(sessionStorage.getItem(this.contextMenu.node.parent.data.name)))) {
+                            if (key === this.contextMenu.node.data.pureName) {
+                                value = this.sourceNode.data.val;
+                            }
+                            temp[key] = value;
+                        }
+                        sessionStorage.setItem(this.contextMenu.node.parent.data.name, JSON.stringify(temp));
+                        console.log('this.sourceNode.parent.data.children: ', this.sourceNode.parent.data.children);
+                        console.log('this.contextMenu.node.parent: ', this.contextMenu.node.parent);
+                    } else {
+                        alert('not the same attribute');
+                    }
+                } else {
+                    alert('not the same type object');
+                }
+        }
+        this.doCut = false;
+        this.sourceNode = null;
+        this.closeMenu();
+        this.ngDoCheck();
+    }
+
+    canPaste = () => {
+        if (!this.sourceNode) {
+            return false;
+        }
+        return this.sourceNode.treeModel.canMoveNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 });
     }
 
 }

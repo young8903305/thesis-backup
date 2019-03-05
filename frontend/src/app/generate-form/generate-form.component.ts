@@ -4,6 +4,8 @@ import { FormGroupName } from '@angular/forms';
 import { GenerateFormService } from './generate-form.service';
 import { stringify } from 'querystring';
 import { store } from '@angular/core/src/render3';
+import { createOfflineCompileUrlResolver } from '@angular/compiler';
+import { clearModulesForTest } from '@angular/core/src/linker/ng_module_factory_loader';
 
 @Component({
   selector: 'app-generate-form',
@@ -39,7 +41,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
                 this.MemberType[key] === 'Byte' || this.MemberType[key] === 'Short' || this.MemberType[key] === 'Integer' ||
                 this.MemberType[key] === 'Long' || this.MemberType[key] === 'Float' || this.MemberType[key] === 'Double') {
-                input[key] = +input[key];
+                input[key] = +input[key];   // string to number
             }
         }
         return input;
@@ -58,13 +60,13 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('MemberType: ', this.MemberType);
     }
 
-    jsogForSessionStorage(jsonInput: any) { // jsonInput: the value of each key in json
+    jsogForSessionStorage(jsonInput: any, typeCheck) { // jsonInput: the value of each key in json-type
         let tempArray = [];
         console.log('jsonInput: ', jsonInput);
         if (isNaN(jsonInput)) { // skip number, ouput number directly
-            tempArray = jsonInput.split(', ');
-            console.log('tempArray: ', tempArray);
-            if (tempArray.length > 1) { // list variable
+            tempArray = jsonInput.split(', ');  // it will split the value
+            // console.log('tempArray: ', tempArray);
+            if (tempArray.length > 1) { // list variable, need to fix this condition
                 for (let i = 0; i < tempArray.length; i++ ) {
                     if (sessionStorage.getItem(tempArray[i]) !== null) {   // sessionStorage has it.
                         if (this.checkMap.has(tempArray[i])) { // used, add as @ref
@@ -116,8 +118,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 console.log('formInput[tempKey]: ', formInput[tempKey]);
                 tempArray = formInput[tempKey].split(', ');
                 console.log('tempArray: ', tempArray);*/
-                console.log('type: ', this.MemberStyle[tempKey]);
-                formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey]);
+                // console.log('type: ', this.MemberStyle[tempKey]);
+                console.log('type input', this.storageTypeMap.get(formInput[tempKey]));
+                formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey], this.storageTypeMap.get(formInput[tempKey]));
                 /*if (sessionStorage.getItem(formInput[tempKey]) !== null) {   // sessionStorage has it.
                     if (this.checkMap.has(formInput[tempKey])) { // used, add as @ref
                         const temp = {};
@@ -152,8 +155,10 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
         /* tempType: sessionStorage's class type and index;
            key: split temp and use the last one be the real key */
-        const tempType = this.form_receive.value['@type'].concat(
+        /*const tempType = this.form_receive.value['@type'].concat(
             this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));
+        const key = tempType.split('.')[tempType.split('.').length - 1];*/
+        const tempType = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
         const key = tempType.split('.')[tempType.split('.').length - 1];
         console.log('key: ', key);  // print object with class and its class' count
         this.checkMap.set(key, true);
@@ -205,6 +210,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             this.storageTypeMap.set(key, this.MemberType);
+            console.log('this.storageTypeMap: ', this.storageTypeMap);
             this.storageIndex++;
         } else {    // sessioinStorage had this item, edit object, overwrite old value
             const temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
@@ -213,6 +219,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
+        this.clearForm();
     }
 
     // clear the form data
