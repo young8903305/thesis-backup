@@ -313,9 +313,11 @@ var AngularTreeComponent = /** @class */ (function () {
         };
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.data.currentFlag.subscribe(function (flagInput) { return _this.flagReceive = flagInput; });
     };
     AngularTreeComponent.prototype.ngDoCheck = function () {
-        if (this.storageLength !== sessionStorage.length) {
+        if (this.storageLength !== sessionStorage.length || this.flagReceive === true) {
             // console.log('length: ', this.temp);
             this.nodes = [];
             for (var i = 0; i < sessionStorage.length; i++) {
@@ -342,6 +344,7 @@ var AngularTreeComponent = /** @class */ (function () {
                 }*/
                 this.nodes.push(parent_1);
             }
+            this.flagReceive = false;
         }
         this.storageLength = sessionStorage.length;
     };
@@ -1047,9 +1050,14 @@ var FormDataService = /** @class */ (function () {
     function FormDataService() {
         this.messageSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
         this.currentMessage = this.messageSource.asObservable();
+        this.flagSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.currentFlag = this.flagSource.asObservable();
     }
     FormDataService.prototype.changeMessage = function (message) {
         this.messageSource.next(message);
+    };
+    FormDataService.prototype.changeFlag = function (flagInput) {
+        this.flagSource.next(flagInput);
     };
     FormDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
@@ -1098,14 +1106,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _generate_form_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./generate-form.service */ "./src/app/generate-form/generate-form.service.ts");
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
+
 
 
 
 
 var GenerateFormComponent = /** @class */ (function () {
-    function GenerateFormComponent(fb, subCreate) {
+    function GenerateFormComponent(fb, subCreate, booleanFlag) {
         this.fb = fb;
         this.subCreate = subCreate;
+        this.booleanFlag = booleanFlag;
         this.form_receive = this.fb.group({});
         this.storageIndex = 1;
         this.storageMap = new Map(); // <class-name, count> : record class' count
@@ -1253,7 +1264,7 @@ var GenerateFormComponent = /** @class */ (function () {
         });
     };
     // sessionStorage just accept string type key/value
-    GenerateFormComponent.prototype.store = function () {
+    GenerateFormComponent.prototype.store = function ($event) {
         console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value['@type']));
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
@@ -1293,6 +1304,7 @@ var GenerateFormComponent = /** @class */ (function () {
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
         this.clearForm();
+        this.booleanFlag.changeFlag(true);
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {
@@ -1316,7 +1328,8 @@ var GenerateFormComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./generate-form.component.css */ "./src/app/generate-form/generate-form.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
-            _generate_form_service__WEBPACK_IMPORTED_MODULE_3__["GenerateFormService"]])
+            _generate_form_service__WEBPACK_IMPORTED_MODULE_3__["GenerateFormService"],
+            _form_data_service__WEBPACK_IMPORTED_MODULE_4__["FormDataService"]])
     ], GenerateFormComponent);
     return GenerateFormComponent;
 }());

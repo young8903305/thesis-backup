@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, Output} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter} from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { FormGroupName } from '@angular/forms';
 import { GenerateFormService } from './generate-form.service';
@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import { store } from '@angular/core/src/render3';
 import { createOfflineCompileUrlResolver } from '@angular/compiler';
 import { clearModulesForTest } from '@angular/core/src/linker/ng_module_factory_loader';
+import { FormDataService } from '../form-data.service';
 
 @Component({
   selector: 'app-generate-form',
@@ -29,7 +30,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     jsog;
 
     constructor(private fb: FormBuilder,
-        private subCreate: GenerateFormService) {
+        private subCreate: GenerateFormService,
+        private booleanFlag: FormDataService) {
     }
 
     ngOnInit() {
@@ -180,7 +182,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     }
 
     // sessionStorage just accept string type key/value
-    store() {
+    store($event: any) {
         console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value['@type']));
 
         /* get object type => store object use its type-name and index
@@ -220,6 +222,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
         this.clearForm();
+        this.booleanFlag.changeFlag(true);
     }
 
     // clear the form data

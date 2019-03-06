@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, DoCheck, Output, EventEmitter, OnChanges } from '@angular/core';
 import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions } from 'angular-tree-component';
 import { FormDataService } from '../form-data.service';
 // import * as _ from 'lodash'; // _.remove.......
@@ -52,6 +52,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     nodes;
     str;
     sessionStorageTemp;
+    flagReceive;
 
 
     contextMenu: { node: TreeNode, x: number, y: number } = null;
@@ -168,10 +169,11 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     };
 
     ngOnInit() {
+        this.data.currentFlag.subscribe(flagInput => this.flagReceive = flagInput);
     }
 
     ngDoCheck() {     // check sessionStorage's length and generate ng-tree view
-        if (this.storageLength !== sessionStorage.length) {
+        if (this.storageLength !== sessionStorage.length || this.flagReceive === true) {
             // console.log('length: ', this.temp);
             this.nodes = [];
             for (let i = 0; i < sessionStorage.length; i++) {
@@ -198,6 +200,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 }*/
                 this.nodes.push(parent);
             }
+            this.flagReceive = false;
         }
         this.storageLength = sessionStorage.length;
     }
