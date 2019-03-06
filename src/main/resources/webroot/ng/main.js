@@ -1540,13 +1540,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var UploaderComponent = /** @class */ (function () {
-    // fileForm;
     function UploaderComponent(fb, uploaderService, http) {
         this.fb = fb;
         this.uploaderService = uploaderService;
         this.http = http;
         this.uploader = this.fb.group({});
-        this.fileForm = this.fb.group({});
     }
     UploaderComponent.prototype.ngOnInit = function () { };
     UploaderComponent.prototype.fileChange = function (fileList) {
@@ -1557,14 +1555,15 @@ var UploaderComponent = /** @class */ (function () {
         var _this = this;
         console.log('fileList', this.fileList);
         this.fileToUpload = this.fileList[0];
+        console.log('this.fileToUpload.name ', this.fileToUpload.name);
         var formData = new FormData();
         formData.append('file', this.fileToUpload, this.fileToUpload.name);
         console.log('formData', formData);
         this.uploaderService.uploadFile(formData).subscribe(function (response) {
             console.log('response', response);
             console.log('response.body', response.body);
-            _this.fileForm = _this.fb.group(response.body);
-            // this.fileForm = response.body;
+            // this.fileForm = this.fb.group(response.body);
+            _this.fileForm = response.body;
         });
     };
     UploaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([

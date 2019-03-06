@@ -579,12 +579,124 @@ public class Main {
 			   fileContent.close();
 			}
 			
+			String typeName = "";
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = mapper.readTree(fileContentStr);
+			Iterator<Entry<String, JsonNode>> jsonNodes = node.fields();
+			while (jsonNodes.hasNext()) {
+				Entry<String, JsonNode> jnode = jsonNodes.next();
+				JsonNode jNode = jnode.getValue();
+				if(jnode.getKey().equals("@type")) {
+					typeName = jnode.getValue().asText();
+					break;
+				}
+			}
+			
+			ObjectMapper ob = new ObjectMapper();
+			
+			Class<?> pClass = null;
+		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style ]
+		    ObjectNode typeNode = ob.createObjectNode();	// [ fieldName : type ]
+			try {
+				pClass = Class.forName(typeName);
+				// Field
+				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+				
+				
+				Annotation annotation;
+				AnnotationForm var;
+				for (Field f : fieldlist) {
+					annotation = f.getAnnotation(AnnotationForm.class);
+					var = (AnnotationForm) annotation;
+					System.out.println(var.style()[0]);
+					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
+						switch (var.style()[0].input()) {
+							case color :
+								styleNode.put(f.getName(), "color");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							/*case checkbox:	// need to fix
+								ArrayNode aNode = ob.createArrayNode();
+								//if(f.getType()==Array.class || f.getType()==List.class) {
+									for(int i = 0; i<var.style()[0].value().length; i++) {
+										System.out.println("checkbox value : " + var.style()[0].value()[i]);
+										aNode.add(var.style()[0].value()[i]);
+									}
+								//}
+								objectNode.set(f.getName(), aNode);
+								styleNode.put(f.getName(), "checkbox");
+								break;*/
+							case date:
+								styleNode.put(f.getName(), "date");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case datetime_local:
+								styleNode.put(f.getName(), "datetime-local");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case email:
+								styleNode.put(f.getName(), "email");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case month:
+								styleNode.put(f.getName(), "month");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case number:
+								styleNode.put(f.getName(), "number");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case password :
+								styleNode.put(f.getName(), "password");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							/*case radio :	// need to fix
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
+								styleNode.put(f.getName(), "radio");
+								break;
+							case range :	// need to fix
+								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
+								styleNode.put(f.getName(), "range");
+								break;*/
+							case text :
+								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case time :
+								styleNode.put(f.getName(), "time");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case week :
+								styleNode.put(f.getName(), "week");
+								typeNode.put(f.getName(), f.getType().getSimpleName());
+								break;
+							case none :
+								break;
+							default :
+								break;
+						}
+					}else if(var.style()[0].textarea().length() > 0) {
+						styleNode.put(f.getName(), "textarea");
+						typeNode.put(f.getName(), f.getType().getSimpleName());
+					}
+				}
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			// System.out.println("objectNode: " + ob.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode));
+			System.out.println("defaultValueNode: " + fileContentStr);
+			System.out.println("styleNode: " + styleNode.toString());
+			System.out.println("typeNode: " + typeNode.toString());
+			
+			String responce_json = "[" + fileContentStr + "," + styleNode.toString() + "," + typeNode.toString() + "]";
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(fileContentStr);
+			response.getWriter().write(responce_json);
 		}
 	}
 	

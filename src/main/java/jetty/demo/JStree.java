@@ -82,7 +82,7 @@ public class JStree {
 	        				REFtemp = "\"@ref\"" + ":" + node.getValue().toString() + ",\n";
 	        				//concat += REFtemp;
 	        			}else if(node.getKey().equals("@type")) { 	//@type
-	        				TYPEtemp = "\"@type\"" + ":" + node.getValue().toString() + ",\n";
+	        				TYPEtemp = "\"@type\"" + ":" + node.getValue().toString() + ",\n";	// toString() change to asText() will be better
 	        				//concat += TYPEtemp;
 	        			}else {	// string, number, true, false, null
 	        				//System.out.println("{\"text\": \"" + node.getKey() + "\"},");
