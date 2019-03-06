@@ -237,4 +237,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         this.storageMap.clear();
         this.storageIndex = 1;
     }
+
+    onDrop($event) {
+        // Dropped $event.element
+    }
+
+    allowDrop(element) {
+        return true;
+    }
 }

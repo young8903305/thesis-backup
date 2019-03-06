@@ -13,7 +13,7 @@
   <div>Menu for {{ contextMenu.node.data.pureName }}</div>
   <hr>
   <ul>
-    <li (click)="copyValue()"><a [style.opacity]="notRoot() && 1 || 0.3">Copy value</a></li>
+    <li (click)="copyValue()"><a>Copy value</a></li>
     <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
     <li (click)="pasteValue()"><a [style.opacity]="notRoot() && canPaste() && 1 || 0.3">Paste value</a></li>
     <li (click)="delete(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Delete</a></li>

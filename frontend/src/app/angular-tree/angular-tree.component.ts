@@ -165,7 +165,12 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 }
             }
         },
-        allowDrag: (node) => node.isRoot,
+        allowDrag: (node) => {
+            if (node.data.pureName !== '@id' && node.data.pureName !== '@type') {
+                return true;
+            }
+        },
+        allowDrop: (node) => false,
     };
 
     ngOnInit() {
@@ -228,9 +233,42 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     }
 
     copyValue = () => {
+        if (this.isRoot()) {
+            console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
+            document.addEventListener('copy', (e: ClipboardEvent) => {
+                e.clipboardData.setData('text/plain', (this.contextMenu.node.data.name));
+                e.preventDefault();
+                document.removeEventListener('copy', null);
+            });
+            document.execCommand('copy');
+
+            this.doCut = true;
+            this.closeMenu();
+        } else {
         this.sourceNode = this.contextMenu.node;
+
+        /*const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = this.contextMenu.node.data.val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);*/
+
+        document.addEventListener('copy', (e: ClipboardEvent) => {
+            e.clipboardData.setData('text/plain', (this.contextMenu.node.data.val));
+            e.preventDefault();
+            document.removeEventListener('copy', null);
+        });
+        document.execCommand('copy');
+
         this.doCut = true;
         this.closeMenu();
+        }
     }
 
     copyObj = () => {

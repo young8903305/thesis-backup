@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit sessionStorage</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div>Menu for {{ contextMenu.node.data.pureName }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"delete(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete</a></li>\n  </ul>\n</div>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit sessionStorage</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div>Menu for {{ contextMenu.node.data.pureName }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a>Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"delete(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete</a></li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -208,7 +208,12 @@ var AngularTreeComponent = /** @class */ (function () {
                     }
                 }
             },
-            allowDrag: function (node) { return node.isRoot; },
+            allowDrag: function (node) {
+                if (node.data.pureName !== '@id' && node.data.pureName !== '@type') {
+                    return true;
+                }
+            },
+            allowDrop: function (node) { return false; },
         };
         this.closeMenu = function () {
             _this.contextMenu = null;
@@ -223,9 +228,39 @@ var AngularTreeComponent = /** @class */ (function () {
             _this.editNode = null;
         };
         this.copyValue = function () {
-            _this.sourceNode = _this.contextMenu.node;
-            _this.doCut = true;
-            _this.closeMenu();
+            if (_this.isRoot()) {
+                console.log('this.contextMenu.node.data.name ', _this.contextMenu.node.data.name);
+                document.addEventListener('copy', function (e) {
+                    e.clipboardData.setData('text/plain', (_this.contextMenu.node.data.name));
+                    e.preventDefault();
+                    document.removeEventListener('copy', null);
+                });
+                document.execCommand('copy');
+                _this.doCut = true;
+                _this.closeMenu();
+            }
+            else {
+                _this.sourceNode = _this.contextMenu.node;
+                /*const selBox = document.createElement('textarea');
+                selBox.style.position = 'fixed';
+                selBox.style.left = '0';
+                selBox.style.top = '0';
+                selBox.style.opacity = '0';
+                selBox.value = this.contextMenu.node.data.val;
+                document.body.appendChild(selBox);
+                selBox.focus();
+                selBox.select();
+                document.execCommand('copy');
+                document.body.removeChild(selBox);*/
+                document.addEventListener('copy', function (e) {
+                    e.clipboardData.setData('text/plain', (_this.contextMenu.node.data.val));
+                    e.preventDefault();
+                    document.removeEventListener('copy', null);
+                });
+                document.execCommand('copy');
+                _this.doCut = true;
+                _this.closeMenu();
+            }
         };
         this.copyObj = function () {
             if (!_this.isRoot) {
@@ -1088,7 +1123,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}}>\n    <textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}}></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}}>\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} ></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
 
 /***/ }),
 
@@ -1316,6 +1351,12 @@ var GenerateFormComponent = /** @class */ (function () {
         sessionStorage.clear();
         this.storageMap.clear();
         this.storageIndex = 1;
+    };
+    GenerateFormComponent.prototype.onDrop = function ($event) {
+        // Dropped $event.element
+    };
+    GenerateFormComponent.prototype.allowDrop = function (element) {
+        return true;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
