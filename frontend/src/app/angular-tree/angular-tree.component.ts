@@ -189,6 +189,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 parent['name'] = Object.keys(sessionStorage)[i];
 
                 for (const [key, value] of Object.entries(JSON.parse(Object.values(sessionStorage)[i]))) {
+                    console.log('tree: ', [key, value]);
                     // if (key !== '@id' && key !== '@type') {
                         parent.children.push({
                             name: key + ': ' + value,

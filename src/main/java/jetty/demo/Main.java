@@ -41,6 +41,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -742,7 +743,15 @@ public class Main {
 						switch (var.style()[0].input()) {
 							case color :
 								styleNode.put(f.getName(), "color");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							/*case checkbox:	// need to fix
 								ArrayNode aNode = ob.createArrayNode();
@@ -756,28 +765,75 @@ public class Main {
 								styleNode.put(f.getName(), "checkbox");
 								break;*/
 							case date:
-								styleNode.put(f.getName(), "date");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								styleNode.put(f.getName(), "date");if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case datetime_local:
 								styleNode.put(f.getName(), "datetime-local");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case email:
 								styleNode.put(f.getName(), "email");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case month:
 								styleNode.put(f.getName(), "month");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case number:
 								styleNode.put(f.getName(), "number");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case password :
 								styleNode.put(f.getName(), "password");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							/*case radio :	// need to fix
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
@@ -789,22 +845,54 @@ public class Main {
 								break;*/
 							case text :
 								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case time :
 								styleNode.put(f.getName(), "time");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case week :
 								styleNode.put(f.getName(), "week");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							default:
 								break;
 						}
 					}else if(var.style()[0].textarea().length() > 0) {
 						styleNode.put(f.getName(), "textarea");
-						typeNode.put(f.getName(), f.getType().getSimpleName());
+						if (f.getType().getSimpleName().equals("List")) {
+							ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+							Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+							String complexType = "List".concat(" " + stringListClass.getSimpleName());
+							typeNode.put(f.getName(), complexType );
+						} else {
+							typeNode.put(f.getName(), f.getType().getSimpleName());
+						}
+						// typeNode.put(f.getName(), f.getType().getSimpleName());
 					}
 				}
 				
@@ -1235,7 +1323,15 @@ public class Main {
 							case color :
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());	// get default value
 								styleNode.put(f.getName(), "color");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							/*case checkbox:	// need to fix
 								ArrayNode aNode = ob.createArrayNode();
@@ -1251,12 +1347,28 @@ public class Main {
 							case date:
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "date");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case datetime_local:
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "datetime-local");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case email:
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
@@ -1266,17 +1378,41 @@ public class Main {
 							case month:
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "month");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case number:
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "number");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case password :
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "password");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							/*case radio :	// need to fix
 								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
@@ -1289,17 +1425,41 @@ public class Main {
 							case text :
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case time :
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "time");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case week :
 								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 								styleNode.put(f.getName(), "week");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
+								if (f.getType().getSimpleName().equals("List")) {
+									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+									String complexType = "List".concat(" " + stringListClass.getSimpleName());
+									typeNode.put(f.getName(), complexType );
+								} else {
+									typeNode.put(f.getName(), f.getType().getSimpleName());
+								}
+								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case none :
 								break;
@@ -1309,7 +1469,15 @@ public class Main {
 					}else if(var.style()[0].textarea().length() > 0) {
 						defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
 						styleNode.put(f.getName(), "textarea");
-						typeNode.put(f.getName(), f.getType().getSimpleName());
+						if (f.getType().getSimpleName().equals("List")) {
+							ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+							Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+							String complexType = "List".concat(" " + stringListClass.getSimpleName());
+							typeNode.put(f.getName(), complexType );
+						} else {
+							typeNode.put(f.getName(), f.getType().getSimpleName());
+						}
+						// typeNode.put(f.getName(), f.getType().getSimpleName());
 					}
 				}
 				

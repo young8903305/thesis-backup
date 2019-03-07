@@ -23,9 +23,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     form_receive = this.fb.group({});
 
     storageIndex = 1;
-    storageMap = new Map<string, number>(); // <class-name, count> : record class' count
-    idMap = new Map<string, string>();      // <sessionStorage-key, @id>
-    checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref
+    storageMap = new Map<string, number>(); // <class-name, count>: record class' count
+    idMap = new Map<string, string>();      // <sessionStorage-key, @id>: store id for @ref-using
+    checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
     storageTypeMap = new Map<string, Object>(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
     jsog;
 
@@ -37,7 +37,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     ngOnInit() {
     }
 
-    CheckStrToNum(input) {
+    CheckStrToNum(input) {  // input = this.form_receive.value (Object)
         for (const key in this.MemberType) { // change string default value to number
             if (this.MemberType[key] === 'byte' || this.MemberType[key] === 'short' || this.MemberType[key] === 'int' ||
                 this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
@@ -47,6 +47,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             }
         }
         return input;
+    }
+
+    CheckListMember(input) {   // input = this.form_receive.value (Object)
     }
 
     // receieve the class info form create component
@@ -62,55 +65,90 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('MemberType: ', this.MemberType);
     }
 
-    jsogForSessionStorage(jsonInput: any, typeCheck) { // jsonInput: the value of each key in json-type
-        let tempArray = [];
+    jsogForSessionStorage(jsonInput: Object, typeCheck: Object) { // jsonInput(object): k-v pair of form, typeCheck: ob of outer ob's type
+        // jsonInput-> { name: yang } typeCheck-> { age: long }
+        // jsonInput-> { children:[p1, p2] } typeCheck-> { children: list PersonDemo }
         console.log('jsonInput: ', jsonInput);
-        if (isNaN(jsonInput)) { // skip number, ouput number directly
-            tempArray = jsonInput.split(', ');  // it will split the value
-            // console.log('tempArray: ', tempArray);
-            if (tempArray.length > 1) { // list variable, need to fix this condition
-                for (let i = 0; i < tempArray.length; i++ ) {
-                    if (sessionStorage.getItem(tempArray[i]) !== null) {   // sessionStorage has it.
-                        if (this.checkMap.has(tempArray[i])) { // used, add as @ref
+        const tempKey = Object.keys(jsonInput); //  age, children
+        const tempVal = Object.values(jsonInput);  // 1, [p1, p2], [1, 2], ["1", "2"]
+        const tempType = typeCheck[tempKey.toString()]; // long, list PersonDemo, list int, list string
+
+        if ( tempVal.toString() === '') {   // no value, put null
+            return null;
+        }
+        if (tempType === 'byte' || tempType === 'short' || tempType === 'int' || tempType === 'long' // number, output directly
+            || tempType === 'float' || tempType === 'double' || tempType === 'Byte' || tempType === 'Short'
+            || tempType === 'Integer' || tempType === 'Long' || tempType === 'Float' || tempType === 'Double') {
+                return +tempVal;
+        } else if (tempType === 'boolean') {    // true & false
+            if (tempVal.toString() === 'true') {
+                return true;
+            } else {
+                return false;
+            }
+        } else {    // list or string
+            const tempTypeArray = tempType.split(' ');  // split the type value to array
+            if (tempTypeArray[0] === 'List') { // list variable
+                const tempListVal = [];
+                const tempSingleVal = tempVal.toString().split(', ');
+                for (let i = 0; i < tempSingleVal.length; i++ ) {
+                    if (sessionStorage.getItem(tempSingleVal[i]) !== null) {   // sessionStorage has it. [p1, p2] list persondemo
+                        if (this.checkMap.has(tempSingleVal[i])) { // used, add as @ref
                             const temp = {};
-                            const refType = JSON.parse(sessionStorage.getItem(tempArray[i]))['@type'];
-                            temp['@ref'] = this.idMap.get(tempArray[i]);
+                            const refType = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@type'];
+                            temp['@ref'] = this.idMap.get(tempSingleVal[i]);
                             temp['@type'] = refType;
-                            tempArray[i] = temp;
-                            console.log('tempArray[i]: ', tempArray[i]);
+                            tempListVal[i] = temp;
+                            console.log('tempListVal[i]: ', tempListVal[i]);
                         } else {    // haven't used it yet, set checkMap to true, and write it
-                            // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                            this.checkMap.set(tempArray[i], true);
-                            tempArray[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempArray[i])));
-                            // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
+                            this.checkMap.set(tempSingleVal[i], true);
+                            const typein = this.storageTypeMap.get(tempSingleVal[i]);
+                            tempListVal[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempSingleVal[i])), typein);
                             console.log('checkMap', this.checkMap);
                         }
+                    } else if (tempTypeArray[1] === 'byte' || tempTypeArray[1] === 'short' || tempTypeArray[1] === 'int'
+                        || tempTypeArray[1] === 'long' || tempTypeArray[1] === 'float' || tempTypeArray[1] === 'double'
+                        || tempTypeArray[1] === 'Byte' || tempTypeArray[1] === 'Short' || tempTypeArray[1] === 'Integer'
+                        || tempTypeArray[1] === 'Long' || tempTypeArray[1] === 'Float' || tempTypeArray[1] === 'Double') {
+                            // [1, 2] list int
+                            tempListVal[i] = +tempSingleVal[i];
+                    } else if (tempTypeArray[1] === 'boolean') {    // [t, f, t, f] list boolean
+                        if (tempSingleVal.toString() === 'true') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {    // ["1", "2"] list string
+                        tempListVal[i] = tempSingleVal[i];
                     }
                 }
-                return tempArray;
-            } else {    // not list variable
-                if (sessionStorage.getItem(jsonInput) !== null) {   // sessionStorage has it.
-                    if (this.checkMap.has(jsonInput)) { // used, add as @ref
+                return tempListVal;
+            } else {    // string
+                const StrTempVal = tempVal.toString();
+                if (sessionStorage.getItem(StrTempVal) !== null) {   // sessionStorage has it.
+                    let reVal: any;
+                    if (this.checkMap.has(StrTempVal)) { // used, add as @ref
                         const temp = {};
-                        const refType = JSON.parse(sessionStorage.getItem(jsonInput))['@type'];
-                        temp['@ref'] = this.idMap.get(jsonInput);
+                        const refType = JSON.parse(sessionStorage.getItem(StrTempVal))['@type'];
+                        temp['@ref'] = this.idMap.get(StrTempVal);
                         temp['@type'] = refType;
-                        jsonInput = temp;
-                        console.log('jsonInput: ', jsonInput);
+                        reVal = temp;
                     } else {    // haven't used it yet, set checkMap to true, and write it
-                        this.checkMap.set(jsonInput, true);
-                        jsonInput = this.jsogGen(JSON.parse(sessionStorage.getItem(jsonInput)));
+                        this.checkMap.set(StrTempVal, true);
+                        const typein = this.storageTypeMap.get(StrTempVal);
+                        reVal = this.jsogGen(JSON.parse(sessionStorage.getItem(StrTempVal)), typein);
                         console.log('checkMap', this.checkMap);
                     }
+                    console.log('reVal: ', reVal);
+                    return reVal;
+                } else {
+                    return StrTempVal;
                 }
-                return jsonInput;
             }
-        } else {
-            return jsonInput;
         }
     }
 
-    jsogGen(formInput: any) {   // formInput = this.form_receive.value (object)
+    jsogGen(formInput: any, typein: Object) {   // formInput = this.form_receive.value (object); typein: object of outer type from sTypeMap
         const jsogS = {};
 
         for (let i = 0; i < Object.keys(formInput).length; i++) {
@@ -121,8 +159,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 tempArray = formInput[tempKey].split(', ');
                 console.log('tempArray: ', tempArray);*/
                 // console.log('type: ', this.MemberStyle[tempKey]);
-                console.log('type input', this.storageTypeMap.get(formInput[tempKey]));
-                formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey], this.storageTypeMap.get(formInput[tempKey]));
+                // console.log('type input', this.storageTypeMap.get(tempKey));
+                const single_KV_pair = {};
+                single_KV_pair[tempKey] = formInput[tempKey];
+                // console.log('formInput: ', single_KV_pair);
+                formInput[tempKey] = this.jsogForSessionStorage(single_KV_pair, typein);
+                // formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey], typein);
                 /*if (sessionStorage.getItem(formInput[tempKey]) !== null) {   // sessionStorage has it.
                     if (this.checkMap.has(formInput[tempKey])) { // used, add as @ref
                         const temp = {};
@@ -165,7 +207,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('key: ', key);  // print object with class and its class' count
         this.checkMap.set(key, true);
 
-        this.jsog = this.jsogGen( this.form_receive.value );
+        console.log('storageTypeMap.get(key): ', this.storageTypeMap.get(key));
+        this.jsog = this.jsogGen(this.form_receive.value, this.storageTypeMap.get(key) );
 
         this.checkMap.clear();
         console.log('jsog ', this.jsog);
