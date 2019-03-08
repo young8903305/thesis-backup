@@ -51,8 +51,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     CheckListMember(input) {   // input = this.form_receive.value (Object)
         const tempInput = input;
-        const tempKey = Object.keys(tempInput); // return array of keys
-        const tempVal = Object.values(tempInput);
+        const tempKey = Object.keys(tempInput); // array of keys
+        const tempVal = Object.values(tempInput);   // array of values
         let tempArray;
         const reArray = [];
         for (let i = 0; i < tempKey.length; i++) {
