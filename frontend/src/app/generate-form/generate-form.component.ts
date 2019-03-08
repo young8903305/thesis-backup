@@ -50,6 +50,24 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     }
 
     CheckListMember(input) {   // input = this.form_receive.value (Object)
+        const tempInput = input;
+        const tempKey = Object.keys(tempInput); // return array of keys
+        const tempVal = Object.values(tempInput);
+        let tempArray;
+        const reArray = [];
+        for (let i = 0; i < tempKey.length; i++) {
+            if (tempKey[i] !== '@id' && tempKey[i] !== '@type') {
+                if (this.MemberType[tempKey[i]].includes('List')) {
+                    console.log('tempVal[i]: ', tempVal[i]);
+                    tempArray = tempVal.toString().split(', ');
+                    for (let j = 0; j < tempArray.length; j++) {
+                        reArray.push(tempArray[j]);
+                    }
+                }
+            }
+        }
+        console.log('reArray: ', reArray);
+        return tempInput;
     }
 
     // receieve the class info form create component
@@ -252,6 +270,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            this.CheckListMember(this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             this.storageTypeMap.set(key, this.MemberType);

@@ -1174,6 +1174,24 @@ var GenerateFormComponent = /** @class */ (function () {
         return input;
     };
     GenerateFormComponent.prototype.CheckListMember = function (input) {
+        var tempInput = input;
+        var tempKey = Object.keys(tempInput); // return array of keys
+        var tempVal = Object.values(tempInput);
+        var tempArray;
+        var reArray = [];
+        for (var i = 0; i < tempKey.length; i++) {
+            if (tempKey[i] !== '@id' && tempKey[i] !== '@type') {
+                if (this.MemberType[tempKey[i]].includes('List')) {
+                    console.log('tempVal[i]: ', tempVal[i]);
+                    tempArray = tempVal.toString().split(', ');
+                    for (var j = 0; j < tempArray.length; j++) {
+                        reArray.push(tempArray[j]);
+                    }
+                }
+            }
+        }
+        console.log('reArray: ', reArray);
+        return tempInput;
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
@@ -1374,6 +1392,7 @@ var GenerateFormComponent = /** @class */ (function () {
             var temp = this.form_receive.value['@type'].concat(this.storageIndex); // use storage count as id postfix
             var key = temp.split('.')[temp.split('.').length - 1];
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            this.CheckListMember(this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             this.storageTypeMap.set(key, this.MemberType);
