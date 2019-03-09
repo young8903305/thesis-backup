@@ -35,7 +35,9 @@ import { ContextmenuComponent } from './contextmenu/contextmenu.component';
         TreeModule.forRoot(),
         AppRoutingModule,
     ],
-    providers: [ FormDataService ],
+    providers: [
+            FormDataService
+    ],
     bootstrap: [ AppComponent ],
 })
 export class AppModule { }

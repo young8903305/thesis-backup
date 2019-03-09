@@ -37,20 +37,20 @@ public class PersonDemo implements Serializable{
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.color, value = "#ff0000") }, name = "color")
 	private String color;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.time, value = "" ) }, name = "id")
-	private String test;
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.time, value = "" ) }, name = "choose a time")
+	private String time;
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "spouse")
 	private PersonDemo spouse;
 	
-	public PersonDemo (int age, String lastname, String firstname, String description, String email, String color, String test, PersonDemo p) {
+	public PersonDemo (int age, String lastname, String firstname, String description, String email, String color, String time, PersonDemo p) {
 		setAge(age);
 		setLastName(lastname);
 		setFirstName(firstname);
 		setPassword(description);
 		setEmail(email);
 		setColor(color);
-		setTest(test);
+		setTime(time);
 		setSpouse(p);
 	}
 	
@@ -104,12 +104,12 @@ public class PersonDemo implements Serializable{
 		return this.color;
 	}
 	
-	public void setTest(String test) {
-		this.test = test;
+	public void setTime(String time) {
+		this.time = time;
 	}
 	
-	public String getTest() {
-		return this.test;
+	public String getTime() {
+		return this.time;
 	}
 	
 	public void setSpouse(PersonDemo p) {

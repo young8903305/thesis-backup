@@ -49,28 +49,6 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         return input;
     }
 
-    // no need
-    CheckListMember(input) {   // input = this.form_receive.value (Object)
-        const tempInput = input;
-        const tempKey = Object.keys(tempInput); // array of keys
-        const tempVal = Object.values(tempInput);   // array of values
-        let tempArray;
-        const reArray = [];
-        for (let i = 0; i < tempKey.length; i++) {
-            if (tempKey[i] !== '@id' && tempKey[i] !== '@type') {
-                if (this.MemberType[tempKey[i]].includes('List')) {
-                    console.log('tempVal[i]: ', tempVal[i]);
-                    tempArray = tempVal.toString().split(', ');
-                    for (let j = 0; j < tempArray.length; j++) {
-                        reArray.push(tempArray[j]);
-                    }
-                }
-            }
-        }
-        console.log('reArray: ', reArray);
-        return tempInput;
-    }
-
     // receieve the class info form create component
     ngOnChanges() {
         // this.defaultValueTemp = this.generate_form_receive[0];

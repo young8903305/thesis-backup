@@ -48,17 +48,18 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     constructor(private data: FormDataService) {
     }
 
+
     storageLength = 0;
     nodes;
     str;
     sessionStorageTemp;
     flagReceive;    // in form-data service, for resize the component if sessionStorage been motified
 
-
     contextMenu: { node: TreeNode, x: number, y: number } = null;
     editNode: TreeNode = null;
     sourceNode: TreeNode = null;
     doCut = false;
+    finishPaste = true;
 
 
     /*nodes = [
@@ -190,13 +191,11 @@ export class AngularTreeComponent implements OnInit, DoCheck {
 
                 for (const [key, value] of Object.entries(JSON.parse(Object.values(sessionStorage)[i]))) {
                     console.log('tree: ', [key, value]);
-                    // if (key !== '@id' && key !== '@type') {
                         parent.children.push({
                             name: key + ': ' + value,
                             pureName: key,
                             val: value
                         });
-                    // }
                 }
                 /*for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
                     parent.children.push({
@@ -246,29 +245,29 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             this.doCut = true;
             this.closeMenu();
         } else {
-        this.sourceNode = this.contextMenu.node;
+            this.sourceNode = this.contextMenu.node;
 
-        /*const selBox = document.createElement('textarea');
-        selBox.style.position = 'fixed';
-        selBox.style.left = '0';
-        selBox.style.top = '0';
-        selBox.style.opacity = '0';
-        selBox.value = this.contextMenu.node.data.val;
-        document.body.appendChild(selBox);
-        selBox.focus();
-        selBox.select();
-        document.execCommand('copy');
-        document.body.removeChild(selBox);*/
+            /*const selBox = document.createElement('textarea');
+            selBox.style.position = 'fixed';
+            selBox.style.left = '0';
+            selBox.style.top = '0';
+            selBox.style.opacity = '0';
+            selBox.value = this.contextMenu.node.data.val;
+            document.body.appendChild(selBox);
+            selBox.focus();
+            selBox.select();
+            document.execCommand('copy');
+            document.body.removeChild(selBox);*/
 
-        document.addEventListener('copy', (e: ClipboardEvent) => {
-            e.clipboardData.setData('text/plain', (this.contextMenu.node.data.val));
-            e.preventDefault();
-            document.removeEventListener('copy', null);
-        });
-        document.execCommand('copy');
+            document.addEventListener('copy', (e: ClipboardEvent) => {
+                e.clipboardData.setData('text/plain', (this.contextMenu.node.data.val));
+                e.preventDefault();
+                document.removeEventListener('copy', null);
+            });
+            document.execCommand('copy');
 
-        this.doCut = true;
-        this.closeMenu();
+            this.doCut = true;
+            this.closeMenu();
         }
     }
 
@@ -305,6 +304,14 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         return true;
     }
 
+    hasVal = () => {
+        if (this.contextMenu.node.data.val === '') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     deleteObject = (node) => {
         sessionStorage.removeItem(node.data.name);
         this.closeMenu();
@@ -319,7 +326,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             temp[key] = value;
         }
         sessionStorage.setItem(node.parent.data.name, JSON.stringify(temp));
-        node.data.name = node.data.pureName + ': ' + '';
+        node.data.val = '';
+        node.data.name = node.data.pureName + ': ' + node.data.val;
         this.closeMenu();
     }
 
@@ -328,7 +336,6 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             return;
         }
         if (this.doCut) {
-            // console.log('this.contextMenu.node.parent.data.children', this.contextMenu.node.parent.data.children);
                 const [name, pureName, val] = Object.entries(this.contextMenu.node.parent.data.children[1]);    // index 1: get @type val
                 const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);
                 if (val[1].toString() === sourceVal[1].toString()) {
@@ -347,8 +354,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                             temp[key] = value;
                         }
                         sessionStorage.setItem(this.contextMenu.node.parent.data.name, JSON.stringify(temp));
-                        // console.log('this.sourceNode.parent.data.children: ', this.sourceNode.parent.data.children);
-                        // console.log('this.contextMenu.node.parent: ', this.contextMenu.node.parent);
+                        this.doCut = false;
+                        this.sourceNode = null;
                     } else {
                         alert('not the same attribute');
                     }
@@ -356,8 +363,6 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     alert('not the same type object');
                 }
         }
-        this.doCut = false;
-        this.sourceNode = null;
         this.closeMenu();
     }
 

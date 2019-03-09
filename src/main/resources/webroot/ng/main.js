@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit sessionStorage</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -105,6 +105,7 @@ var AngularTreeComponent = /** @class */ (function () {
         this.editNode = null;
         this.sourceNode = null;
         this.doCut = false;
+        this.finishPaste = true;
         /*nodes = [
             {
                 name: 'PersonDemo1',
@@ -293,6 +294,14 @@ var AngularTreeComponent = /** @class */ (function () {
             }
             return true;
         };
+        this.hasVal = function () {
+            if (_this.contextMenu.node.data.val === '') {
+                return false;
+            }
+            else {
+                return true;
+            }
+        };
         this.deleteObject = function (node) {
             sessionStorage.removeItem(node.data.name);
             _this.closeMenu();
@@ -307,7 +316,8 @@ var AngularTreeComponent = /** @class */ (function () {
                 temp[key] = value;
             }
             sessionStorage.setItem(node.parent.data.name, JSON.stringify(temp));
-            node.data.name = node.data.pureName + ': ' + '';
+            node.data.val = '';
+            node.data.name = node.data.pureName + ': ' + node.data.val;
             _this.closeMenu();
         };
         this.pasteValue = function () {
@@ -315,7 +325,6 @@ var AngularTreeComponent = /** @class */ (function () {
                 return;
             }
             if (_this.doCut) {
-                // console.log('this.contextMenu.node.parent.data.children', this.contextMenu.node.parent.data.children);
                 var _a = Object.entries(_this.contextMenu.node.parent.data.children[1]), name_1 = _a[0], pureName = _a[1], val = _a[2]; // index 1: get @type val
                 var _b = Object.entries(_this.sourceNode.parent.data.children[1]), sourceName = _b[0], sourcePureName = _b[1], sourceVal = _b[2];
                 if (val[1].toString() === sourceVal[1].toString()) {
@@ -334,8 +343,8 @@ var AngularTreeComponent = /** @class */ (function () {
                             temp[key] = value;
                         }
                         sessionStorage.setItem(_this.contextMenu.node.parent.data.name, JSON.stringify(temp));
-                        // console.log('this.sourceNode.parent.data.children: ', this.sourceNode.parent.data.children);
-                        // console.log('this.contextMenu.node.parent: ', this.contextMenu.node.parent);
+                        _this.doCut = false;
+                        _this.sourceNode = null;
                     }
                     else {
                         alert('not the same attribute');
@@ -345,8 +354,6 @@ var AngularTreeComponent = /** @class */ (function () {
                     alert('not the same type object');
                 }
             }
-            _this.doCut = false;
-            _this.sourceNode = null;
             _this.closeMenu();
         };
         this.canPaste = function () {
@@ -373,13 +380,11 @@ var AngularTreeComponent = /** @class */ (function () {
                 for (var _i = 0, _a = Object.entries(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
                     var _b = _a[_i], key = _b[0], value = _b[1];
                     console.log('tree: ', [key, value]);
-                    // if (key !== '@id' && key !== '@type') {
                     parent_1.children.push({
                         name: key + ': ' + value,
                         pureName: key,
                         val: value
                     });
-                    // }
                 }
                 /*for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
                     parent.children.push({
@@ -483,7 +488,7 @@ module.exports = "h1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav >\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/uploader\">Uploader</a>\n        <br>\n        <a routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n<!--\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n-->\n\n<!--<app-angular-tree (sessionStorageEditInfo)=\"childEventClicked($event)\"></app-angular-tree>-->\n    <app-angular-tree></app-angular-tree>\n<!--<app-contextmenu></app-contextmenu>-->\n</div>\n"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"sidenav\">\n    <nav >\n        <!--<a routerLink=\"/edit\" (click)=\"noWelcome()\">Edit</a>\n        <br>-->\n        <a routerLink=\"/create\">Create</a>\n        <br>\n        <a routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n    </nav>\n</div>\n\n<div class=\"main\">\n    <h1>Welcome!!</h1>\n    <router-outlet></router-outlet>\n<!--\n    <div ng-controller='myCtrl'>\n        <div js-tree=\"treeConfig\" ng-model=\"treeData\" should-apply=\"ignoreModelChanges()\" tree=\"treeInstance\" tree-events=\"ready:readyCB;create_node:createNodeCB\"></div>\n    </div>\n-->\n\n<!--<app-angular-tree (sessionStorageEditInfo)=\"childEventClicked($event)\"></app-angular-tree>-->\n    <app-angular-tree></app-angular-tree>\n<!--<app-contextmenu></app-contextmenu>-->\n</div>\n"
 
 /***/ }),
 
@@ -609,7 +614,9 @@ var AppModule = /** @class */ (function () {
                 angular_tree_component__WEBPACK_IMPORTED_MODULE_12__["TreeModule"].forRoot(),
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_6__["AppRoutingModule"],
             ],
-            providers: [_form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"]],
+            providers: [
+                _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"]
+            ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]],
         })
     ], AppModule);
@@ -830,23 +837,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _create_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./create.service */ "./src/app/create/create.service.ts");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
-/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
-
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
 
 
 
 
 var CreateComponent = /** @class */ (function () {
-    function CreateComponent(createService, fb, data) {
+    function CreateComponent(createService, data) {
         var _this = this;
         this.createService = createService;
-        this.fb = fb;
         this.data = data;
         this.createService.getClassName()
             .subscribe(function (response) {
             _this.dataClassName = Object.values(response);
-            // console.log('classNames', this.dataClassName);
         });
     }
     CreateComponent.prototype.ngOnInit = function () {
@@ -874,8 +877,7 @@ var CreateComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./create.component.css */ "./src/app/create/create.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_create_service__WEBPACK_IMPORTED_MODULE_2__["CreateService"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormBuilder"],
-            _form_data_service__WEBPACK_IMPORTED_MODULE_4__["FormDataService"]])
+            _form_data_service__WEBPACK_IMPORTED_MODULE_3__["FormDataService"]])
     ], CreateComponent);
     return CreateComponent;
 }());
@@ -1133,7 +1135,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}}>\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} ></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n<button (click)=\"clearSession()\">clear sessionStorage</button>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}}>\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} ></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n<button (click)=\"clearSession()\">Clear Session Storage</button>"
 
 /***/ }),
 
@@ -1181,27 +1183,6 @@ var GenerateFormComponent = /** @class */ (function () {
             }
         }
         return input;
-    };
-    // no need
-    GenerateFormComponent.prototype.CheckListMember = function (input) {
-        var tempInput = input;
-        var tempKey = Object.keys(tempInput); // array of keys
-        var tempVal = Object.values(tempInput); // array of values
-        var tempArray;
-        var reArray = [];
-        for (var i = 0; i < tempKey.length; i++) {
-            if (tempKey[i] !== '@id' && tempKey[i] !== '@type') {
-                if (this.MemberType[tempKey[i]].includes('List')) {
-                    console.log('tempVal[i]: ', tempVal[i]);
-                    tempArray = tempVal.toString().split(', ');
-                    for (var j = 0; j < tempArray.length; j++) {
-                        reArray.push(tempArray[j]);
-                    }
-                }
-            }
-        }
-        console.log('reArray: ', reArray);
-        return tempInput;
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {

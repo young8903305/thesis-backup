@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 /*@Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class FormDataService {
         this.storageSource.next(storageInput);
     }
 
-    changeFlag(flagInput) { // form edit the sessionStorage and store
+    changeFlag(flagInput) { // form edit object and store
         this.flagSource.next(flagInput);
     }
 

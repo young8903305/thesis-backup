@@ -13,12 +13,10 @@ import { FormDataService } from '../form-data.service';
 export class CreateComponent implements OnInit {
 
     constructor(private createService: CreateService,
-                private fb: FormBuilder,
                 private data: FormDataService) {
         this.createService.getClassName()
             .subscribe(response => {
                 this.dataClassName = Object.values(response);
-                // console.log('classNames', this.dataClassName);
             });
     }
 

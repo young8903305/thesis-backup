@@ -7,17 +7,17 @@
     </ng-template>
 </tree-root>
 
-<button *ngIf="storageLength!==0" (click)="onEditClick()">Edit sessionStorage</button>
+<button *ngIf="storageLength!==0" (click)="onEditClick()">Edit Object</button>
 
 <div class="menu" *ngIf="contextMenu" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
   <div *ngIf="notRoot()">Menu for {{ contextMenu.node.data.pureName }}</div>
   <div *ngIf="isRoot()">Menu for {{ contextMenu.node.data.name }}</div>
   <hr>
   <ul>
-    <li (click)="copyValue()"><a [style.opacity]="notRoot() && 1 || 0.3">Copy value</a></li>
+    <li (click)="copyValue()"><a [style.opacity]="hasVal() && notRoot() && 1 || 0.3">Copy value</a></li>
     <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
     <li (click)="pasteValue()"><a [style.opacity]="notRoot() && canPaste() && 1 || 0.3">Paste value</a></li>
-    <li (click)="deleteValue(contextMenu.node)"><a [style.opacity]="notRoot() && 1 || 0.3">Delete value</a></li>
+    <li (click)="deleteValue(contextMenu.node)"><a [style.opacity]="hasVal() && notRoot() && 1 || 0.3">Delete value</a></li>
     <li (click)="deleteObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Delete object</a></li>
   </ul>
 </div>
