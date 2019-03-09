@@ -26,7 +26,7 @@ export class CreateComponent implements OnInit {
     receive: any;
 
     ngOnInit() {
-        this.data.currentMessage.subscribe(message => this.receive = message);
+        this.data.currentStorage.subscribe(storageIn => this.receive = storageIn);
     }
 
     /* if user choose the different class, re-get from the server, and pass to the generate-form component

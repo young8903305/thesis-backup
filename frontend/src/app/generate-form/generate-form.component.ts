@@ -121,12 +121,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                             temp['@ref'] = this.idMap.get(tempSingleVal[i]);
                             temp['@type'] = refType;
                             tempListVal[i] = temp;
-                            console.log('tempListVal[i]: ', tempListVal[i]);
+                            // console.log('tempListVal[i]: ', tempListVal[i]);
                         } else {    // haven't used it yet, set checkMap to true, and write it
                             this.checkMap.set(tempSingleVal[i], true);
                             const typein = this.storageTypeMap.get(tempSingleVal[i]);
                             tempListVal[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempSingleVal[i])), typein);
-                            console.log('checkMap', this.checkMap);
+                            // console.log('checkMap', this.checkMap);
                         }
                     } else if (tempTypeArray[1] === 'byte' || tempTypeArray[1] === 'short' || tempTypeArray[1] === 'int'
                         || tempTypeArray[1] === 'long' || tempTypeArray[1] === 'float' || tempTypeArray[1] === 'double'
@@ -142,7 +142,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         }
                     } else {    // ["1", "2"] list string
                         tempListVal[i] = tempSingleVal[i];
-                        console.log('tempListVal: ', tempListVal);
+                        // console.log('tempListVal: ', tempListVal);
                     }
                 }
                 return tempListVal;
@@ -160,9 +160,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         this.checkMap.set(StrTempVal, true);
                         const typein = this.storageTypeMap.get(StrTempVal);
                         reVal = this.jsogGen(JSON.parse(sessionStorage.getItem(StrTempVal)), typein);
-                        console.log('checkMap', this.checkMap);
+                        // console.log('checkMap', this.checkMap);
                     }
-                    console.log('reVal: ', reVal);
+                    // console.log('reVal: ', reVal);
                     return reVal;
                 } else {
                     return StrTempVal;

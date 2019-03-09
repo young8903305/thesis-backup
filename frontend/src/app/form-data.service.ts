@@ -8,19 +8,19 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class FormDataService {
 
-    private messageSource = new BehaviorSubject<Object>([]);
-    currentMessage = this.messageSource.asObservable();
+    private storageSource = new BehaviorSubject<Object>([]);
+    currentStorage = this.storageSource.asObservable();
 
     private flagSource = new BehaviorSubject<Object>([]);
     currentFlag = this.flagSource.asObservable();
 
     constructor() { }
 
-    changeMessage(message) {
-        this.messageSource.next(message);
+    editSessionStorage(storageInput) {
+        this.storageSource.next(storageInput);
     }
 
-    changeFlag(flagInput) {
+    changeFlag(flagInput) { // form edit the sessionStorage and store
         this.flagSource.next(flagInput);
     }
 

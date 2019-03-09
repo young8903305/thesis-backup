@@ -52,7 +52,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     nodes;
     str;
     sessionStorageTemp;
-    flagReceive;
+    flagReceive;    // in form-data service, for resize the component if sessionStorage been motified
 
 
     contextMenu: { node: TreeNode, x: number, y: number } = null;
@@ -211,9 +211,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.storageLength = sessionStorage.length;
     }
 
-    onEditClick() {   // edit sessionStorage, transmit info upward
+    onEditClick() {   // edit sessionStorage, transmit info to create component, it will transmit to generate-form
         this.sessionStorageTemp = a;
-        this.data.changeMessage(JSON.parse(this.sessionStorageTemp.toString()));
+        this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));
     }
 
 
@@ -305,8 +305,21 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         return true;
     }
 
-    delete = (node) => {
+    deleteObject = (node) => {
         sessionStorage.removeItem(node.data.name);
+        this.closeMenu();
+    }
+
+    deleteValue = (node) => {
+        const temp = {};
+        for (let [key, value] of Object.entries(JSON.parse(sessionStorage.getItem(node.parent.data.name)))) {
+            if (key === node.data.pureName) {
+                value = '';
+            }
+            temp[key] = value;
+        }
+        sessionStorage.setItem(node.parent.data.name, JSON.stringify(temp));
+        node.data.name = node.data.pureName + ': ' + '';
         this.closeMenu();
     }
 
@@ -314,22 +327,18 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         if (!this.canPaste()) {
             return;
         }
-        /*this.doCut
-            ? this.sourceNode.treeModel.moveNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 })
-            : this.sourceNode.treeModel.copyNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 });*/
         if (this.doCut) {
             // console.log('this.contextMenu.node.parent.data.children', this.contextMenu.node.parent.data.children);
-                const [name, pureName, val] = Object.entries(this.contextMenu.node.parent.data.children[1]);    // index 1: @type
-                const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);  // index 1: @type
+                const [name, pureName, val] = Object.entries(this.contextMenu.node.parent.data.children[1]);    // index 1: get @type val
+                const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);
                 if (val[1].toString() === sourceVal[1].toString()) {
-                // if (this.contextMenu.node.parent.data.children[i]['type'] === this.sourceNode.parent.data.children[i]['type']) {
                     if (this.contextMenu.node.data.pureName === this.sourceNode.data.pureName) {
                         this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
                         // node's view
                         this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
                         const temp = {};
-                        console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
-                        sessionStorage.getItem(this.contextMenu.node.parent.data.name));
+                        // console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
+                        // sessionStorage.getItem(this.contextMenu.node.parent.data.name));
                         for ( let [key, value] of Object.entries(
                             JSON.parse(sessionStorage.getItem(this.contextMenu.node.parent.data.name)))) {
                             if (key === this.contextMenu.node.data.pureName) {
@@ -338,8 +347,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                             temp[key] = value;
                         }
                         sessionStorage.setItem(this.contextMenu.node.parent.data.name, JSON.stringify(temp));
-                        console.log('this.sourceNode.parent.data.children: ', this.sourceNode.parent.data.children);
-                        console.log('this.contextMenu.node.parent: ', this.contextMenu.node.parent);
+                        // console.log('this.sourceNode.parent.data.children: ', this.sourceNode.parent.data.children);
+                        // console.log('this.contextMenu.node.parent: ', this.contextMenu.node.parent);
                     } else {
                         alert('not the same attribute');
                     }
@@ -350,7 +359,6 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.doCut = false;
         this.sourceNode = null;
         this.closeMenu();
-        this.ngDoCheck();
     }
 
     canPaste = () => {
