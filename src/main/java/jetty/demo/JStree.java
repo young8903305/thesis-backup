@@ -176,7 +176,7 @@ public class JStree {
 	
 	public static void main(String...args) throws IOException {
 		String jsogPerson = "{\"@id\":\"1\",\"age\":10,\"firstName\":\"Ann\",\"lastName\":\"Chou\",\"spouse\":null}";
-		String jsogFamily = "{\"@id\":\"1\",\"@type\":\"jetty.demo.Family\",\"father\":{\"@id\":\"2\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"test\":null,\"spouse\":null},\"mother\":{\"@id\":\"3\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"test\":null,\"spouse\":null},\"children\":[{\"@ref\":\"2\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"3\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
+		String jsogFamily = "{\"@id\":\"3\",\"@type\":\"jetty.demo.Family\",\"father\":{\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"test\":\"\",\"spouse\":\"\"},\"mother\":{\"@id\":\"2\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"test\":\"\",\"spouse\":\"\"},\"children\":[{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"2\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
 		
 		String TypeFamily = "{\"@id\": \"1\",\"@type\": \"jetty.demo.Family\",\"father\": {\"@id\": \"2\",\"@type\": \"jetty.demo.Person\",\"age\": 10,\"firstName\": \"dfga\",\"lastName\": \"alkjfg\",\"spouse\": {\"@id\": \"3\",\"@type\": \"jetty.demo.Person\",\"age\": 2,\"firstName\": \"22\",\"lastName\": \"22\",\"spouse\": {\"@ref\": \"2\",\"@type\": \"jetty.demo.Person\"}}},\"mother\": {\"@ref\": \"3\",\"@type\": \"jetty.demo.Person\"},\"children\": [{\"@id\": \"4\",\"@type\": \"jetty.demo.Person\",\"age\": 3,\"firstName\": \"33\",\"lastName\": \"333\",\"spouse\": null}, {\"@id\": \"5\",\"@type\": \"jetty.demo.Person\",\"age\": 4,\"firstName\": \"44\",\"lastName\": \"4444\",\"spouse\": null}]}";
 		String outputString = "";
@@ -212,7 +212,7 @@ public class JStree {
 	    
 		// read back from string and deserialize
 		Family ff = mapper.readerFor(Family.class).readValue(jsogFamily);
-		System.out.println("ff.getChildren().get(0).getAge(): " + ff.getChildren().get(0).getAge());
+		System.out.println("ff.getChildren().get(0).getAge(): " + ff.getChildren().get(1).getColor());
 		
 		/*PersonDemo p1 = null;
 		p1.setAge(12);

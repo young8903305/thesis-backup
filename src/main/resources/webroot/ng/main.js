@@ -1173,10 +1173,11 @@ var GenerateFormComponent = /** @class */ (function () {
         }
         return input;
     };
+    // no need
     GenerateFormComponent.prototype.CheckListMember = function (input) {
         var tempInput = input;
-        var tempKey = Object.keys(tempInput); // return array of keys
-        var tempVal = Object.values(tempInput);
+        var tempKey = Object.keys(tempInput); // array of keys
+        var tempVal = Object.values(tempInput); // array of values
         var tempArray;
         var reArray = [];
         for (var i = 0; i < tempKey.length; i++) {
@@ -1212,9 +1213,9 @@ var GenerateFormComponent = /** @class */ (function () {
         var tempKey = Object.keys(jsonInput); //  age, children
         var tempVal = Object.values(jsonInput); // 1, [p1, p2], [1, 2], ["1", "2"]
         var tempType = typeCheck[tempKey.toString()]; // long, list PersonDemo, list int, list string
-        if (tempVal.toString() === '') { // no value, put null
+        /*if ( tempVal.toString() === '') {   // no value, put null
             return null;
-        }
+        }*/
         if (tempType === 'byte' || tempType === 'short' || tempType === 'int' || tempType === 'long' // number, output directly
             || tempType === 'float' || tempType === 'double' || tempType === 'Byte' || tempType === 'Short'
             || tempType === 'Integer' || tempType === 'Long' || tempType === 'Float' || tempType === 'Double') {
@@ -1232,7 +1233,10 @@ var GenerateFormComponent = /** @class */ (function () {
             var tempTypeArray = tempType.split(' '); // split the type value to array
             if (tempTypeArray[0] === 'List') { // list variable
                 var tempListVal = [];
-                var tempSingleVal = tempVal.toString().split(', ');
+                var tempSingleVal = tempVal.toString().split(', '); // value split with ', '
+                if ((tempSingleVal.length === 1) && (tempSingleVal[0] === '')) {
+                    return tempListVal; // list have nothing, return empty list
+                }
                 for (var i = 0; i < tempSingleVal.length; i++) {
                     if (sessionStorage.getItem(tempSingleVal[i]) !== null) { // sessionStorage has it. [p1, p2] list persondemo
                         if (this.checkMap.has(tempSingleVal[i])) { // used, add as @ref
@@ -1267,6 +1271,7 @@ var GenerateFormComponent = /** @class */ (function () {
                     }
                     else { // ["1", "2"] list string
                         tempListVal[i] = tempSingleVal[i];
+                        console.log('tempListVal: ', tempListVal);
                     }
                 }
                 return tempListVal;
@@ -1392,7 +1397,6 @@ var GenerateFormComponent = /** @class */ (function () {
             var temp = this.form_receive.value['@type'].concat(this.storageIndex); // use storage count as id postfix
             var key = temp.split('.')[temp.split('.').length - 1];
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
-            this.CheckListMember(this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             this.storageTypeMap.set(key, this.MemberType);
