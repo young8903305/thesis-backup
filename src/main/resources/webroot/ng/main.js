@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" >\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">\n            <input autofocus [(ngModel)]=\"node.data.name\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable [dragData]=\"dragNode\"></tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -63,38 +63,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import * as _ from 'lodash'; // _.remove.......
-/*const actionMapping: IActionMapping = {
-    mouse: {    // mouse action
-        contextMenu: (tree, node, $event) => {  // right click
-            // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
-            $event.preventDefault();
-            if (node.isRoot) {
-                const x = confirm('Delete ?');
-                if (x) {
-                    // remove from original nodes array
-                    // _.remove(node.parent.data.children, node.data);
-                    sessionStorage.removeItem(node.data.name);
-                }
-            }
-            tree.update();
-        },
-        click: (tree, node, $event) => {    // click root node, active and pass to server and parse the node storage
-            $event.preventDefault();
-            if (node.isRoot) {
-                TREE_ACTIONS.TOGGLE_ACTIVE(tree, node, $event);
-                const xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        a = xhttp.responseText;     // universal variable for catch the response, then form the sessionStorage
-                    }
-                };
-                xhttp.open('POST', '/ngEditSessionStorage', true);
-                xhttp.send(sessionStorage.getItem(node.data.name));
-            }
-        }
-    }
-};*/
 var a;
 var AngularTreeComponent = /** @class */ (function () {
     function AngularTreeComponent(data) {
@@ -194,6 +162,9 @@ var AngularTreeComponent = /** @class */ (function () {
                     },
                     click: function (treeModel, treeNode, e) {
                         e.preventDefault();
+                        if (treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') {
+                            angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
+                        }
                         _this.closeMenu();
                         if (treeNode.isRoot) { // root node to form
                             angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
@@ -206,6 +177,14 @@ var AngularTreeComponent = /** @class */ (function () {
                             xhttp_1.open('POST', '/ngEditSessionStorage', true);
                             xhttp_1.send(sessionStorage.getItem(treeNode.data.name));
                         }
+                    },
+                    drag: function (treeModel, treeNode, e) {
+                        if (treeNode.isRoot) {
+                            _this.data.passNodeVal(treeNode.data.name);
+                        }
+                        else {
+                            _this.data.passNodeVal(treeNode.data.val);
+                        }
                     }
                 }
             },
@@ -214,19 +193,11 @@ var AngularTreeComponent = /** @class */ (function () {
                     return true;
                 }
             },
-            allowDrop: function (node) { return false; },
+            allowDrop: false
+            // allowDrop: (node) => false
         };
         this.closeMenu = function () {
             _this.contextMenu = null;
-        };
-        // no use
-        this.edit = function () {
-            _this.editNode = _this.contextMenu.node;
-            _this.closeMenu();
-        };
-        // no use
-        this.stopEdit = function () {
-            _this.editNode = null;
         };
         this.copyValue = function () {
             if (_this.isRoot()) {
@@ -379,19 +350,13 @@ var AngularTreeComponent = /** @class */ (function () {
                 parent_1['name'] = Object.keys(sessionStorage)[i];
                 for (var _i = 0, _a = Object.entries(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
                     var _b = _a[_i], key = _b[0], value = _b[1];
-                    console.log('tree: ', [key, value]);
+                    // console.log('tree: ', [key, value]);
                     parent_1.children.push({
                         name: key + ': ' + value,
                         pureName: key,
                         val: value
                     });
                 }
-                /*for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
-                    parent.children.push({
-                        name: item,
-                        val: item.toString()
-                    });
-                }*/
                 this.nodes.push(parent_1);
             }
             this.flagReceive = false;
@@ -575,6 +540,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_tree_angular_tree_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./angular-tree/angular-tree.component */ "./src/app/angular-tree/angular-tree.component.ts");
 /* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./form-data.service */ "./src/app/form-data.service.ts");
 /* harmony import */ var _contextmenu_contextmenu_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./contextmenu/contextmenu.component */ "./src/app/contextmenu/contextmenu.component.ts");
+/* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ng-drag-drop */ "./node_modules/ng-drag-drop/index.js");
+/* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__);
+
 
 
 
@@ -612,6 +580,7 @@ var AppModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_5__["ReactiveFormsModule"],
                 angular_tree_component__WEBPACK_IMPORTED_MODULE_12__["TreeModule"].forRoot(),
+                ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__["NgDragDropModule"].forRoot(),
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_6__["AppRoutingModule"],
             ],
             providers: [
@@ -1095,13 +1064,18 @@ __webpack_require__.r(__webpack_exports__);
 })*/
 var FormDataService = /** @class */ (function () {
     function FormDataService() {
-        this.storageSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.storageSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]); // ng-tree -> create
         this.currentStorage = this.storageSource.asObservable();
-        this.flagSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.dragdropNode = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]); // drag & drop, pass the value
+        this.currentNode = this.dragdropNode.asObservable();
+        this.flagSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]); // form finish edit and switch the flag
         this.currentFlag = this.flagSource.asObservable();
     }
     FormDataService.prototype.editSessionStorage = function (storageInput) {
         this.storageSource.next(storageInput);
+    };
+    FormDataService.prototype.passNodeVal = function (nodeVal) {
+        this.dragdropNode.next(nodeVal);
     };
     FormDataService.prototype.changeFlag = function (flagInput) {
         this.flagSource.next(flagInput);
@@ -1135,7 +1109,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}}>\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} ></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n<button (click)=\"clearSession()\">Clear Session Storage</button>"
+module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\">\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\" (input)=put()></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n\n<button (click)=\"clearSession()\">Clear Session Storage</button>"
 
 /***/ }),
 
@@ -1160,10 +1134,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var GenerateFormComponent = /** @class */ (function () {
-    function GenerateFormComponent(fb, subCreate, booleanFlag) {
+    function GenerateFormComponent(fb, subCreate, formDataService) {
         this.fb = fb;
         this.subCreate = subCreate;
-        this.booleanFlag = booleanFlag;
+        this.formDataService = formDataService;
         this.form_receive = this.fb.group({});
         this.storageIndex = 1;
         this.storageMap = new Map(); // <class-name, count>: record class' count
@@ -1172,6 +1146,8 @@ var GenerateFormComponent = /** @class */ (function () {
         this.storageTypeMap = new Map(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
     }
     GenerateFormComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.formDataService.currentNode.subscribe(function (nodeIn) { return _this.dropNodeVal = nodeIn; });
     };
     GenerateFormComponent.prototype.CheckStrToNum = function (input) {
         for (var key in this.MemberType) { // change string default value to number
@@ -1183,6 +1159,36 @@ var GenerateFormComponent = /** @class */ (function () {
             }
         }
         return input;
+    };
+    GenerateFormComponent.prototype.onNodeDrop = function (e) {
+        e.dragData = this.dropNodeVal;
+        var nodeName = e.nativeEvent.target.attributes['ng-reflect-name'].nodeValue;
+        // console.log('e.nativeEvent.target.attributes: ', e.nativeEvent.target.attributes['ng-reflect-name'].nodeValue);
+        var tempType = this.MemberType[nodeName];
+        console.log('tempType: ', tempType);
+        var tempTypeArray = tempType.split(' ');
+        if (tempTypeArray[0] === 'List') {
+            if (e.nativeEvent.target.type === 'text' || e.nativeEvent.target.type === 'textarea') {
+                if (e.nativeEvent.target.value === '') {
+                    e.nativeEvent.target.value = this.dropNodeVal;
+                    this.form_receive.value[nodeName] = e.nativeEvent.target.value;
+                }
+                else {
+                    var str = ', '.concat(this.dropNodeVal);
+                    e.nativeEvent.target.value = e.nativeEvent.target.value + str;
+                    this.form_receive.value[nodeName] = e.nativeEvent.target.value;
+                }
+            }
+        }
+        else {
+            e.nativeEvent.target.value = this.dropNodeVal;
+            this.form_receive.value[nodeName] = e.nativeEvent.target.value;
+            // console.log(this.form_receive.value);
+        }
+        // e.nativeEvent.target.value = this.dropNodeVal;
+        console.log('e: ', e);
+        /*console.log('e.dragData: ', e.dragData);
+        console.log('this.dropNode: ', this.dropNodeVal);*/
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
@@ -1401,7 +1407,7 @@ var GenerateFormComponent = /** @class */ (function () {
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
         this.clearForm();
-        this.booleanFlag.changeFlag(true);
+        this.formDataService.changeFlag(true);
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {

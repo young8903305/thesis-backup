@@ -1,11 +1,4 @@
-<tree-root [nodes]="nodes" [options]="options" >
-    <ng-template #treeNodeTemplate let-node="node">
-        <span *ngIf="node === editNode">
-            <input autofocus [(ngModel)]="node.data.name" (blur)="stopEdit()" (keyup.enter)="stopEdit()" />
-        </span>
-        <span *ngIf="node !== editNode">{{ node.data.name }}</span>
-    </ng-template>
-</tree-root>
+<tree-root [nodes]="nodes" [options]="options" [focused]="true" draggable [dragData]="dragNode"></tree-root>
 
 <button *ngIf="storageLength!==0" (click)="onEditClick()">Edit Object</button>
 

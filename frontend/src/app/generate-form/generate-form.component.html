@@ -2,8 +2,8 @@
   <ng-container *ngFor = "let key of Member">
     <label *ngIf = "key!=='@id' && key!=='@type'">
       {{ key }} :
-<input *ngIf="MemberStyle[key] !== 'textarea'" type={{MemberStyle[key]}} formControlName={{key}}>
-<textarea *ngIf=" MemberStyle[key] ==='textarea'" formControlName={{key}} ></textarea>
+<input *ngIf="MemberStyle[key] !== 'textarea'" type={{MemberStyle[key]}} formControlName={{key}} droppable (onDrop)="onNodeDrop($event)">
+<textarea *ngIf=" MemberStyle[key] ==='textarea'" formControlName={{key}} droppable (onDrop)="onNodeDrop($event)"></textarea>
     </label>
   </ng-container>
   <button type="submit">Output Object</button>
@@ -13,9 +13,9 @@
 <button (click)="store()">store</button>
 <br>
 <button (click)="clearForm()">Clear Form</button>
-<!--
+
 <p>
   Form Value: {{ form_receive.value | json }}
 </p>
--->
+
 <button (click)="clearSession()">Clear Session Storage</button>

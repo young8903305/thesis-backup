@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter, DoCheck} from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { FormGroupName } from '@angular/forms';
 import { GenerateFormService } from './generate-form.service';
@@ -19,7 +19,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     Member;         // defaultValueNode
     MemberStyle;    // styleNode
     MemberType;     // typeNode. use for list, not yet
-    ValueTemp;
+    ValueTemp;      // for CheckStrToNum, store form value afthe this function
     form_receive = this.fb.group({});
 
     storageIndex = 1;
@@ -28,13 +28,15 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
     storageTypeMap = new Map<string, Object>(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
     jsog;
+    dropNodeVal;
 
     constructor(private fb: FormBuilder,
         private subCreate: GenerateFormService,
-        private booleanFlag: FormDataService) {
+        private formDataService: FormDataService) {
     }
 
     ngOnInit() {
+        this.formDataService.currentNode.subscribe(nodeIn => this.dropNodeVal = nodeIn);
     }
 
     CheckStrToNum(input) {  // input = this.form_receive.value (Object)
@@ -47,6 +49,31 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             }
         }
         return input;
+    }
+
+    onNodeDrop(e: any) {
+        e.dragData = this.dropNodeVal;
+        const nodeName = e.nativeEvent.target.attributes['ng-reflect-name'].nodeValue;
+        // console.log('e.nativeEvent.target.attributes: ', e.nativeEvent.target.attributes['ng-reflect-name'].nodeValue);
+        const tempType = this.MemberType[ nodeName ];
+        console.log('tempType: ', tempType);
+        const tempTypeArray = tempType.split(' ');
+        if (tempTypeArray[0] === 'List') {
+            if (e.nativeEvent.target.type === 'text' || e.nativeEvent.target.type === 'textarea') {
+                if (e.nativeEvent.target.value === '') {
+                    e.nativeEvent.target.value = this.dropNodeVal;
+                    this.form_receive.value[nodeName] = e.nativeEvent.target.value;
+                } else {
+                    const str = ', '.concat(this.dropNodeVal);
+                    e.nativeEvent.target.value = e.nativeEvent.target.value + str;
+                    this.form_receive.value[nodeName] = e.nativeEvent.target.value;
+                }
+            }
+        } else {
+            e.nativeEvent.target.value = this.dropNodeVal;
+            this.form_receive.value[nodeName] = e.nativeEvent.target.value;
+        }
+        console.log('e: ', e);
     }
 
     // receieve the class info form create component
@@ -266,7 +293,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
         }
         this.clearForm();
-        this.booleanFlag.changeFlag(true);
+        this.formDataService.changeFlag(true);
     }
 
     // clear the form data

@@ -9,19 +9,26 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class FormDataService {
 
-    private storageSource = new BehaviorSubject<Object>([]);
+    private storageSource = new BehaviorSubject<Object>([]);    // ng-tree -> create
     currentStorage = this.storageSource.asObservable();
 
-    private flagSource = new BehaviorSubject<Object>([]);
+    private dragdropNode = new BehaviorSubject<Object>([]); // drag & drop, pass the value
+    currentNode = this.dragdropNode.asObservable();
+
+    private flagSource = new BehaviorSubject<Object>([]);   // form finish edit and switch the flag
     currentFlag = this.flagSource.asObservable();
 
     constructor() { }
 
-    editSessionStorage(storageInput) {
+    editSessionStorage(storageInput) {  // ng-tree send Storage to form
         this.storageSource.next(storageInput);
     }
 
-    changeFlag(flagInput) { // form edit object and store
+    passNodeVal(nodeVal) {
+        this.dragdropNode.next(nodeVal);
+    }
+
+    changeFlag(flagInput) { // form edit object and store, change flag into true
         this.flagSource.next(flagInput);
     }
 

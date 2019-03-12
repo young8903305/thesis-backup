@@ -15,6 +15,7 @@ import { TreeModule } from 'angular-tree-component';
 import { AngularTreeComponent } from './angular-tree/angular-tree.component';
 import { FormDataService } from './form-data.service';
 import { ContextmenuComponent } from './contextmenu/contextmenu.component';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { ContextmenuComponent } from './contextmenu/contextmenu.component';
         FormsModule,
         ReactiveFormsModule,
         TreeModule.forRoot(),
+        NgDragDropModule.forRoot(),
         AppRoutingModule,
     ],
     providers: [

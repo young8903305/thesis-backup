@@ -1,41 +1,8 @@
 import { Component, OnInit, DoCheck, Output, EventEmitter, OnChanges } from '@angular/core';
 import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions } from 'angular-tree-component';
 import { FormDataService } from '../form-data.service';
-// import * as _ from 'lodash'; // _.remove.......
 
-    /*const actionMapping: IActionMapping = {
-        mouse: {    // mouse action
-            contextMenu: (tree, node, $event) => {  // right click
-                // In case you want to open your own context menu, you must first run $event.preventDefault() within the callback.
-                $event.preventDefault();
-                if (node.isRoot) {
-                    const x = confirm('Delete ?');
-                    if (x) {
-                        // remove from original nodes array
-                        // _.remove(node.parent.data.children, node.data);
-                        sessionStorage.removeItem(node.data.name);
-                    }
-                }
-                tree.update();
-            },
-            click: (tree, node, $event) => {    // click root node, active and pass to server and parse the node storage
-                $event.preventDefault();
-                if (node.isRoot) {
-                    TREE_ACTIONS.TOGGLE_ACTIVE(tree, node, $event);
-                    const xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState === 4 && this.status === 200) {
-                            a = xhttp.responseText;     // universal variable for catch the response, then form the sessionStorage
-                        }
-                    };
-                    xhttp.open('POST', '/ngEditSessionStorage', true);
-                    xhttp.send(sessionStorage.getItem(node.data.name));
-                }
-            }
-        }
-    };*/
-
-    let a;
+let a;
 
 @Component({
   selector: 'app-angular-tree',
@@ -151,6 +118,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 },
                 click: (treeModel: TreeModel, treeNode: TreeNode, e: MouseEvent) => {
                     e.preventDefault();
+                    if (treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') {
+                        TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
+                    }
                     this.closeMenu();
                     if (treeNode.isRoot) {  // root node to form
                         TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
@@ -163,6 +133,13 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                         xhttp.open('POST', '/ngEditSessionStorage', true);
                         xhttp.send(sessionStorage.getItem(treeNode.data.name));
                     }
+                },
+                drag: (treeModel: TreeModel, treeNode: TreeNode, e: MouseEvent) => {
+                    if (treeNode.isRoot) {
+                        this.data.passNodeVal(treeNode.data.name);
+                    } else {
+                        this.data.passNodeVal(treeNode.data.val);
+                    }
                 }
             }
         },
@@ -171,7 +148,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 return true;
             }
         },
-        allowDrop: (node) => false,
+        allowDrop: false
+        // allowDrop: (node) => false
     };
 
     ngOnInit() {
@@ -190,19 +168,13 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 parent['name'] = Object.keys(sessionStorage)[i];
 
                 for (const [key, value] of Object.entries(JSON.parse(Object.values(sessionStorage)[i]))) {
-                    console.log('tree: ', [key, value]);
+                    // console.log('tree: ', [key, value]);
                         parent.children.push({
                             name: key + ': ' + value,
                             pureName: key,
                             val: value
                         });
                 }
-                /*for (const item of Object.keys(JSON.parse(Object.values(sessionStorage)[i]))) {
-                    parent.children.push({
-                        name: item,
-                        val: item.toString()
-                    });
-                }*/
                 this.nodes.push(parent);
             }
             this.flagReceive = false;
@@ -215,21 +187,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));
     }
 
-
-
     closeMenu = () => {
         this.contextMenu = null;
-    }
-
-    // no use
-    edit = () => {
-        this.editNode = this.contextMenu.node;
-        this.closeMenu();
-    }
-
-    // no use
-    stopEdit = () => {
-        this.editNode = null;
     }
 
     copyValue = () => {
