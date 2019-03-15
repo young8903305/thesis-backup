@@ -107,8 +107,10 @@ public class Main {
 	
 	private static String[] arguments;
 	
-	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();
-	//private static HashMap<String, String> objectMap = new HashMap<String, String>();
+	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();	// key-value
+	private static HashMap<String, String> ViewToSourceMap = new HashMap<String, String>();	// source-view
+	
+	private static String re;
 	
 
 	@SuppressWarnings("serial")
@@ -616,17 +618,6 @@ public class Main {
 								styleNode.put(f.getName(), "color");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							/*case checkbox:	// need to fix
-								ArrayNode aNode = ob.createArrayNode();
-								//if(f.getType()==Array.class || f.getType()==List.class) {
-									for(int i = 0; i<var.style()[0].value().length; i++) {
-										System.out.println("checkbox value : " + var.style()[0].value()[i]);
-										aNode.add(var.style()[0].value()[i]);
-									}
-								//}
-								objectNode.set(f.getName(), aNode);
-								styleNode.put(f.getName(), "checkbox");
-								break;*/
 							case date:
 								styleNode.put(f.getName(), "date");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
@@ -651,14 +642,6 @@ public class Main {
 								styleNode.put(f.getName(), "password");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							/*case radio :	// need to fix
-								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
-								styleNode.put(f.getName(), "radio");
-								break;
-							case range :	// need to fix
-								defaultValueNode.put(f.getName(), var.style()[0].value()[0].toString());
-								styleNode.put(f.getName(), "range");
-								break;*/
 							case text :
 								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
 								typeNode.put(f.getName(), f.getType().getSimpleName());
@@ -723,13 +706,16 @@ public class Main {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode node = mapper.readTree(str);
 			String className = node.get("@type").asText();
+			String id = node.get("@id").asText();
+			String EditSessionName = "";
 			
 			Class<?> pClass = null;
-		    ObjectNode defaultValueNode = mapper.createObjectNode();	// make json string to output : { fieldName : field  DefaultValue }
+		    // ObjectNode defaultValueNode = mapper.createObjectNode();	// make json string to output : { fieldName : field  DefaultValue }
 		    ObjectNode styleNode = mapper.createObjectNode();	// [ fieldName : style ]
 		    ObjectNode typeNode = mapper.createObjectNode();	// [ fieldName : type ]
 			try {
 				pClass = Class.forName(className);
+				EditSessionName = pClass.getSimpleName() + id;
 				// Field
 				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
 				
@@ -756,19 +742,7 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							/*case checkbox:	// need to fix
-								ArrayNode aNode = ob.createArrayNode();
-								//if(f.getType()==Array.class || f.getType()==List.class) {
-									for(int i = 0; i<var.style()[0].value().length; i++) {
-										System.out.println("checkbox value : " + var.style()[0].value()[i]);
-										aNode.add(var.style()[0].value()[i]);
-									}
-								//}
-								objectNode.set(f.getName(), aNode);
-								styleNode.put(f.getName(), "checkbox");
-								break;*/
 							case date:
 								styleNode.put(attrName, "date");if (f.getType().getSimpleName().equals("List")) {
 									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
@@ -778,7 +752,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case datetime_local:
 								styleNode.put(attrName, "datetime-local");
@@ -790,7 +763,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case email:
 								styleNode.put(attrName, "email");
@@ -802,7 +774,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case month:
 								styleNode.put(attrName, "month");
@@ -814,7 +785,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case number:
 								styleNode.put(attrName, "number");
@@ -826,7 +796,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case password :
 								styleNode.put(attrName, "password");
@@ -838,16 +807,7 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							/*case radio :	// need to fix
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
-								styleNode.put(f.getName(), "radio");
-								break;
-							case range :	// need to fix
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
-								styleNode.put(f.getName(), "range");
-								break;*/
 							case text :
 								styleNode.put(attrName, var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
 								if (f.getType().getSimpleName().equals("List")) {
@@ -858,7 +818,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case time :
 								styleNode.put(attrName, "time");
@@ -870,7 +829,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case week :
 								styleNode.put(attrName, "week");
@@ -882,7 +840,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							default:
 								break;
@@ -897,7 +854,6 @@ public class Main {
 						} else {
 							typeNode.put(attrName, f.getType().getSimpleName());
 						}
-						// typeNode.put(f.getName(), f.getType().getSimpleName());
 					}
 				}
 				
@@ -905,7 +861,8 @@ public class Main {
 				e.printStackTrace();
 			}
 			
-			String responce_json = "[" + str + "," + styleNode.toString() + "," + typeNode.toString() + "]";
+			// enclose Edit Session Name with "", make responce_json send to front-end
+			String responce_json = "[" + str + "," + styleNode.toString() + "," + typeNode.toString() + ",\"" + EditSessionName.toString() + "\"" + "]";
 			
 			// response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
@@ -985,7 +942,23 @@ public class Main {
 		        reader.close();
 		    }
 			String str = sb.toString();
-			System.out.println("form value: "+ str);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			re = str;
+			JsonNode jsog = mapper.readTree(str);
+			
+			String source;
+			String view;
+			for ( Entry<String, String> entry : ViewToSourceMap.entrySet()) {
+				jsog = mapper.readTree(re);
+			    source = entry.getKey();
+			    view = entry.getValue();
+			    re = "{" + parse(jsog, source, view) + "}";
+			    System.out.println(re);
+			}
+			
+			System.out.println("form value: " + str);
+			System.out.println("final value: " + re);
 		    
 		    fileChooser.setDialogTitle("Specify a file to save");   
 		     
@@ -1012,8 +985,83 @@ public class Main {
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(str);
+			response.getWriter().write("ok");
 		}
+	}
+	
+	public static String parse (JsonNode jsog, String source_name, String view_name) {
+		
+		String view = view_name;
+		String source = source_name;
+		String out = "";
+		
+		Iterator<Entry<String, JsonNode>> jsonNodes = jsog.fields();
+		while (jsonNodes.hasNext()) {  
+	        Entry<String, JsonNode> node = jsonNodes.next();
+	        JsonNode jNodeValue = node.getValue();
+	        
+	        if(!jNodeValue.isObject()) {	// array, string, number, true, false, null, @id, @ref
+	        	if( jNodeValue.isArray() ) {
+		       		Iterator<JsonNode> elements = jNodeValue.elements();
+		       		if (node.getKey().equals(view)) {
+		       			out = out + "\"" + source + "\":[";
+		       		} else {
+		       			out = out + "\"" + node.getKey() + "\":[";
+		       		}
+		       		while (elements.hasNext()) {
+		       			JsonNode element = elements.next();
+		       			if(!element.isObject()) {	// array, string, number, true, false, null, @id, @ref
+		       				if(element.isArray()) {	// may not have this situation.
+		       					out = out + parse(element, source, view);
+		       				}else {	// string, number, true, false, null, @id, @ref
+		       					if (elements.hasNext()) {
+		       						Object value;
+		       						if (element.isNumber() || element.isBoolean()){
+		       							value = element;
+		       						}else {
+		       							value = element.toString();
+		       						}
+		       						out = out + value + ",";
+		       					} else {
+		       						out = out + element.toString();
+		       					}
+		       				}
+		       			} else {
+		       				if (elements.hasNext()) {
+		       					out = out + "{" + parse(element, source, view) + "},";
+		       				} else {
+		       					out = out + "{" + parse(element, source, view) + "}";
+		       				}
+		       			}
+		       		}
+		       		out = out + "]";
+		       		
+		       	} else {	// string, number, true, false, null, @id, @ref
+		       		if (node.getKey().equals(view)) {
+		       			if(jsonNodes.hasNext()) {
+		       				out = out + "\"" + source + "\"" + ":" + node.getValue() + ",";
+		       			} else {
+		       				out = out + "\"" + source + "\"" + ":" + node.getValue();
+		       			}
+			        } else {
+			        	if(jsonNodes.hasNext()) {
+			        		out = out + "\"" + node.getKey() + "\"" + ":" + node.getValue() + ",";
+			        	} else {
+			        		out = out + "\"" + node.getKey() + "\"" + ":" + node.getValue();
+			        	}
+			        }
+		       	}
+	        } else {	// value is {}
+	        	if (jsonNodes.hasNext()) {
+	        		out = out + "\"" + node.getKey() + "\"" + ": {" + parse(jNodeValue, source, view) + "},";
+	        	} else {
+	        		out = out + "\"" + node.getKey() + "\"" + ": {" + parse(jNodeValue, source, view) + "}";
+	        	}
+	        }
+	        
+	        
+	    }
+		return out;
 	}
 	
 	public static class ngEdit extends HttpServlet{
@@ -1164,6 +1212,7 @@ public class Main {
 						attrName = f.getName();
 					} else {
 						attrName = var.name();
+						ViewToSourceMap.put(f.getName(), attrName);
 					}
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
@@ -1178,19 +1227,7 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							/*case checkbox:	// need to fix
-								ArrayNode aNode = ob.createArrayNode();
-								//if(f.getType()==Array.class || f.getType()==List.class) {
-									for(int i = 0; i<var.style()[0].value().length; i++) {
-										System.out.println("checkbox value : " + var.style()[0].value()[i]);
-										aNode.add(var.style()[0].value()[i]);
-									}
-								//}
-								objectNode.set(f.getName(), aNode);
-								styleNode.put(f.getName(), "checkbox");
-								break;*/
 							case date:
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
 								styleNode.put(attrName, "date");
@@ -1202,7 +1239,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case datetime_local:
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
@@ -1215,7 +1251,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case email:
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
@@ -1240,7 +1275,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case number:
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
@@ -1253,7 +1287,6 @@ public class Main {
 								} else {
 									typeNode.put(f.getName(), f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case password :
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
@@ -1266,16 +1299,7 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							/*case radio :	// need to fix
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
-								styleNode.put(f.getName(), "radio");
-								break;
-							case range :	// need to fix
-								objectNode.put(f.getName(), var.style()[0].value()[0].toString());
-								styleNode.put(f.getName(), "range");
-								break;*/
 							case text :
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
 								styleNode.put(attrName, var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
@@ -1300,7 +1324,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case week :
 								defaultValueNode.put(attrName, var.style()[0].value()[0].toString());
@@ -1313,7 +1336,6 @@ public class Main {
 								} else {
 									typeNode.put(attrName, f.getType().getSimpleName());
 								}
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case none :
 								break;
@@ -1331,20 +1353,20 @@ public class Main {
 						} else {
 							typeNode.put(attrName, f.getType().getSimpleName());
 						}
-						// typeNode.put(f.getName(), f.getType().getSimpleName());
 					}
 				}
 				
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
-			// System.out.println("objectNode: " + ob.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode));
+
 			System.out.println("defaultValueNode: " + defaultValueNode.toString());
 			System.out.println("styleNode: " + styleNode.toString());
 			System.out.println("typeNode: " + typeNode.toString());
+			System.out.println("className: " + className.toString());
 			
-			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + "]";
+			// enclose className with "", make responce_json send to front-end
+			String responce_json = "[" + defaultValueNode.toString() + "," + styleNode.toString() + "," + typeNode.toString() + ",\"" + className.toString() + "\"" + "]";
 			
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");

@@ -10,21 +10,20 @@ import com.voodoodyne.jackson.jsog.*;
 
 import jetty.demo.AnnotationStyle.InputTypeControl;
 
-@ClassAnnotation(className = "Person_gen")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable{
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "age")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "44") }, name = "age")
 	private int age;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "lastName")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "Chen") }, name = "lastName")
 	private String lastName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "firstName")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "Pu") }, name = "firstName")
 	private String firstName;
 	
-	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "1") }, name = "spouse")
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "spouse")
 	private Person spouse;
 	
 	public Person (int age, String firstname, String lastname, Person p) {

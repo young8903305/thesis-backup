@@ -21,6 +21,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     MemberType;     // typeNode. use for list, not yet
     ValueTemp;      // for CheckStrToNum, store form value afthe this function
     form_receive = this.fb.group({});
+    className = '';
 
     storageIndex = 1;
     storageMap = new Map<string, number>(); // <class-name, count>: record class' count
@@ -82,11 +83,13 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         this.Member = Object.keys(this.generate_form_receive[0]);  // defaultValueNode
         this.MemberStyle = this.generate_form_receive[1];   // styleNode
         this.MemberType = this.generate_form_receive[2];    // typeNode
+        this.className = this.generate_form_receive[3];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
         console.log('Member: ', this.Member);
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
+        console.log('className: ', this.className);
     }
 
     jsogForSessionStorage(jsonInput: Object, typeCheck: Object) { // jsonInput(object): k-v pair of form, typeCheck: ob of outer ob's type
@@ -97,14 +100,14 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         const tempVal = Object.values(jsonInput);  // 1, [p1, p2], [1, 2], ["1", "2"]
         const tempType = typeCheck[tempKey.toString()]; // long, list PersonDemo, list int, list string
 
-        /*if ( tempVal.toString() === '') {   // no value, put null
+        if ( tempVal.toString() === '') {   // no value, put null
             return null;
-        }*/
+        }
         if (tempType === 'byte' || tempType === 'short' || tempType === 'int' || tempType === 'long' // number, output directly
             || tempType === 'float' || tempType === 'double' || tempType === 'Byte' || tempType === 'Short'
             || tempType === 'Integer' || tempType === 'Long' || tempType === 'Float' || tempType === 'Double') {
                 return +tempVal;
-        } else if (tempType === 'boolean') {    // true & false
+        } else if (tempType === 'boolean' || tempType === 'Boolean') {    // true & false
             if (tempVal.toString() === 'true') {
                 return true;
             } else {
@@ -139,17 +142,19 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         || tempTypeArray[1] === 'Long' || tempTypeArray[1] === 'Float' || tempTypeArray[1] === 'Double') {
                             // [1, 2] list int
                             tempListVal[i] = +tempSingleVal[i];
-                    } else if (tempTypeArray[1] === 'boolean') {    // [t, f, t, f] list boolean
-                        if (tempSingleVal.toString() === 'true') {
-                            return true;
+                    } else if (tempTypeArray[1] === 'Boolean' || tempTypeArray[1] === 'boolean') {    // [t, f, t, f] list boolean
+                        console.log('tempSingleVal.toString: ', tempSingleVal[i].toString());
+                        if (tempSingleVal[i].toString() === 'true') {
+                            tempListVal[i] = true;
                         } else {
-                            return false;
+                            tempListVal[i] = false;
                         }
                     } else {    // ["1", "2"] list string
                         tempListVal[i] = tempSingleVal[i];
                         // console.log('tempListVal: ', tempListVal);
                     }
                 }
+                console.log('tempListVal: ', tempListVal);
                 return tempListVal;
             } else {    // string
                 const StrTempVal = tempVal.toString();
@@ -182,33 +187,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         for (let i = 0; i < Object.keys(formInput).length; i++) {
             const tempKey = Object.keys(formInput)[i];
             if ( (tempKey !== '@id') && (tempKey !== '@type') ) {
-                /*let tempArray = [];
-                console.log('formInput[tempKey]: ', formInput[tempKey]);
-                tempArray = formInput[tempKey].split(', ');
-                console.log('tempArray: ', tempArray);*/
-                // console.log('type: ', this.MemberStyle[tempKey]);
-                // console.log('type input', this.storageTypeMap.get(tempKey));
                 const single_KV_pair = {};
                 single_KV_pair[tempKey] = formInput[tempKey];
-                // console.log('formInput: ', single_KV_pair);
                 formInput[tempKey] = this.jsogForSessionStorage(single_KV_pair, typein);
-                // formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey], typein);
-                /*if (sessionStorage.getItem(formInput[tempKey]) !== null) {   // sessionStorage has it.
-                    if (this.checkMap.has(formInput[tempKey])) { // used, add as @ref
-                        const temp = {};
-                        const refType = JSON.parse(sessionStorage.getItem(formInput[tempKey]))['@type'] ;
-                        temp['@ref'] = this.idMap.get(formInput[tempKey]);
-                        temp['@type'] = refType;
-                        formInput[tempKey] = temp;
-                        console.log('form[tempKey]: ', formInput[tempKey]);
-                    } else {    // haven't used it yet, set checkMap to true, and write it
-                        // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                        this.checkMap.set(formInput[tempKey], true);
-                        formInput[tempKey] = this.jsogGen(JSON.parse(sessionStorage.getItem(formInput[tempKey])));
-                        // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
-                        console.log('checkMap', this.checkMap);
-                    }
-                }*/
             }
             jsogS[tempKey] = formInput[tempKey];
         }
@@ -294,6 +275,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         }
         this.clearForm();
         this.formDataService.changeFlag(true);
+        this.className = '';
     }
 
     // clear the form data
@@ -301,19 +283,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         this.Member = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
+        this.className = '';
     }
 
     clearSession() {
         sessionStorage.clear();
         this.storageMap.clear();
         this.storageIndex = 1;
-    }
-
-    onDrop($event) {
-        // Dropped $event.element
-    }
-
-    allowDrop(element) {
-        return true;
     }
 }

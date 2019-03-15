@@ -5,29 +5,33 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jetty.demo.AnnotationStyle.InputTypeControl;
+
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Student implements Serializable{
 	
-	@AnnotationForm()
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "name")
 	private String name;
 	
-	@AnnotationForm()
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.number, value = "") }, name = "age")
 	private Integer age;
 	
-	@AnnotationForm()
-	private String gender;
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "gender")
+	private Boolean gender;
 	
-	@AnnotationForm()
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "phone")
 	private String phone;
 	
-	public Student(String name, Integer age, String gender, String phone) {
+	public Student(String name, Integer age, Boolean gender, String phone) {
 		setName(name);
 		setAge(age);
 		setGender(gender);
 		setPhone(phone);
 	}
+	
+	public Student() {}
 	
 	public void setName(String name) {
 		this.name = name;
@@ -45,11 +49,11 @@ public class Student implements Serializable{
 		return this.age;
 	}
 	
-	public void setGender(String gender) {
+	public void setGender(Boolean gender) {
 		this.gender = gender;
 	}
 	
-	public String getGender() {
+	public Boolean getGender() {
 		return this.gender;
 	}
 	

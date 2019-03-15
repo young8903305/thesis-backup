@@ -118,12 +118,12 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 },
                 click: (treeModel: TreeModel, treeNode: TreeNode, e: MouseEvent) => {
                     e.preventDefault();
-                    if (treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') {
+                    if ((treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') || treeNode.isRoot) {
                         TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
                     }
                     this.closeMenu();
                     if (treeNode.isRoot) {  // root node to form
-                        TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
+                        // TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
                         const xhttp = new XMLHttpRequest();
                         xhttp.onreadystatechange = function () {
                             if (this.readyState === 4 && this.status === 200) {

@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable [dragData]=\"dragNode\"></tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable></tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -162,12 +162,12 @@ var AngularTreeComponent = /** @class */ (function () {
                     },
                     click: function (treeModel, treeNode, e) {
                         e.preventDefault();
-                        if (treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') {
+                        if ((treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') || treeNode.isRoot) {
                             angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
                         }
                         _this.closeMenu();
                         if (treeNode.isRoot) { // root node to form
-                            angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
+                            // TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
                             var xhttp_1 = new XMLHttpRequest();
                             xhttp_1.onreadystatechange = function () {
                                 if (this.readyState === 4 && this.status === 200) {
@@ -1109,7 +1109,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\">\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\" (input)=put()></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n\n<button (click)=\"clearSession()\">Clear Session Storage</button>"
+module.exports = "<p *ngIf=\"className !== ''\">Form of {{ className }}</p>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\">\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n\n\n<button (click)=\"clearSession()\">Clear Session Storage</button>"
 
 /***/ }),
 
@@ -1139,6 +1139,7 @@ var GenerateFormComponent = /** @class */ (function () {
         this.subCreate = subCreate;
         this.formDataService = formDataService;
         this.form_receive = this.fb.group({});
+        this.className = '';
         this.storageIndex = 1;
         this.storageMap = new Map(); // <class-name, count>: record class' count
         this.idMap = new Map(); // <sessionStorage-key, @id>: store id for @ref-using
@@ -1183,12 +1184,8 @@ var GenerateFormComponent = /** @class */ (function () {
         else {
             e.nativeEvent.target.value = this.dropNodeVal;
             this.form_receive.value[nodeName] = e.nativeEvent.target.value;
-            // console.log(this.form_receive.value);
         }
-        // e.nativeEvent.target.value = this.dropNodeVal;
         console.log('e: ', e);
-        /*console.log('e.dragData: ', e.dragData);
-        console.log('this.dropNode: ', this.dropNodeVal);*/
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
@@ -1196,11 +1193,13 @@ var GenerateFormComponent = /** @class */ (function () {
         this.Member = Object.keys(this.generate_form_receive[0]); // defaultValueNode
         this.MemberStyle = this.generate_form_receive[1]; // styleNode
         this.MemberType = this.generate_form_receive[2]; // typeNode
+        this.className = this.generate_form_receive[3];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
         console.log('Member: ', this.Member);
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
+        console.log('className: ', this.className);
     };
     GenerateFormComponent.prototype.jsogForSessionStorage = function (jsonInput, typeCheck) {
         // jsonInput-> { name: yang } typeCheck-> { age: long }
@@ -1209,15 +1208,15 @@ var GenerateFormComponent = /** @class */ (function () {
         var tempKey = Object.keys(jsonInput); //  age, children
         var tempVal = Object.values(jsonInput); // 1, [p1, p2], [1, 2], ["1", "2"]
         var tempType = typeCheck[tempKey.toString()]; // long, list PersonDemo, list int, list string
-        /*if ( tempVal.toString() === '') {   // no value, put null
+        if (tempVal.toString() === '') { // no value, put null
             return null;
-        }*/
+        }
         if (tempType === 'byte' || tempType === 'short' || tempType === 'int' || tempType === 'long' // number, output directly
             || tempType === 'float' || tempType === 'double' || tempType === 'Byte' || tempType === 'Short'
             || tempType === 'Integer' || tempType === 'Long' || tempType === 'Float' || tempType === 'Double') {
             return +tempVal;
         }
-        else if (tempType === 'boolean') { // true & false
+        else if (tempType === 'boolean' || tempType === 'Boolean') { // true & false
             if (tempVal.toString() === 'true') {
                 return true;
             }
@@ -1257,12 +1256,13 @@ var GenerateFormComponent = /** @class */ (function () {
                         // [1, 2] list int
                         tempListVal[i] = +tempSingleVal[i];
                     }
-                    else if (tempTypeArray[1] === 'boolean') { // [t, f, t, f] list boolean
-                        if (tempSingleVal.toString() === 'true') {
-                            return true;
+                    else if (tempTypeArray[1] === 'Boolean' || tempTypeArray[1] === 'boolean') { // [t, f, t, f] list boolean
+                        console.log('tempSingleVal.toString: ', tempSingleVal[i].toString());
+                        if (tempSingleVal[i].toString() === 'true') {
+                            tempListVal[i] = true;
                         }
                         else {
-                            return false;
+                            tempListVal[i] = false;
                         }
                     }
                     else { // ["1", "2"] list string
@@ -1270,6 +1270,7 @@ var GenerateFormComponent = /** @class */ (function () {
                         // console.log('tempListVal: ', tempListVal);
                     }
                 }
+                console.log('tempListVal: ', tempListVal);
                 return tempListVal;
             }
             else { // string
@@ -1303,33 +1304,9 @@ var GenerateFormComponent = /** @class */ (function () {
         for (var i = 0; i < Object.keys(formInput).length; i++) {
             var tempKey = Object.keys(formInput)[i];
             if ((tempKey !== '@id') && (tempKey !== '@type')) {
-                /*let tempArray = [];
-                console.log('formInput[tempKey]: ', formInput[tempKey]);
-                tempArray = formInput[tempKey].split(', ');
-                console.log('tempArray: ', tempArray);*/
-                // console.log('type: ', this.MemberStyle[tempKey]);
-                // console.log('type input', this.storageTypeMap.get(tempKey));
                 var single_KV_pair = {};
                 single_KV_pair[tempKey] = formInput[tempKey];
-                // console.log('formInput: ', single_KV_pair);
                 formInput[tempKey] = this.jsogForSessionStorage(single_KV_pair, typein);
-                // formInput[tempKey] = this.jsogForSessionStorage(formInput[tempKey], typein);
-                /*if (sessionStorage.getItem(formInput[tempKey]) !== null) {   // sessionStorage has it.
-                    if (this.checkMap.has(formInput[tempKey])) { // used, add as @ref
-                        const temp = {};
-                        const refType = JSON.parse(sessionStorage.getItem(formInput[tempKey]))['@type'] ;
-                        temp['@ref'] = this.idMap.get(formInput[tempKey]);
-                        temp['@type'] = refType;
-                        formInput[tempKey] = temp;
-                        console.log('form[tempKey]: ', formInput[tempKey]);
-                    } else {    // haven't used it yet, set checkMap to true, and write it
-                        // console.log('PersonDemo1 ', sessionStorage.getItem(formInput[tempKey]));
-                        this.checkMap.set(formInput[tempKey], true);
-                        formInput[tempKey] = this.jsogGen(JSON.parse(sessionStorage.getItem(formInput[tempKey])));
-                        // form[tempKey] = JSON.parse(sessionStorage.getItem(form[tempKey]));
-                        console.log('checkMap', this.checkMap);
-                    }
-                }*/
             }
             jsogS[tempKey] = formInput[tempKey];
         }
@@ -1408,23 +1385,19 @@ var GenerateFormComponent = /** @class */ (function () {
         }
         this.clearForm();
         this.formDataService.changeFlag(true);
+        this.className = '';
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {
         this.Member = undefined;
         this.generate_form_receive.value = undefined;
         this.form_receive = this.fb.group({});
+        this.className = '';
     };
     GenerateFormComponent.prototype.clearSession = function () {
         sessionStorage.clear();
         this.storageMap.clear();
         this.storageIndex = 1;
-    };
-    GenerateFormComponent.prototype.onDrop = function ($event) {
-        // Dropped $event.element
-    };
-    GenerateFormComponent.prototype.allowDrop = function (element) {
-        return true;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),

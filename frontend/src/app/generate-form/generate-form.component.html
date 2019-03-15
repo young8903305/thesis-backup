@@ -1,3 +1,5 @@
+<p *ngIf="className !== ''">Form of {{ className }}</p>
+
 <form [formGroup] = "form_receive" (ngSubmit) = "output()">
   <ng-container *ngFor = "let key of Member">
     <label *ngIf = "key!=='@id' && key!=='@type'">
@@ -14,8 +16,10 @@
 <br>
 <button (click)="clearForm()">Clear Form</button>
 
+
 <p>
   Form Value: {{ form_receive.value | json }}
 </p>
+
 
 <button (click)="clearSession()">Clear Session Storage</button>
