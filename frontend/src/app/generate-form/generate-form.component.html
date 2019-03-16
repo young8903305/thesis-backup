@@ -1,20 +1,20 @@
-<p *ngIf="className !== ''">Form of {{ className }}</p>
+<p *ngIf = " className !== '' ">Form of {{ className }}</p>
 
 <form [formGroup] = "form_receive" (ngSubmit) = "output()">
-  <ng-container *ngFor = "let key of Member">
+  <ng-container *ngFor = "let key of MemberKey">
     <label *ngIf = "key!=='@id' && key!=='@type'">
       {{ key }} :
-<input *ngIf="MemberStyle[key] !== 'textarea'" type={{MemberStyle[key]}} formControlName={{key}} droppable (onDrop)="onNodeDrop($event)">
-<textarea *ngIf=" MemberStyle[key] ==='textarea'" formControlName={{key}} droppable (onDrop)="onNodeDrop($event)"></textarea>
+    <input *ngIf = " MemberStyle[key] !== 'textarea' " type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = " onNodeDrop($event) ">
+    <textarea *ngIf = " MemberStyle[key] ==='textarea' " formControlName = {{key}} droppable (onDrop) = " onNodeDrop($event) "></textarea>
     </label>
   </ng-container>
-  <button type="submit">Output Object</button>
+  <button type = "submit">Output Object</button>
 </form>
 <br>
 <br>
-<button (click)="store()">store</button>
+<button (click) = "store()">store</button>
 <br>
-<button (click)="clearForm()">Clear Form</button>
+<button (click) = "clearForm()">Clear Form</button>
 
 
 <p>
@@ -22,4 +22,4 @@
 </p>
 
 
-<button (click)="clearSession()">Clear Session Storage</button>
+<button (click) = "clearSession()">Clear Session Storage</button>

@@ -72,10 +72,18 @@ public class CheckName {
 			        }
 		       	}
 	        } else {	// value is {}
-	        	if (jsonNodes.hasNext()) {
-	        		out = out + "\"" + node.getKey() + "\"" + ": {" + parse(jNodeValue, source, view) + "},";
+	        	if (node.getKey().equals(view)) {
+		        	if (jsonNodes.hasNext()) {
+		        		out = out + "\"" + source + "\"" + ": {" + parse(jNodeValue, source, view) + "},";
+		        	} else {
+		        		out = out + "\"" + source + "\"" + ": {" + parse(jNodeValue, source, view) + "}";
+		        	}
 	        	} else {
-	        		out = out + "\"" + node.getKey() + "\"" + ": {" + parse(jNodeValue, source, view) + "}";
+	        		if (jsonNodes.hasNext()) {
+		        		out = out + "\"" + node.getKey() + "\"" + ": {" + parse(jNodeValue, source, view) + "},";
+		        	} else {
+		        		out = out + "\"" + node.getKey() + "\"" + ": {" + parse(jNodeValue, source, view) + "}";
+		        	}
 	        	}
 	        }
 	        
@@ -85,11 +93,11 @@ public class CheckName {
 	}
 	
 	public static void main(String...args) throws IOException {
-		String person = "{\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"First Name\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"choose a color\":\"#ff0000\",\"time\":\"\",\"spouse\":\"\"}";
-		String view = "spouse";
+		String person = "{\"@id\":\"2\",\"@type\":\"jetty.demo.Family\",\"father (PersonDemo)\": {\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"time\":null,\"spouse\":null},\"mother (PersonDemo)\": {\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},\"children\":[{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
+		String view = "mother (PersonDemo)";
 		String source = "fuck";
 		String test = "{\"@id\":\"1\",\"@type\":\"jetty.demo.Teacher\",\"name\":\"asfasasa\",\"years\":-2,\"lessons\":[\"sgfss\",\"sdfk\",\"aksjfh\"]}";
-		String family2 = "";
+		String family = "{\"@id\":\"2\",\"@type\":\"jetty.demo.Family\",\"father\": {\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"time\":null,\"spouse\":null},\"mother\": {\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},\"children\":[{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
 		
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode jsog = mapper.readTree(person);
@@ -98,8 +106,11 @@ public class CheckName {
 		//JsonNode jsog = mapper.readTree(family2);
 		//JsonNode jsog = mapper.readTree(test);
 		
-			re = "{" + parse(jsog, source, view) + "}";
-			System.out.println(re);
+		re = "{" + parse(jsog, source, view) + "}";
+		System.out.println(re);
+		
+		Family ff = mapper.readerFor(Family.class).readValue(family);
+		System.out.println("ff.getFather().getEmail(): " + ff.getFather().getEmail());
 		
 	}
 	

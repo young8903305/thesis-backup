@@ -3,7 +3,7 @@ import { FormArray, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { FormGroupName } from '@angular/forms';
 import { GenerateFormService } from './generate-form.service';
 import { stringify } from 'querystring';
-import { store } from '@angular/core/src/render3';
+import { store, template } from '@angular/core/src/render3';
 import { createOfflineCompileUrlResolver } from '@angular/compiler';
 import { clearModulesForTest } from '@angular/core/src/linker/ng_module_factory_loader';
 import { FormDataService } from '../form-data.service';
@@ -16,10 +16,10 @@ import { FormDataService } from '../form-data.service';
 export class GenerateFormComponent implements OnInit, OnChanges {
 
     @Input() generate_form_receive;
-    Member;         // defaultValueNode
-    MemberStyle;    // styleNode
-    MemberType;     // typeNode. use for list, not yet
-    ValueTemp;      // for CheckStrToNum, store form value afthe this function
+    MemberKey = [];     // defaultValue: generate_form_receive[0]
+    MemberStyle = {};   // styleNode
+    MemberType = {};    // typeNode. use for list
+    ValueTemp;          // for CheckStrToNum, store form value afthe this function
     form_receive = this.fb.group({});
     className = '';
 
@@ -79,14 +79,13 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // receieve the class info form create component
     ngOnChanges() {
-        // this.defaultValueTemp = this.generate_form_receive[0];
-        this.Member = Object.keys(this.generate_form_receive[0]);  // defaultValueNode
+        this.MemberKey = Object.keys(this.generate_form_receive[0]);    // for html, don't delete
         this.MemberStyle = this.generate_form_receive[1];   // styleNode
         this.MemberType = this.generate_form_receive[2];    // typeNode
         this.className = this.generate_form_receive[3];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('Member: ', this.Member);
+        console.log('MemberKey: ', this.MemberKey);
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
         console.log('className: ', this.className);
@@ -235,7 +234,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // sessionStorage just accept string type key/value
     store($event: any) {
-        console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value['@type']));
+        console.log('this.form_receive @type: ', JSON.stringify(this.form_receive.value['@type']));
 
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
@@ -276,12 +275,16 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         this.clearForm();
         this.formDataService.changeFlag(true);
         this.className = '';
+        this.MemberKey = [];         // defaultValue: generate_form_receive[0]
+        this.MemberStyle = {};    // styleNode
+        this.MemberType = {};     // typeNode. use for list
     }
 
     // clear the form data
     clearForm() {
-        this.Member = undefined;
+        this.MemberKey = [];
         this.generate_form_receive.value = undefined;
+        // this.generate_form_receive = {};
         this.form_receive = this.fb.group({});
         this.className = '';
     }

@@ -1109,7 +1109,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p *ngIf=\"className !== ''\">Form of {{ className }}</p>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of Member\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n<input *ngIf=\"MemberStyle[key] !== 'textarea'\" type={{MemberStyle[key]}} formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\">\n<textarea *ngIf=\" MemberStyle[key] ==='textarea'\" formControlName={{key}} droppable (onDrop)=\"onNodeDrop($event)\"></textarea>\n    </label>\n  </ng-container>\n  <button type=\"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\">store</button>\n<br>\n<button (click)=\"clearForm()\">Clear Form</button>\n\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n\n\n<button (click)=\"clearSession()\">Clear Session Storage</button>"
+module.exports = "<p *ngIf = \" className !== '' \">Form of {{ className }}</p>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of MemberKey\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n    <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n    </label>\n  </ng-container>\n  <button type = \"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click) = \"store()\">store</button>\n<br>\n<button (click) = \"clearForm()\">Clear Form</button>\n\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n\n\n<button (click) = \"clearSession()\">Clear Session Storage</button>"
 
 /***/ }),
 
@@ -1138,6 +1138,9 @@ var GenerateFormComponent = /** @class */ (function () {
         this.fb = fb;
         this.subCreate = subCreate;
         this.formDataService = formDataService;
+        this.MemberKey = []; // defaultValue: generate_form_receive[0]
+        this.MemberStyle = {}; // styleNode
+        this.MemberType = {}; // typeNode. use for list
         this.form_receive = this.fb.group({});
         this.className = '';
         this.storageIndex = 1;
@@ -1189,14 +1192,13 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
-        // this.defaultValueTemp = this.generate_form_receive[0];
-        this.Member = Object.keys(this.generate_form_receive[0]); // defaultValueNode
+        this.MemberKey = Object.keys(this.generate_form_receive[0]); // for html, don't delete
         this.MemberStyle = this.generate_form_receive[1]; // styleNode
         this.MemberType = this.generate_form_receive[2]; // typeNode
         this.className = this.generate_form_receive[3];
         this.form_receive = this.fb.group(this.generate_form_receive[0]);
         console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('Member: ', this.Member);
+        console.log('MemberKey: ', this.MemberKey);
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
         console.log('className: ', this.className);
@@ -1345,7 +1347,7 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // sessionStorage just accept string type key/value
     GenerateFormComponent.prototype.store = function ($event) {
-        console.log('this.form_receive.value: ', JSON.stringify(this.form_receive.value['@type']));
+        console.log('this.form_receive @type: ', JSON.stringify(this.form_receive.value['@type']));
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
          */
@@ -1386,11 +1388,15 @@ var GenerateFormComponent = /** @class */ (function () {
         this.clearForm();
         this.formDataService.changeFlag(true);
         this.className = '';
+        this.MemberKey = []; // defaultValue: generate_form_receive[0]
+        this.MemberStyle = {}; // styleNode
+        this.MemberType = {}; // typeNode. use for list
     };
     // clear the form data
     GenerateFormComponent.prototype.clearForm = function () {
-        this.Member = undefined;
+        this.MemberKey = [];
         this.generate_form_receive.value = undefined;
+        // this.generate_form_receive = {};
         this.form_receive = this.fb.group({});
         this.className = '';
     };
