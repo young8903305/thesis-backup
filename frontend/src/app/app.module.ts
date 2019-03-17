@@ -16,6 +16,7 @@ import { AngularTreeComponent } from './angular-tree/angular-tree.component';
 import { FormDataService } from './form-data.service';
 import { ContextmenuComponent } from './contextmenu/contextmenu.component';
 import { NgDragDropModule } from 'ng-drag-drop';
+import { AngularTreeService } from './angular-tree/angular-tree.service';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,8 @@ import { NgDragDropModule } from 'ng-drag-drop';
         AppRoutingModule,
     ],
     providers: [
-            FormDataService
+            FormDataService,
+            AngularTreeService
     ],
     bootstrap: [ AppComponent ],
 })

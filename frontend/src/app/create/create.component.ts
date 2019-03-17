@@ -14,9 +14,8 @@ export class CreateComponent implements OnInit {
 
     constructor(private createService: CreateService,
                 private data: FormDataService) {
-        this.createService.getClassName()
-            .subscribe(response => {
-                this.dataClassName = Object.values(response);
+                    this.createService.getClassName().subscribe(response => {
+                        this.dataClassName = Object.values(response);
             });
     }
 

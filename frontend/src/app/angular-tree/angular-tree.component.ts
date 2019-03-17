@@ -1,6 +1,7 @@
 import { Component, OnInit, DoCheck, Output, EventEmitter, OnChanges } from '@angular/core';
 import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions } from 'angular-tree-component';
 import { FormDataService } from '../form-data.service';
+import { AngularTreeService } from './angular-tree.service';
 
 let a;
 
@@ -12,7 +13,11 @@ let a;
 export class AngularTreeComponent implements OnInit, DoCheck {
 
 
-    constructor(private data: FormDataService) {
+    constructor(private data: FormDataService,
+                private ngTreeService: AngularTreeService) {
+                    this.ngTreeService.getType().subscribe( response => {
+                        this.typeMap = response;
+                    });
     }
 
 
@@ -27,6 +32,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     sourceNode: TreeNode = null;
     doCut = false;
     finishPaste = true;
+    typeMap: any;
 
 
     /*nodes = [
@@ -114,6 +120,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                             x: e.pageX,
                             y: e.pageY
                         };
+                        console.log('treeNode.data: ', treeNode.data);
                     }
                 },
                 click: (treeModel: TreeModel, treeNode: TreeNode, e: MouseEvent) => {
@@ -166,18 +173,19 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     'children': []
                 };
                 parent['name'] = Object.keys(sessionStorage)[i];
-
+                const sessionValTemp = JSON.parse(Object.values(sessionStorage)[i]);
+                const typeVal = JSON.parse( this.typeMap[sessionValTemp['@type']] );
                 for (const [key, value] of Object.entries(JSON.parse(Object.values(sessionStorage)[i]))) {
-                    // console.log('tree: ', [key, value]);
                         parent.children.push({
                             name: key + ': ' + value,
                             pureName: key,
-                            val: value
+                            val: value,
+                            style: typeVal[key]
                         });
                 }
                 this.nodes.push(parent);
             }
-            this.flagReceive = false;
+            this.flagReceive = false;   // finish resize ng-tree, turn it to false
         }
         this.storageLength = sessionStorage.length;
     }
@@ -192,7 +200,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     }
 
     copyValue = () => {
-        if (this.isRoot()) {
+        if (this.isRoot()) {    // for root node, copy its name to represent the whole object
             console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
             document.addEventListener('copy', (e: ClipboardEvent) => {
                 e.clipboardData.setData('text/plain', (this.contextMenu.node.data.name));
@@ -218,6 +226,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             document.execCommand('copy');
             document.body.removeChild(selBox);*/
 
+            // use clipboard EventListener send val to clipboard
             document.addEventListener('copy', (e: ClipboardEvent) => {
                 e.clipboardData.setData('text/plain', (this.contextMenu.node.data.val));
                 e.preventDefault();
@@ -290,37 +299,38 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.closeMenu();
     }
 
+    // replace the value in sessionStorage directly, edit the name attr of ng-tree directly
     pasteValue = () => {
         if (!this.canPaste()) {
             return;
         }
         if (this.doCut) {
-                const [name, pureName, val] = Object.entries(this.contextMenu.node.parent.data.children[1]);    // index 1: get @type val
-                const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);
-                if (val[1].toString() === sourceVal[1].toString()) {
-                    if (this.contextMenu.node.data.pureName === this.sourceNode.data.pureName) {
-                        this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
-                        // node's view
-                        this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
-                        const temp = {};
-                        // console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
-                        // sessionStorage.getItem(this.contextMenu.node.parent.data.name));
-                        for ( let [key, value] of Object.entries(
-                            JSON.parse(sessionStorage.getItem(this.contextMenu.node.parent.data.name)))) {
-                            if (key === this.contextMenu.node.data.pureName) {
-                                value = this.sourceNode.data.val;
-                            }
-                            temp[key] = value;
+            const [name, pureName, val] = Object.entries(this.contextMenu.node.parent.data.children[1]);    // index 1: get @type val
+            const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);
+            if (val[1].toString() === sourceVal[1].toString()) {
+                if (this.contextMenu.node.data.pureName === this.sourceNode.data.pureName) {
+                    this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
+                    // node's view
+                    this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
+                    const temp = {};
+                    // console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
+                    // sessionStorage.getItem(this.contextMenu.node.parent.data.name));
+                    for ( let [key, value] of Object.entries(
+                        JSON.parse(sessionStorage.getItem(this.contextMenu.node.parent.data.name)))) {
+                        if (key === this.contextMenu.node.data.pureName) {
+                            value = this.sourceNode.data.val;
                         }
-                        sessionStorage.setItem(this.contextMenu.node.parent.data.name, JSON.stringify(temp));
-                        this.doCut = false;
-                        this.sourceNode = null;
-                    } else {
-                        alert('not the same attribute');
+                        temp[key] = value;
                     }
+                    sessionStorage.setItem(this.contextMenu.node.parent.data.name, JSON.stringify(temp));
+                    this.doCut = false;
+                    this.sourceNode = null;
                 } else {
-                    alert('not the same type object');
+                    alert('not the same attribute');
                 }
+            } else {
+                alert('not the same type object');
+            }
         }
         this.closeMenu();
     }
@@ -330,6 +340,25 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             return false;
         }
         return this.sourceNode.treeModel.canMoveNode(this.sourceNode, { parent: this.contextMenu.node, index: 0 });
+    }
+
+    editValue() {
+        this.editNode = this.contextMenu.node;
+        this.closeMenu();
+    }
+    stopEdit() {
+        console.log('this.editNode.data.style: ', this.editNode.data.style);
+        const temp = {};
+        for (let [key, value] of Object.entries(
+            JSON.parse(sessionStorage.getItem(this.editNode.parent.data.name)))) {
+            if (key === this.editNode.data.pureName) {
+                this.editNode.data.name = this.editNode.data.pureName + ': ' + this.editNode.data.val;
+                value = this.editNode.data.val;
+            }
+            temp[key] = value;
+        }
+        sessionStorage.setItem(this.editNode.parent.data.name, JSON.stringify(temp));
+        this.editNode = null;
     }
 
 }

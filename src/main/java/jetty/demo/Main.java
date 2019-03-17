@@ -109,6 +109,7 @@ public class Main {
 	
 	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();	// key-value
 	private static HashMap<String, String> ViewToSourceMap = new HashMap<String, String>();	// source-view
+	private static HashMap<String, String> TypeMap = new HashMap<String, String>();	// name-type
 	
 	private static String re;
 	
@@ -684,6 +685,108 @@ public class Main {
 		}
 	}
 	
+	// send TypeMap to ng-tree component
+	public static class ngType extends HttpServlet{
+		
+		public void init() throws ServletException{}
+		
+		@Override
+		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			ObjectMapper ob = new ObjectMapper();
+			
+			for (int i = 0; i < arguments.length; i++) {
+				
+				Class<?> pClass = null;
+				ObjectNode styleNode = ob.createObjectNode();	//  fieldName : type 
+				try {
+					pClass = Class.forName(arguments[i]);
+					// Field
+					Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+					
+					Annotation annotation;
+					AnnotationForm var;
+					String viewName = "";
+					String complexTypeName = "";
+					for (Field f : fieldlist) {
+						annotation = f.getAnnotation(AnnotationForm.class);
+						var = (AnnotationForm) annotation;
+						if (f.getType().getSimpleName().equals("List")) {
+							ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+							Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+							complexTypeName = "List".concat(" " + stringListClass.getSimpleName());
+							if (var.name().equals("")) {
+								viewName = f.getName().concat(" (" + complexTypeName + ")");
+							} else {
+								viewName = var.name().concat(" (" + complexTypeName + ")");
+							}
+						} else {
+							complexTypeName = f.getType().getSimpleName();
+							if (var.name().equals("")) {
+								viewName = f.getName().concat(" (" + complexTypeName + ")");;
+							} else {
+								viewName = var.name().concat(" (" + complexTypeName + ")");
+							}
+						}
+						if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
+							switch (var.style()[0].input()) {
+							case color :
+								styleNode.put(viewName, "color");
+								break;
+							case date:
+								styleNode.put(viewName, "date");
+								break;
+							case datetime_local:
+								styleNode.put(viewName, "datetime-local");
+								break;
+							case email:
+								styleNode.put(viewName, "email");
+								break;
+							case month:
+								styleNode.put(viewName, "month");
+								break;
+							case number:
+								styleNode.put(viewName, "number");
+								break;
+							case password :
+								styleNode.put(viewName, "password");
+								break;
+							case text :
+								styleNode.put(viewName, var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
+								break;
+							case time :
+								styleNode.put(viewName, "time");
+								break;
+							case week :
+								styleNode.put(viewName, "week");
+								break;
+							case none :
+								break;
+							default :
+								break;
+							}
+						} else if (var.style()[0].textarea().length() > 0) {
+							styleNode.put(viewName, "textarea");
+						}
+						TypeMap.put(arguments[i], styleNode.toString());
+					}
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			ObjectNode reObject = ob.createObjectNode();
+		    TypeMap.forEach((k, v) -> {
+		    	reObject.put(k, v.toString());
+		    });
+
+			response.setContentType("text/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write(reObject.toString());
+		}
+	}
+	
 	public static class ngEditSessionStorage extends HttpServlet {
 		public void init() throws ServletException {
 		}
@@ -894,9 +997,9 @@ public class Main {
 			    re = "{" + parse(jsog, source, view) + "}";
 			    System.out.println(re);
 			}
-			System.out.println("Map: " + ViewToSourceMap);
+			// System.out.println("Map: " + ViewToSourceMap);
 			// System.out.println("form value: " + str);
-			System.out.println("final value: " + re);
+			// System.out.println("final value: " + re);
 		    
 		    fileChooser.setDialogTitle("Specify a file to save");   
 		     
@@ -927,6 +1030,7 @@ public class Main {
 		}
 	}
 	
+	// parse the json, then change the view-name to source-name, then send back to ngFormOutput 
 	public static String parse (JsonNode jsog, String source_name, String view_name) {
 		
 		String view = view_name;
@@ -1088,6 +1192,7 @@ public class Main {
 	
 	// parse arguments, make class pool
 	public static class ngClassNames extends HttpServlet {
+		
 		public void init() throws ServletException {}
 		
 		@Override
@@ -1095,6 +1200,13 @@ public class Main {
 			
 			ObjectMapper ob = new ObjectMapper();
 			String arjson = ob.writeValueAsString(arguments);
+			
+			// construct TypeMap for ng-tree in ngType-servlet
+			
+			/* TypeMap.forEach( (k, v) -> {
+				System.out.println(k + v);
+			}); */
+			
 			
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
@@ -1127,7 +1239,7 @@ public class Main {
 		        reader.close();
 		    }
 		    String classNameInJson = sb.toString();	// { name:className }. It's in json formula
-		    System.out.println(classNameInJson);
+		    // System.out.println(classNameInJson);
 		    
 		    // JsonNode : get class by jsNode.get("name").asText(), then create json string
 		    ObjectMapper ob = new ObjectMapper();
@@ -1447,6 +1559,7 @@ public class Main {
 		servletContextHandler.addServlet(ngFormOutput.class, "/ngFormOutput");
 		servletContextHandler.addServlet(ngSessionStorage.class, "/ngSessionStorage");
 		servletContextHandler.addServlet(ngEditSessionStorage.class, "/ngEditSessionStorage");
+		servletContextHandler.addServlet(ngType.class, "/ngType");
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());
         fileUploadServletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement("data/tmp"));

@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable></tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable>\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n            <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.val\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n            <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.val\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n\n<script>\n</script>"
 
 /***/ }),
 
@@ -59,15 +59,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
 /* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
+/* harmony import */ var _angular_tree_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./angular-tree.service */ "./src/app/angular-tree/angular-tree.service.ts");
+
 
 
 
 
 var a;
 var AngularTreeComponent = /** @class */ (function () {
-    function AngularTreeComponent(data) {
+    function AngularTreeComponent(data, ngTreeService) {
         var _this = this;
         this.data = data;
+        this.ngTreeService = ngTreeService;
         this.storageLength = 0;
         this.contextMenu = null;
         this.editNode = null;
@@ -158,6 +161,7 @@ var AngularTreeComponent = /** @class */ (function () {
                                 x: e.pageX,
                                 y: e.pageY
                             };
+                            console.log('treeNode.data: ', treeNode.data);
                         }
                     },
                     click: function (treeModel, treeNode, e) {
@@ -200,7 +204,7 @@ var AngularTreeComponent = /** @class */ (function () {
             _this.contextMenu = null;
         };
         this.copyValue = function () {
-            if (_this.isRoot()) {
+            if (_this.isRoot()) { // for root node, copy its name to represent the whole object
                 console.log('this.contextMenu.node.data.name ', _this.contextMenu.node.data.name);
                 document.addEventListener('copy', function (e) {
                     e.clipboardData.setData('text/plain', (_this.contextMenu.node.data.name));
@@ -224,6 +228,7 @@ var AngularTreeComponent = /** @class */ (function () {
                 selBox.select();
                 document.execCommand('copy');
                 document.body.removeChild(selBox);*/
+                // use clipboard EventListener send val to clipboard
                 document.addEventListener('copy', function (e) {
                     e.clipboardData.setData('text/plain', (_this.contextMenu.node.data.val));
                     e.preventDefault();
@@ -291,6 +296,7 @@ var AngularTreeComponent = /** @class */ (function () {
             node.data.name = node.data.pureName + ': ' + node.data.val;
             _this.closeMenu();
         };
+        // replace the value in sessionStorage directly, edit the name attr of ng-tree directly
         this.pasteValue = function () {
             if (!_this.canPaste()) {
                 return;
@@ -333,6 +339,9 @@ var AngularTreeComponent = /** @class */ (function () {
             }
             return _this.sourceNode.treeModel.canMoveNode(_this.sourceNode, { parent: _this.contextMenu.node, index: 0 });
         };
+        this.ngTreeService.getType().subscribe(function (response) {
+            _this.typeMap = response;
+        });
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -348,18 +357,20 @@ var AngularTreeComponent = /** @class */ (function () {
                     'children': []
                 };
                 parent_1['name'] = Object.keys(sessionStorage)[i];
+                var sessionValTemp = JSON.parse(Object.values(sessionStorage)[i]);
+                var typeVal = JSON.parse(this.typeMap[sessionValTemp['@type']]);
                 for (var _i = 0, _a = Object.entries(JSON.parse(Object.values(sessionStorage)[i])); _i < _a.length; _i++) {
                     var _b = _a[_i], key = _b[0], value = _b[1];
-                    // console.log('tree: ', [key, value]);
                     parent_1.children.push({
                         name: key + ': ' + value,
                         pureName: key,
-                        val: value
+                        val: value,
+                        style: typeVal[key]
                     });
                 }
                 this.nodes.push(parent_1);
             }
-            this.flagReceive = false;
+            this.flagReceive = false; // finish resize ng-tree, turn it to false
         }
         this.storageLength = sessionStorage.length;
     };
@@ -367,15 +378,72 @@ var AngularTreeComponent = /** @class */ (function () {
         this.sessionStorageTemp = a;
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));
     };
+    AngularTreeComponent.prototype.editValue = function () {
+        this.editNode = this.contextMenu.node;
+        this.closeMenu();
+    };
+    AngularTreeComponent.prototype.stopEdit = function () {
+        console.log('this.editNode.data.style: ', this.editNode.data.style);
+        var temp = {};
+        for (var _i = 0, _a = Object.entries(JSON.parse(sessionStorage.getItem(this.editNode.parent.data.name))); _i < _a.length; _i++) {
+            var _b = _a[_i], key = _b[0], value = _b[1];
+            if (key === this.editNode.data.pureName) {
+                this.editNode.data.name = this.editNode.data.pureName + ': ' + this.editNode.data.val;
+                value = this.editNode.data.val;
+            }
+            temp[key] = value;
+        }
+        sessionStorage.setItem(this.editNode.parent.data.name, JSON.stringify(temp));
+        this.editNode = null;
+    };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-angular-tree',
             template: __webpack_require__(/*! ./angular-tree.component.html */ "./src/app/angular-tree/angular-tree.component.html"),
             styles: [__webpack_require__(/*! ./angular-tree.component.css */ "./src/app/angular-tree/angular-tree.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_form_data_service__WEBPACK_IMPORTED_MODULE_3__["FormDataService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_form_data_service__WEBPACK_IMPORTED_MODULE_3__["FormDataService"],
+            _angular_tree_service__WEBPACK_IMPORTED_MODULE_4__["AngularTreeService"]])
     ], AngularTreeComponent);
     return AngularTreeComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/angular-tree/angular-tree.service.ts":
+/*!******************************************************!*\
+  !*** ./src/app/angular-tree/angular-tree.service.ts ***!
+  \******************************************************/
+/*! exports provided: AngularTreeService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AngularTreeService", function() { return AngularTreeService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
+
+
+/*@Injectable({
+    providedIn: 'root'
+})*/
+var AngularTreeService = /** @class */ (function () {
+    function AngularTreeService(http) {
+        this.http = http;
+        this.typeUrl = '/ngType';
+    }
+    AngularTreeService.prototype.getType = function () {
+        return this.http.get(this.typeUrl);
+    };
+    AngularTreeService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+    ], AngularTreeService);
+    return AngularTreeService;
 }());
 
 
@@ -542,6 +610,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contextmenu_contextmenu_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./contextmenu/contextmenu.component */ "./src/app/contextmenu/contextmenu.component.ts");
 /* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ng-drag-drop */ "./node_modules/ng-drag-drop/index.js");
 /* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./angular-tree/angular-tree.service */ "./src/app/angular-tree/angular-tree.service.ts");
+
 
 
 
@@ -584,7 +654,8 @@ var AppModule = /** @class */ (function () {
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_6__["AppRoutingModule"],
             ],
             providers: [
-                _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"]
+                _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"],
+                _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__["AngularTreeService"]
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]],
         })
@@ -725,6 +796,7 @@ var ContextmenuComponent = /** @class */ (function () {
             _this.closeMenu();
         };
         this.stopEdit = function () {
+            console.log('this.editNode: ', _this.editNode.data.name);
             _this.editNode = null;
         };
         this.copy = function () {
@@ -816,8 +888,7 @@ var CreateComponent = /** @class */ (function () {
         var _this = this;
         this.createService = createService;
         this.data = data;
-        this.createService.getClassName()
-            .subscribe(function (response) {
+        this.createService.getClassName().subscribe(function (response) {
             _this.dataClassName = Object.values(response);
         });
     }

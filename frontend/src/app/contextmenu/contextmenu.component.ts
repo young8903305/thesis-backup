@@ -65,6 +65,7 @@ export class ContextmenuComponent {
   }
 
   stopEdit = () => {
+      console.log('this.editNode: ', this.editNode.data.name);
     this.editNode = null;
   }
 
