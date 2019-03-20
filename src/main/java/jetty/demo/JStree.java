@@ -18,8 +18,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-import jetty.demo.Person;
 import jetty.demo.AnnotationForm;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

@@ -361,4 +361,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.editNode = null;
     }
 
+    preventDe($event) {
+        $event.stopPropagation();
+    }
+
 }

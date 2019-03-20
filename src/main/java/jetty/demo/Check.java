@@ -1,13 +1,20 @@
 package jetty.demo;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CheckName {
+public class Check {
 	
 	public static String parse (JsonNode jsog, String source_name, String view_name) {
 		
@@ -107,11 +114,41 @@ public class CheckName {
 		//JsonNode jsog = mapper.readTree(test);
 		
 		re = "{" + parse(jsog, source, view) + "}";
-		System.out.println(re);
+		// System.out.println(re);
 		
 		Family ff = mapper.readerFor(Family.class).readValue(family);
-		System.out.println("ff.getFather().getEmail(): " + ff.getFather().getEmail());
+		// System.out.println("ff.getFather().getEmail(): " + ff.getFather().getEmail());
 		
+		
+		
+		Car c = new Car();
+		CarTires ct = new CarTires();
+		CarTiresBrand ctb = new CarTiresBrand();
+		
+		ctb.setName("taiwan");
+		ctb.setPrise(1000);
+		ct.setBrand(ctb);
+		ct.setSize(17);
+		c.setName("BENZ");
+		c.setTires(ct, ct, ct, ct);
+		String car = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(c);
+		
+		// System.out.println(car);
+		
+		String[] a = new String[10];
+		List<String> b = new LinkedList<String>();
+		ArrayList<String> d = new ArrayList<String>();
+		
+		/*System.out.println(a.getClass().getSimpleName() + " " + a.getClass().getTypeName().getClass().getSimpleName());
+		System.out.println(b.getClass().getSimpleName() + " " + b.getClass().getTypeName().getClass().getSimpleName());
+		System.out.println(d.getClass().getSimpleName() + " " + c.getClass().getTypeName().getClass().getSimpleName());*/
+		
+		String car_jsog = "{\"@id\":\"3\",\"@type\":\"jetty.demo.Car\",\"tires\":[{\"@id\":\"2\",\"@type\":\"jetty.demo.CarTires\",\"brandName\":\"Michelin\",\"size\":15},{\"@ref\":\"2\",\"@type\":\"jetty.demo.CarTires\"},{\"@ref\":\"2\",\"@type\":\"jetty.demo.CarTires\"},{\"@ref\":\"2\",\"@type\":\"jetty.demo.CarTires\"}],\"carName\":\"KIA\"}";
+		Car car_check = mapper.readerFor(Car.class).readValue(car_jsog);
+		CarTires[] tires_check = car_check.getTires();
+		for (int i = 0; i < tires_check.length; i++) {
+			System.out.println(tires_check[i].getSize());
+		}
 	}
 	
 	

@@ -14,11 +14,11 @@ public class SerDeser{
 	
 	public static void main(String args[]) {
 		
-		Person man = new Person(33, "man", "example", null);
+		PersonDemo man = new PersonDemo();
 		//Ser(man);
 		System.out.println("done");
 		try {
-			Person man2 = Deser("/Users/yang/Desktop/person.ser");
+			PersonDemo man2 = Deser("/Users/yang/Desktop/person.ser");
 			System.out.println(man2.getAge());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -26,7 +26,7 @@ public class SerDeser{
 		}
 	}
 	
-	public static void Ser(Person person) {
+	public static void Ser(PersonDemo person) {
 		try {
 			// Serializable, primitive java object output
 			FileOutputStream f = new FileOutputStream(new File( "/Users/yang/Desktop/person.ser"));		// will output to webapp folder
@@ -41,13 +41,13 @@ public class SerDeser{
 		}
 	}
 	
-	public static Person Deser(String filename) throws IOException {
-		Person personDe = null;
+	public static PersonDemo Deser(String filename) throws IOException {
+		PersonDemo personDe = null;
 		
 		try {
 			FileInputStream fi = new FileInputStream(new File( filename));
 			ObjectInputStream oi = new ObjectInputStream(fi);
-			personDe = (Person) oi.readObject();
+			personDe = (PersonDemo) oi.readObject();
 		} catch (FileNotFoundException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}

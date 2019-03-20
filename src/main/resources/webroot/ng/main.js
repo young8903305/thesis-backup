@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable>\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n            <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.val\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" />\n            <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.val\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n\n<script>\n</script>"
+module.exports = "<tree-root [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable>\n    <ng-template #treeNodeTemplate let-node=\"node\">\n        <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n            <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.val\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" (click)=\"preventDe($event)\"/>\n            <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.val\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n        </span>\n        <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n    </ng-template>\n</tree-root>\n\n<button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n\n<div class=\"menu\" *ngIf=\"contextMenu\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n  <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n  <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n  <hr>\n  <ul>\n    <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n    <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Copy value</a></li>\n    <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n    <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n    <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n    <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n  </ul>\n</div>\n\n<script>\n    $(\"input\").click(function(event){\n        event.stopPropagation();\n    });\n</script>"
 
 /***/ }),
 
@@ -395,6 +395,9 @@ var AngularTreeComponent = /** @class */ (function () {
         }
         sessionStorage.setItem(this.editNode.parent.data.name, JSON.stringify(temp));
         this.editNode = null;
+    };
+    AngularTreeComponent.prototype.preventDe = function ($event) {
+        $event.stopPropagation();
     };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1180,7 +1183,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p *ngIf = \" className !== '' \">Form of {{ className }}</p>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of MemberKey\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n    <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n    </label>\n  </ng-container>\n  <button type = \"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click) = \"store()\">store</button>\n<br>\n<button (click) = \"clearForm()\">Clear Form</button>\n\n\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n\n\n<button (click) = \"clearSession()\">Clear Session Storage</button>"
+module.exports = "<p *ngIf = \" className !== '' \">Form of {{ className }}</p>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n  <ng-container *ngFor = \"let key of MemberKey\">\n    <label *ngIf = \"key!=='@id' && key!=='@type'\">\n      {{ key }} :\n    <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n    <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n    </label>\n  </ng-container>\n  <button type = \"submit\">Output Object</button>\n</form>\n<br>\n<br>\n<button (click) = \"store()\">store</button>\n<br>\n<button (click) = \"clearForm()\">Clear Form</button>\n\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n\n<button (click) = \"clearSession()\">Clear Session Storage</button>"
 
 /***/ }),
 
@@ -1242,7 +1245,7 @@ var GenerateFormComponent = /** @class */ (function () {
         var tempType = this.MemberType[nodeName];
         console.log('tempType: ', tempType);
         var tempTypeArray = tempType.split(' ');
-        if (tempTypeArray[0] === 'List') {
+        if (tempTypeArray[0] === 'List' || tempTypeArray[0].includes('[]')) { // list or array in java, use json list to store
             if (e.nativeEvent.target.type === 'text' || e.nativeEvent.target.type === 'textarea') {
                 if (e.nativeEvent.target.value === '') {
                     e.nativeEvent.target.value = this.dropNodeVal;
@@ -1299,7 +1302,7 @@ var GenerateFormComponent = /** @class */ (function () {
         }
         else { // list or string
             var tempTypeArray = tempType.split(' '); // split the type value to array
-            if (tempTypeArray[0] === 'List') { // list variable
+            if (tempTypeArray[0] === 'List' || tempTypeArray[0].includes('[]')) { // list or array variable in java, use json list store
                 var tempListVal = [];
                 var tempSingleVal = tempVal.toString().split(', '); // value split with ', '
                 if ((tempSingleVal.length === 1) && (tempSingleVal[0] === '')) {
@@ -1326,7 +1329,7 @@ var GenerateFormComponent = /** @class */ (function () {
                         || tempTypeArray[1] === 'long' || tempTypeArray[1] === 'float' || tempTypeArray[1] === 'double'
                         || tempTypeArray[1] === 'Byte' || tempTypeArray[1] === 'Short' || tempTypeArray[1] === 'Integer'
                         || tempTypeArray[1] === 'Long' || tempTypeArray[1] === 'Float' || tempTypeArray[1] === 'Double') {
-                        // [1, 2] list int
+                        // [1, 2] list int, change it to number
                         tempListVal[i] = +tempSingleVal[i];
                     }
                     else if (tempTypeArray[1] === 'Boolean' || tempTypeArray[1] === 'boolean') { // [t, f, t, f] list boolean
@@ -1372,6 +1375,7 @@ var GenerateFormComponent = /** @class */ (function () {
             }
         }
     };
+    // formInput = this.form_receive.value (object); typein: object of outer type from storageTypeMap
     GenerateFormComponent.prototype.jsogGen = function (formInput, typein) {
         var jsogS = {};
         for (var i = 0; i < Object.keys(formInput).length; i++) {

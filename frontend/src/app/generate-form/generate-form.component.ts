@@ -59,7 +59,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         const tempType = this.MemberType[ nodeName ];
         console.log('tempType: ', tempType);
         const tempTypeArray = tempType.split(' ');
-        if (tempTypeArray[0] === 'List') {
+        if (tempTypeArray[0] === 'List' || tempTypeArray[0].includes('[]')) {   // list or array in java, use json list to store
             if (e.nativeEvent.target.type === 'text' || e.nativeEvent.target.type === 'textarea') {
                 if (e.nativeEvent.target.value === '') {
                     e.nativeEvent.target.value = this.dropNodeVal;
@@ -114,7 +114,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             }
         } else {    // list or string
             const tempTypeArray = tempType.split(' ');  // split the type value to array
-            if (tempTypeArray[0] === 'List') { // list variable
+            if (tempTypeArray[0] === 'List' || tempTypeArray[0].includes('[]')) { // list or array variable in java, use json list store
                 const tempListVal = [];
                 const tempSingleVal = tempVal.toString().split(', ');   // value split with ', '
                 if ((tempSingleVal.length === 1) && (tempSingleVal[0] === '')) {
@@ -139,7 +139,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         || tempTypeArray[1] === 'long' || tempTypeArray[1] === 'float' || tempTypeArray[1] === 'double'
                         || tempTypeArray[1] === 'Byte' || tempTypeArray[1] === 'Short' || tempTypeArray[1] === 'Integer'
                         || tempTypeArray[1] === 'Long' || tempTypeArray[1] === 'Float' || tempTypeArray[1] === 'Double') {
-                            // [1, 2] list int
+                            // [1, 2] list int, change it to number
                             tempListVal[i] = +tempSingleVal[i];
                     } else if (tempTypeArray[1] === 'Boolean' || tempTypeArray[1] === 'boolean') {    // [t, f, t, f] list boolean
                         console.log('tempSingleVal.toString: ', tempSingleVal[i].toString());
@@ -180,7 +180,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         }
     }
 
-    jsogGen(formInput: any, typein: Object) {   // formInput = this.form_receive.value (object); typein: object of outer type from sTypeMap
+    // formInput = this.form_receive.value (object); typein: object of outer type from storageTypeMap
+    jsogGen(formInput: any, typein: Object) {
         const jsogS = {};
 
         for (let i = 0; i < Object.keys(formInput).length; i++) {

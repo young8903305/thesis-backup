@@ -833,18 +833,14 @@ public class Main {
 						ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
 						Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
 						complexTypeName = "List".concat(" " + stringListClass.getSimpleName());
-						if (var.name().equals("")) {
-							viewName = f.getName().concat(" (" + complexTypeName + ")");
-						} else {
-							viewName = var.name().concat(" (" + complexTypeName + ")");
-						}
-					} else {
+					} else {	// array or other types
 						complexTypeName = f.getType().getSimpleName();
-						if (var.name().equals("")) {
-							viewName = f.getName().concat(" (" + complexTypeName + ")");;
-						} else {
-							viewName = var.name().concat(" (" + complexTypeName + ")");
-						}
+					}
+					// set viewName if name in annotation been set, or use attribute name
+					if (var.name().equals("")) {
+						viewName = f.getName().concat(" (" + complexTypeName + ")");;
+					} else {
+						viewName = var.name().concat(" (" + complexTypeName + ")");
 					}
 					ViewToSourceMap.put(f.getName(), viewName);
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
@@ -1076,7 +1072,12 @@ public class Main {
 		       				}
 		       			}
 		       		}
-		       		out = out + "]";
+		       		// check if there has a node after array/list 
+		       		if(jsonNodes.hasNext()) {
+		       			out = out + "]" + ",";
+		        	} else {
+		        		out = out + "]";
+		        	}
 		       		
 		       	} else {	// string, number, true, false, null, @id, @ref
 		       		if (node.getKey().equals(view)) {
@@ -1271,18 +1272,14 @@ public class Main {
 						ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
 						Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
 						complexTypeName = "List".concat(" " + stringListClass.getSimpleName());
-						if (var.name().equals("")) {
-							viewName = f.getName().concat(" (" + complexTypeName + ")");
-						} else {
-							viewName = var.name().concat(" (" + complexTypeName + ")");
-						}
-					} else {
+					} else {	// array or other types
 						complexTypeName = f.getType().getSimpleName();
-						if (var.name().equals("")) {
-							viewName = f.getName().concat(" (" + complexTypeName + ")");;
-						} else {
-							viewName = var.name().concat(" (" + complexTypeName + ")");
-						}
+					}
+					// set viewName if name in annotation been set, or use attribute name 
+					if (var.name().equals("")) {
+						viewName = f.getName().concat(" (" + complexTypeName + ")");;
+					} else {
+						viewName = var.name().concat(" (" + complexTypeName + ")");
 					}
 					ViewToSourceMap.put(f.getName(), viewName);
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
