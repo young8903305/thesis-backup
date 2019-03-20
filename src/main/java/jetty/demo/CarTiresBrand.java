@@ -17,15 +17,15 @@ public class CarTiresBrand {
 	
 	public CarTiresBrand() {}
 	
-	public String getSize() {
+	public String getCountry() {
 		return this.country;
 	}
 	
-	public void setName(String country) {
+	public void setCountry(String country) {
 		this.country = country;
 	}
 	
-	public long getPrise() {
+	public long getColor() {
 		return this.color;
 	}
 	

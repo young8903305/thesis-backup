@@ -74,7 +74,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             e.nativeEvent.target.value = this.dropNodeVal;
             this.form_receive.value[nodeName] = e.nativeEvent.target.value;
         }
-        console.log('e: ', e);
+        // console.log('e: ', e);
     }
 
     // receieve the class info form create component

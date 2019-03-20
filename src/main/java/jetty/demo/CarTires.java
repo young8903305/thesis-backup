@@ -9,20 +9,31 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CarTires {
 	
+	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "(put CarTiresBrand here)") }, name = "Tire's Name")
+	private CarTiresBrand brand;
+	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "Michelin") }, name = "Tire's Name")
-	private CarTiresBrand brandName;
+	private String name;
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.number, value = "17") }, name = "Diameter")
 	private int size; 
 	
 	public CarTires() {}
 	
-	public void setBrand(CarTiresBrand brandName) {
-		this.brandName = brandName;
+	public void setBrand(CarTiresBrand brand) {
+		this.brand = brand;
 	}
 	
 	public CarTiresBrand getBrand() {
-		return this.brandName;
+		return this.brand;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public void setSize(int size) {

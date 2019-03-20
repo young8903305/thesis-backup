@@ -127,6 +127,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     e.preventDefault();
                     if ((treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') || treeNode.isRoot) {
                         TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
+                        console.log('treeNode.data: ', treeNode.data);
                     }
                     this.closeMenu();
                     if (treeNode.isRoot) {  // root node to form

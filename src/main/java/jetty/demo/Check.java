@@ -125,7 +125,7 @@ public class Check {
 		CarTires ct = new CarTires();
 		CarTiresBrand ctb = new CarTiresBrand();
 		
-		ctb.setName("taiwan");
+		ctb.setCountry("Taiwan");
 		ctb.setPrise(1000);
 		ct.setBrand(ctb);
 		ct.setSize(17);
@@ -143,11 +143,11 @@ public class Check {
 		System.out.println(b.getClass().getSimpleName() + " " + b.getClass().getTypeName().getClass().getSimpleName());
 		System.out.println(d.getClass().getSimpleName() + " " + c.getClass().getTypeName().getClass().getSimpleName());*/
 		
-		String car_jsog = "{\"@id\":\"3\",\"@type\":\"jetty.demo.Car\",\"tires\":[{\"@id\":\"2\",\"@type\":\"jetty.demo.CarTires\",\"brandName\":\"Michelin\",\"size\":15},{\"@ref\":\"2\",\"@type\":\"jetty.demo.CarTires\"},{\"@ref\":\"2\",\"@type\":\"jetty.demo.CarTires\"},{\"@ref\":\"2\",\"@type\":\"jetty.demo.CarTires\"}],\"carName\":\"KIA\"}";
+		String car_jsog = "{\"@id\":\"9\",\"@type\":\"jetty.demo.Car\",\"tires\":[{\"@id\":\"5\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"4\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"Japan\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"6\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"3\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"America\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"7\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"2\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"Taiwan\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"8\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"1\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17}],\"carName\":\"KIA\"}";
 		Car car_check = mapper.readerFor(Car.class).readValue(car_jsog);
 		CarTires[] tires_check = car_check.getTires();
 		for (int i = 0; i < tires_check.length; i++) {
-			System.out.println(tires_check[i].getSize());
+			System.out.println(tires_check[i].getBrand().getCountry());
 		}
 	}
 	

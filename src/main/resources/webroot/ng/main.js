@@ -168,6 +168,7 @@ var AngularTreeComponent = /** @class */ (function () {
                         e.preventDefault();
                         if ((treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') || treeNode.isRoot) {
                             angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
+                            console.log('treeNode.data: ', treeNode.data);
                         }
                         _this.closeMenu();
                         if (treeNode.isRoot) { // root node to form
@@ -1262,7 +1263,7 @@ var GenerateFormComponent = /** @class */ (function () {
             e.nativeEvent.target.value = this.dropNodeVal;
             this.form_receive.value[nodeName] = e.nativeEvent.target.value;
         }
-        console.log('e: ', e);
+        // console.log('e: ', e);
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {

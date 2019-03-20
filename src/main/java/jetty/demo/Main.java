@@ -715,18 +715,15 @@ public class Main {
 							ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
 							Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
 							complexTypeName = "List".concat(" " + stringListClass.getSimpleName());
-							if (var.name().equals("")) {
-								viewName = f.getName().concat(" (" + complexTypeName + ")");
-							} else {
-								viewName = var.name().concat(" (" + complexTypeName + ")");
-							}
-						} else {
+							
+						} else {	// array or other types
 							complexTypeName = f.getType().getSimpleName();
-							if (var.name().equals("")) {
-								viewName = f.getName().concat(" (" + complexTypeName + ")");;
-							} else {
-								viewName = var.name().concat(" (" + complexTypeName + ")");
-							}
+						}
+						// set viewName if name in annotation been set, or use attribute name
+						if (var.name().equals("")) {
+							viewName = f.getName().concat(" (" + complexTypeName + ")");
+						} else {
+							viewName = var.name().concat(" (" + complexTypeName + ")");
 						}
 						if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 							switch (var.style()[0].input()) {
@@ -943,7 +940,7 @@ public class Main {
 		        sessionStorage.put(jnode.getKey(), jnode.getValue().asText());
 			}
 			
-			sessionStorage.forEach((k, v) -> System.out.println(k + " : " + v));
+			//sessionStorage.forEach((k, v) -> System.out.println(k + " : " + v));
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/plain");
