@@ -30,6 +30,7 @@
     "jquery": "^3.3.1",
     "ng-drag-drop": "^5.0.0",
     "ng-js-tree": "0.0.10",
+    "ngx-bootstrap": "^3.2.0",
     "popper.js": "^1.14.6",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",

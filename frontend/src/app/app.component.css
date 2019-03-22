@@ -34,7 +34,8 @@ nav a.active {
 }
 
 .main {
-  margin-left: 200px;
+  margin-left: 8em;
+  margin-top: 3em;
   /* Same as the width of the sidenav */
 }
 
@@ -52,7 +53,7 @@ nav a.active {
 
 .sidenav {
   height: 100%;
-  width: 200px;
+  width: 6em;
   position: fixed;
   z-index: 1;
   top: 0;
