@@ -191,7 +191,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.storageLength = sessionStorage.length;
     }
 
-    onEditClick() {   // edit sessionStorage, transmit info to create component, it will transmit to generate-form
+    // edit sessionStorage, transmit info to create component, it will transmit to generate-form
+    onEditClick() {
         this.sessionStorageTemp = a;
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));
     }

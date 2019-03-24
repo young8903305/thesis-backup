@@ -623,10 +623,6 @@ public class Main {
 								styleNode.put(f.getName(), "date");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
-							case datetime_local:
-								styleNode.put(f.getName(), "datetime-local");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
 							case email:
 								styleNode.put(f.getName(), "email");
 								typeNode.put(f.getName(), f.getType().getSimpleName());
@@ -733,9 +729,6 @@ public class Main {
 							case date:
 								styleNode.put(viewName, "date");
 								break;
-							case datetime_local:
-								styleNode.put(viewName, "datetime-local");
-								break;
 							case email:
 								styleNode.put(viewName, "email");
 								break;
@@ -839,7 +832,7 @@ public class Main {
 					} else {
 						viewName = var.name().concat(" (" + complexTypeName + ")");
 					}
-					ViewToSourceMap.put(f.getName(), viewName);
+					// ViewToSourceMap.put(f.getName(), viewName);
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
 							case color :
@@ -848,10 +841,6 @@ public class Main {
 								break;
 							case date:
 								styleNode.put(viewName, "date");
-								typeNode.put(viewName, complexTypeName);
-								break;
-							case datetime_local:
-								styleNode.put(viewName, "datetime-local");
 								typeNode.put(viewName, complexTypeName);
 								break;
 							case email:
@@ -1289,19 +1278,6 @@ public class Main {
 							case date:
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "date");
-								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
-								break;
-							case datetime_local:
-								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
-								styleNode.put(viewName, "datetime-local");
 								typeNode.put(viewName, complexTypeName);
 								/*if (f.getType().getSimpleName().equals("List")) {
 									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();

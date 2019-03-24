@@ -11,27 +11,14 @@ import java.lang.annotation.ElementType;
 public @interface AnnotationStyle {
 	
 	public enum InputTypeControl {
-		// button,
-		//checkbox,	// for array/list
 		color,
 		date,
-		datetime_local,	// only for chrome
-		email,	// no HTML default validate for angular
-		//file,
-		//hidden,
-		//image,
-		month,	// only for chrome
+		email,
+		month,
 		number,
 		password,
-		//radio,	// need other attribute
-		//range,	// need other attribute
-		//reset,
-		//search,
-		//submit,
-		//tel,
 		text,
 		time,
-		//url,
 		week,
 		none
 	}
@@ -43,3 +30,4 @@ public @interface AnnotationStyle {
 	String textarea() default "false";
 	
 }
+
