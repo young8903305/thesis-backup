@@ -360,6 +360,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             temp[key] = value;
         }
         sessionStorage.setItem(this.editNode.parent.data.name, JSON.stringify(temp));
+        console.log('this.editNode.data.val: ', this.editNode.data.val);
         this.editNode = null;
     }
 

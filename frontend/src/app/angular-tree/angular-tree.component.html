@@ -1,7 +1,7 @@
 <tree-root [nodes]="nodes" [options]="options" [focused]="true" draggable>
     <ng-template #treeNodeTemplate let-node="node">
         <span *ngIf="node === editNode">{{ node.data.pureName }}
-            <input *ngIf=" (node.data.style!=='textarea') " type={{node.data.style}} autofocus [(ngModel)]="node.data.val" (blur)="stopEdit()" (keyup.enter)="stopEdit()" (click)="preventDe($event)"/>
+            <input *ngIf=" (node.data.style!=='textarea') " type={{node.data.style}} autofocus [(ngModel)]="node.data.val" (change)="stopEdit()" (keyup.enter)="stopEdit()" (click)="preventDe($event)"/>
             <textarea *ngIf=" node.data.style === 'textarea' " autofocus [(ngModel)]="node.data.val" (blur)="stopEdit()" (keyup.enter)="stopEdit()"></textarea>
         </span>
         <span *ngIf="node !== editNode">{{ node.data.name }}</span>
