@@ -28,6 +28,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     idMap = new Map<string, string>();      // <sessionStorage-key, @id>: store id for @ref-using
     checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
     storageTypeMap = new Map<string, Object>(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
+    formValueMap = new Map<string, string>();   // <session-key, Object>
+    isJsogMap = new Map<string, boolean>(); // <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
     jsog;
     dropNodeVal;
 
@@ -52,6 +54,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         return input;
     }
 
+    // drop node value from ng-tree
     onNodeDrop(e: any) {
         e.dragData = this.dropNodeVal;
         const nodeName = e.nativeEvent.target.attributes['ng-reflect-name'].nodeValue;
@@ -79,6 +82,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // receieve the class info form create component
     ngOnChanges() {
+        if ( !(this.generate_form_receive instanceof Array) ) {
+            this.generate_form_receive = JSON.parse(this.generate_form_receive);
+        }
         this.MemberKey = Object.keys(this.generate_form_receive[0]);    // for html, don't delete
         this.MemberStyle = this.generate_form_receive[1];   // styleNode
         this.MemberType = this.generate_form_receive[2];    // typeNode
@@ -113,7 +119,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 return false;
             }
         } else {    // list or string
-            const tempTypeArray = tempType.split(' ');  // split the type value to array
+            const tempTypeArray = tempType.split(' ');  // split the type-value to array
             if (tempTypeArray[0] === 'List' || tempTypeArray[0].includes('[]')) { // list or array variable in java, use json list store
                 const tempListVal = [];
                 const tempSingleVal = tempVal.toString().split(', ');   // value split with ', '
@@ -132,7 +138,14 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         } else {    // haven't used it yet, set checkMap to true, and write it
                             this.checkMap.set(tempSingleVal[i], true);
                             const typein = this.storageTypeMap.get(tempSingleVal[i]);
-                            tempListVal[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempSingleVal[i])), typein);
+                            console.log('JSON.parse(sessionStorage.getItem(tempSingleVal[i])): ',
+                                JSON.parse(sessionStorage.getItem(tempSingleVal[i])));
+                            if (this.isJsogMap.has(tempSingleVal[i])) { // sessionStorage already been jsog, use it directly
+                                tempListVal[i] = JSON.parse(sessionStorage.getItem(tempSingleVal[i]));
+                            } else {
+                                tempListVal[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempSingleVal[i])), typein);
+                            }
+                            console.log('tempListVal[i]: ', tempListVal[i]);
                             // console.log('checkMap', this.checkMap);
                         }
                     } else if (tempTypeArray[1] === 'byte' || tempTypeArray[1] === 'short' || tempTypeArray[1] === 'int'
@@ -155,7 +168,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 }
                 console.log('tempListVal: ', tempListVal);
                 return tempListVal;
-            } else {    // string
+            } else {    // string represent object
                 const StrTempVal = tempVal.toString();
                 if (sessionStorage.getItem(StrTempVal) !== null) {   // sessionStorage has it.
                     let reVal: any;
@@ -235,7 +248,13 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // sessionStorage just accept string type key/value
     store($event: any) {
-        console.log('this.form_receive @type: ', JSON.stringify(this.form_receive.value['@type']));
+        console.log('JSON.stringify(this.form_receive.value): ', JSON.stringify(this.form_receive.value));
+
+        this.idMap.clear();
+        for (let i = 0; i < sessionStorage.length; i++) {
+            this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
+            // this.checkMap.set(Object.keys(sessionStorage)[i], false);
+        }
 
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
@@ -243,7 +262,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         const aaa = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
         const bbb = aaa.split('.')[aaa.split('.').length - 1];
         if (sessionStorage.getItem(bbb) === null) { // sessionStorage don't have this item, create object
-            if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {    // already had the same class object
+            /*if (this.storageMap.has(JSON.stringify(this.form_receive.value['@type']))) {    // already had the same class object
                 let value = this.storageMap.get(JSON.stringify(this.form_receive.value['@type']));
                 value++;
                 this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), value);
@@ -251,7 +270,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             } else {    // first object of this class
                 this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
                 // this.form_receive.value['@id'] = 1;
-            }
+            }*/
             this.form_receive.value['@id'] = this.storageIndex.toString();
 
             /* temp: sessionStorage's class type and index;
@@ -260,25 +279,47 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));*/
             const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
-            this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
-            sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
-            // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
             this.storageTypeMap.set(key, this.MemberType);
-            console.log('this.storageTypeMap: ', this.storageTypeMap);
+            this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            console.log('this.ValueTemp: ', this.ValueTemp);
+            console.log('this.storageTypeMap.get(key): ', this.storageTypeMap.get(key));
+            this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            console.log('after: ', this.ValueTemp);
+            sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
+            this.isJsogMap.set(key, true);
+            // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            // console.log('this.storageTypeMap: ', this.storageTypeMap);
             this.storageIndex++;
         } else {    // sessioinStorage had this item, edit object, overwrite old value
             const temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
             const key = temp.split('.')[temp.split('.').length - 1];
+            this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
+            console.log('this.ValueTemp: ', this.ValueTemp);
+            // turn it to jsog then store it
+            this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
+            this.isJsogMap.set(key, true);
         }
         this.clearForm();
         this.formDataService.changeFlag(true);
+        // console.log('this.formValueMap: ', this.formValueMap);
+        this.formDataService.passFormValue(this.formValueMap);
         this.className = '';
         this.MemberKey = [];         // defaultValue: generate_form_receive[0]
         this.MemberStyle = {};    // styleNode
         this.MemberType = {};     // typeNode. use for list
+        /*
+         * change log:
+         * parse into jsog when store.
+         * every ob contain other ob, need to check whether it had been used or not, then clear the map.
+         *
+         *
+        */
+        this.checkMap.clear();
     }
 
     // clear the form data
@@ -293,6 +334,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     clearSession() {
         sessionStorage.clear();
         this.storageMap.clear();
+        this.storageTypeMap.clear();
         this.storageIndex = 1;
+        this.checkMap.clear();
     }
 }

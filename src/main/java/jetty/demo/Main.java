@@ -108,10 +108,47 @@ public class Main {
 	private static String[] arguments;
 	
 	private static HashMap<String, String> sessionStorage = new HashMap<String, String>();	// key-value
-	private static HashMap<String, String> ViewToSourceMap = new HashMap<String, String>();	// source-view
-	private static HashMap<String, String> TypeMap = new HashMap<String, String>();	// name-type
+	private static HashMap<String, String> Source_ViewMap = new HashMap<String, String>();	// source-view
+	private static HashMap<String, String> InputTypeMap = new HashMap<String, String>();	// name-type
+	private static HashMap<String, String> javaStorageTypeMap = new HashMap<String, String>();	// name-javaType
 	
 	private static String re;
+	
+	public static void ConstructViewToSourceMap (String arg) {
+		Class<?> pClass = null;
+			try {
+				pClass = Class.forName(arg);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// Field
+			Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+			
+			Annotation annotation;
+			AnnotationForm var;
+			String viewName = "";
+			String complexTypeName = "";
+			for (Field f : fieldlist) {
+				annotation = f.getAnnotation(AnnotationForm.class);
+				var = (AnnotationForm) annotation;
+				System.out.println(var.style()[0]);
+				if (f.getType().getSimpleName().equals("List")) {
+					ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+					Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+					complexTypeName = "List".concat(" " + stringListClass.getSimpleName());
+				} else {	// array or other types
+					complexTypeName = f.getType().getSimpleName();
+				}
+				// set viewName if name in annotation been set, or use attribute name 
+				if (var.name().equals("")) {
+					viewName = f.getName().concat(" (" + complexTypeName + ")");;
+				} else {
+					viewName = var.name().concat(" (" + complexTypeName + ")");
+				}
+				Source_ViewMap.put(f.getName(), viewName);
+			}
+	}
 	
 
 	@SuppressWarnings("serial")
@@ -566,7 +603,7 @@ public class Main {
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
-			InputStream fileContent = null;
+			/*InputStream fileContent = null;
 			String fileContentStr;
 			try {
 				fileContent = request.getPart("file").getInputStream();
@@ -677,12 +714,52 @@ public class Main {
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(responce_json);
+			response.getWriter().write(responce_json);*/
+			
+			InputStream fileContent = null;
+			String fileContentStr;
+			try {
+				fileContent = request.getPart("file").getInputStream();
+				
+				ByteArrayOutputStream result = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int length;
+				while ((length = fileContent.read(buffer)) != -1) {
+				    result.write(buffer, 0, length);
+				}
+				fileContentStr = result.toString(StandardCharsets.UTF_8.name());
+				System.out.println("from file: " + fileContentStr);
+			} finally {
+			   fileContent.close();
+			}
+			
+			String str = fileContentStr.toString();
+			
+			ObjectMapper mapper = new ObjectMapper();
+			re = str;
+			JsonNode jsog = mapper.readTree(str);
+			
+			String source;
+			String view;
+			for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
+				jsog = mapper.readTree(re);
+			    source = entry.getKey();
+			    view = entry.getValue();
+			    re = "{" + parse(jsog, view, source) + "}";
+			}
+			
+			// System.out.println(re);
+			
+			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
+			response.setContentType("text/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write(re);
 		}
 	}
 	
-	// send TypeMap to ng-tree component
-	public static class ngType extends HttpServlet{
+	// send InputTypeMap to ng-tree component
+	public static class ngInputType extends HttpServlet{
 		
 		public void init() throws ServletException{}
 		
@@ -695,6 +772,7 @@ public class Main {
 				
 				Class<?> pClass = null;
 				ObjectNode styleNode = ob.createObjectNode();	//  fieldName : type 
+				ObjectNode typeNode = ob.createObjectNode();	// [ fieldName : type ]
 				try {
 					pClass = Class.forName(arguments[i]);
 					// Field
@@ -758,24 +836,120 @@ public class Main {
 						} else if (var.style()[0].textarea().length() > 0) {
 							styleNode.put(viewName, "textarea");
 						}
-						TypeMap.put(arguments[i], styleNode.toString());
+						InputTypeMap.put(arguments[i], styleNode.toString());
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			ObjectNode reObject = ob.createObjectNode();
-		    TypeMap.forEach((k, v) -> {
-		    	reObject.put(k, v.toString());
+			ObjectNode inputTypeJson = ob.createObjectNode();
+		    InputTypeMap.forEach((k, v) -> {
+		    	inputTypeJson.put(k, v.toString());
 		    });
 
-			response.setContentType("text/json");
+			response.setContentType("text/plain");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(reObject.toString());
+			response.getWriter().write(inputTypeJson.toString());
 		}
 	}
+	
+	// send javaStorageTypeMap to ng-tree component
+		public static class ngJavaStorageType extends HttpServlet{
+			
+			public void init() throws ServletException{}
+			
+			@Override
+			protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+				
+				ObjectMapper ob = new ObjectMapper();
+				
+				for (int i = 0; i < arguments.length; i++) {
+					
+					Class<?> pClass = null;
+					ObjectNode typeNode = ob.createObjectNode();	// fieldName : type
+					try {
+						pClass = Class.forName(arguments[i]);
+						// Field
+						Field[] fieldlist = pClass.getDeclaredFields(); // include private members
+						
+						Annotation annotation;
+						AnnotationForm var;
+						String viewName = "";
+						String complexTypeName = "";
+						for (Field f : fieldlist) {
+							annotation = f.getAnnotation(AnnotationForm.class);
+							var = (AnnotationForm) annotation;
+							if (f.getType().getSimpleName().equals("List")) {
+								ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
+								Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
+								complexTypeName = "List".concat(" " + stringListClass.getSimpleName());
+								
+							} else {	// array or other types
+								complexTypeName = f.getType().getSimpleName();
+							}
+							// set viewName if name in annotation been set, or use attribute name
+							if (var.name().equals("")) {
+								viewName = f.getName().concat(" (" + complexTypeName + ")");
+							} else {
+								viewName = var.name().concat(" (" + complexTypeName + ")");
+							}
+							if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
+								switch (var.style()[0].input()) {
+								case color :
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case date:
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case email:
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case month:
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case number:
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case password :
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case text :
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case time :
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case week :
+									typeNode.put(viewName, complexTypeName);
+									break;
+								case none :
+									break;
+								default :
+									break;
+								}
+							} else if (var.style()[0].textarea().length() > 0) {
+								typeNode.put(viewName, complexTypeName);
+							}
+							javaStorageTypeMap.put(arguments[i], typeNode.toString());
+						}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				ObjectNode javaStorageTypeJson = ob.createObjectNode();
+			    javaStorageTypeMap.forEach((k, v) -> {
+			    	javaStorageTypeJson.put(k, v.toString());
+			    });
+
+				response.setContentType("text/plain");
+				response.setCharacterEncoding("UTF-8");
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.getWriter().write(javaStorageTypeJson.toString());
+			}
+		}
 	
 	public static class ngEditSessionStorage extends HttpServlet {
 		public void init() throws ServletException {
@@ -972,12 +1146,12 @@ public class Main {
 			
 			String source;
 			String view;
-			for ( Entry<String, String> entry : ViewToSourceMap.entrySet()) {
+			for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
 				jsog = mapper.readTree(re);
 			    source = entry.getKey();
 			    view = entry.getValue();
 			    re = "{" + parse(jsog, source, view) + "}";
-			    System.out.println(re);
+			    // System.out.println(re);
 			}
 			// System.out.println("Map: " + ViewToSourceMap);
 			// System.out.println("form value: " + str);
@@ -1015,8 +1189,8 @@ public class Main {
 	// parse the json, then change the view-name to source-name, then send back to ngFormOutput 
 	public static String parse (JsonNode jsog, String source_name, String view_name) {
 		
-		String view = view_name;
 		String source = source_name;
+		String view = view_name;
 		String out = "";
 		
 		Iterator<Entry<String, JsonNode>> jsonNodes = jsog.fields();
@@ -1267,7 +1441,7 @@ public class Main {
 					} else {
 						viewName = var.name().concat(" (" + complexTypeName + ")");
 					}
-					ViewToSourceMap.put(f.getName(), viewName);
+					Source_ViewMap.put(f.getName(), viewName);
 					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
 						switch (var.style()[0].input()) {
 							case color :
@@ -1465,7 +1639,9 @@ public class Main {
 		arguments = args;
 		for (String ar : arguments) {
 			System.out.println("ar: " + ar);
+			ConstructViewToSourceMap(ar);
 		}
+		
 		Main main = new Main(port);
 		main.start();
 		main.waitForInterrupt();
@@ -1529,7 +1705,9 @@ public class Main {
 		servletContextHandler.addServlet(ngFormOutput.class, "/ngFormOutput");
 		servletContextHandler.addServlet(ngSessionStorage.class, "/ngSessionStorage");
 		servletContextHandler.addServlet(ngEditSessionStorage.class, "/ngEditSessionStorage");
-		servletContextHandler.addServlet(ngType.class, "/ngType");
+		servletContextHandler.addServlet(ngInputType.class, "/ngInputType");
+		servletContextHandler.addServlet(ngJavaStorageType.class, "/ngJavaStorageType");
+		
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());
         fileUploadServletHolder.getRegistration().setMultipartConfig(new MultipartConfigElement("data/tmp"));

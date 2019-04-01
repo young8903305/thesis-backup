@@ -3,19 +3,34 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
-<div class="main">
-    <h1> Welcome!!</h1>
-    <router-outlet></router-outlet>
+<div class="container-fluid"> <!-- use ngx-bootstrap -->
     <br>
-    <app-angular-tree></app-angular-tree>
+    <br>
+    <div class="row">
+        <br>
+        <div class="col-sm-2 col-md-2 col-lg-1 col-xl-1">
+            <nav class="navbar navbar-dark bg-light navbar-expand-sm px-0 flex-row flex-nowrap">
+                <div class="navbar-collapse collapse">
+                    <div class="nav flex-sm-column flex-row">
+                        <a class="nav-item nav-link" routerLink="/uploader">Upload</a>
+                        <br>
+                        <a class="nav-item nav-link" routerLink="/create">Create</a>
+                        <br>
+                        <a class="nav-item nav-link" routerLink="/" (click)="gotoindex()">Home</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div>
+            <br>
+            <br>
+            <h1> Welcome!!</h1>
+            <br>
+            <br>
+            <router-outlet></router-outlet>
+            <br>
+            <app-angular-tree></app-angular-tree>
+        </div>
+    </div>
 </div>
 
-<div class="sidenav">
-  <nav>
-    <!--<a routerLink="/edit" (click)="noWelcome()">Edit</a>
-        <br>-->
-    <a routerLink="/create">Create</a>
-    <br>
-    <a routerLink="/" (click)="gotoindex()">Home</a>
-  </nav>
-</div>

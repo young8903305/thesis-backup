@@ -9,12 +9,17 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AngularTreeService {
 
-    typeUrl = '/ngType';
+    typeUrl = '/ngInputType';
+    javaStorageTypeUrl = '/ngJavaStorageType';
 
     constructor( private http: HttpClient ) { }
 
-    getType() {
+    getInputType() {
         return this.http.get(this.typeUrl);
+    }
+
+    getJavaStorageType() {
+        return this.http.get(this.javaStorageTypeUrl);
     }
 
 }

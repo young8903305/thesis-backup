@@ -1,3 +1,4 @@
+/*
 h1 {
   font-size: 1.2em;
   color: #999;
@@ -36,7 +37,7 @@ nav a.active {
 .main {
   margin-left: 8em;
   margin-top: 3em;
-  /* Same as the width of the sidenav */
+  /* Same as the width of the sidenav //
 }
 
 .sidenav div:hover {
@@ -62,3 +63,4 @@ nav a.active {
   overflow-x: hidden;
   padding-top: 20px;
 }
+*/

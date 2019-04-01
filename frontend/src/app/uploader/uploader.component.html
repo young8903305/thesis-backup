@@ -7,12 +7,14 @@
 </form>-->
 
 
-<form [formGroup]="uploader" (change)="fileChange( $event.target.files )" (ngSubmit)="submit()">
-  <label>
-    choose json file :
-    <input type="file" size="80" accept=".json" />
-  </label>
-  <button type="submit">Form it</button>
+<form [formGroup]="uploader" (change)="fileChange( $event.target.files )" (ngSubmit)="upload()">
+    <label>
+        choose json file :
+        <input type="file" size="80" accept=".json" />
+    </label>
+    <div class="mt-3">
+        <button class="btn btn-info" type="submit">upload</button>
+    </div>
 </form>
 <br>
 

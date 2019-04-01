@@ -1,3 +1,4 @@
+/*
 .sidenav div:hover {
   color: #f1f1f1;
 }
@@ -21,4 +22,7 @@
   overflow-x: hidden;
   padding-top: 20px;
 }
-
+*/
+button {
+  margin-left: 5px
+}

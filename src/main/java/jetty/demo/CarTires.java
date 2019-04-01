@@ -11,7 +11,7 @@ public class CarTires {
 	
 	@AnnotationForm(
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "(put CarTiresBrand here)") },
-			name = "Tire's Name")
+			name = "Tire's Brand")
 	private CarTiresBrand brand;
 	
 	@AnnotationForm(

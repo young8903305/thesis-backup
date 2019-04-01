@@ -20,10 +20,10 @@ public class CarTiresBrand {
 	@AnnotationForm(
 			style = { @AnnotationStyle(
 					input=InputTypeControl.color,
-					value = "white")
+					value = "#000000")
 			},
 			name = "Tire's color")
-	private long color;
+	private String color;
 	
 	public CarTiresBrand() {}
 	
@@ -35,11 +35,11 @@ public class CarTiresBrand {
 		this.country = country;
 	}
 	
-	public long getColor() {
+	public String getColor() {
 		return this.color;
 	}
 	
-	public void setPrise(long color) {
+	public void setColor(String color) {
 		this.color = color;
 	}
 }
