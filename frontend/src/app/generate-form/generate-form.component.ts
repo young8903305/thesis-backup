@@ -247,7 +247,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     }
 
     // sessionStorage just accept string type key/value
-    store($event: any) {
+    store() {
         console.log('JSON.stringify(this.form_receive.value): ', JSON.stringify(this.form_receive.value));
 
         this.idMap.clear();
@@ -316,8 +316,6 @@ export class GenerateFormComponent implements OnInit, OnChanges {
          * change log:
          * parse into jsog when store.
          * every ob contain other ob, need to check whether it had been used or not, then clear the map.
-         *
-         *
         */
         this.checkMap.clear();
     }

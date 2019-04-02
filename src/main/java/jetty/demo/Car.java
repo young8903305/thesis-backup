@@ -13,7 +13,7 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 public class Car {
 	
 	@AnnotationForm(
-			style = { @AnnotationStyle(textarea="true", value = "") })
+			style = { @AnnotationStyle(input=InputTypeControl.text, value = "") })
 	private CarTires[] tires;
 	
 	@AnnotationForm(
