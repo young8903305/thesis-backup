@@ -1,5 +1,5 @@
-import { Component, OnInit, DoCheck, Output, EventEmitter, OnChanges } from '@angular/core';
-import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions } from 'angular-tree-component';
+import { Component, OnInit, DoCheck, Output, EventEmitter, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
+import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions, TreeComponent } from 'angular-tree-component';
 import { FormDataService } from '../form-data.service';
 import { AngularTreeService } from './angular-tree.service';
 import { nodeChildrenAsMap } from '@angular/router/src/utils/tree';
@@ -413,7 +413,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     onEditClick() {
         /*this.sessionStorageTemp = a;
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));*/
-        console.log('a: ', a);
+        console.log('edit Object: ', a);
         this.data.editSessionStorage(a);
     }
 
@@ -421,6 +421,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.contextMenu = null;
     }
 
+    // copy the contextNode's editVal
     copyValue = () => {
         if (this.isRoot()) {    // for root node, copy its name to represent the whole object
             console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
@@ -433,7 +434,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
 
             this.doCut = true;
             this.closeMenu();
-        } else {
+        } else {    // not a root Node
             this.sourceNode = this.contextMenu.node;
 
             /*
@@ -452,7 +453,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
 
             // use clipboard EventListener send val to clipboard
             document.addEventListener('copy', (e: ClipboardEvent) => {
-                e.clipboardData.setData('text/plain', (this.contextMenu.node.data.val));
+                e.clipboardData.setData('text/plain', (this.contextMenu.node.data.editVal));
                 e.preventDefault();
                 document.removeEventListener('copy', null);
             });
@@ -496,8 +497,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         return true;
     }
 
+    // use to check show 'Delete Value', delete editValue, so check the editVal
     hasVal = () => {
-        if (this.contextMenu.node.data.val === '') {
+        if (this.contextMenu.node.data.editVal === '') {
             return false;
         } else {
             return true;
@@ -509,21 +511,32 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.closeMenu();
     }
 
+    // simple version of stopEdit()
     deleteValue = (node) => {
         const temp = {};
-        for (let [key, value] of Object.entries(JSON.parse(sessionStorage.getItem(node.parent.data.name)))) {
+        for (let [key, value] of Object.entries(JSON.parse(sessionStorage.getItem(node.parent.data.pureName)))) {
             if (key === node.data.pureName) {
+                // edit for view & formVal
+                node.data.name = node.data.pureName + ': ' + '';
+                node.data.val = '';
+                node.data.editVal = '';
+                node.parent.data.formVal[node.data.pureName] = '';
+                console.log('this.editNode.parent.data.formVal: ', node.parent.data.formVal);
+                this.formValueMap.set(node.parent.data.pureName.toString(), JSON.stringify(node.parent.data.formVal));
+                /*console.log('this.editNode.parent.data.formVal[this.editNode.data.pureName]: ',
+                this.editNode.parent.data.formVal[this.editNode.data.pureName]);*/
+                // edit for sessionStorage
                 value = '';
             }
             temp[key] = value;
         }
-        sessionStorage.setItem(node.parent.data.name, JSON.stringify(temp));
-        node.data.val = '';
+        // sessionStorage.setItem(node.parent.data.name, JSON.stringify(temp));
+        /*node.data.val = '';
         node.data.editVal = '';
         node.data.name = node.data.pureName + ': ' + node.data.val;
 
         node.parent.data.val[node.data.pureName] = '';
-        node.parent.data.formVal[node.data.pureName] = '';
+        node.parent.data.formVal[node.data.pureName] = '';*/
 
         this.formValueMap.set(node.parent.data.pureName, JSON.stringify(node.parent.data.formVal));
 
@@ -532,7 +545,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             virtualRoot = virtualRoot.parent;
         }
         // console.log('this.javaStorageTypeMap: ', this.javaStorageTypeMap);
+        for (let i = 1; i <= virtualRoot.data.children.length; i++) {
         for (const element of virtualRoot.data.children) {
+            if (element.pureName.includes(i.toString())) {
             /*console.log('JSON.parse(this.InputTypeMap[element.formVal[@type]]): ',
             JSON.parse(this.InputTypeMap[element.formVal['@type']]));*/
             if (element.pureName === node.parent.data.pureName) {
@@ -554,6 +569,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             formValueTemp = this.jsogGen(formValueTemp, typeTemp);
             sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
         }
+        }
+    }
 
         // make tree to reload
         this.flagReceive = true;
@@ -619,6 +636,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 this.editNode.data.val = this.editNode.data.editVal;
                 this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal;
                 console.log('this.editNode.parent.data.formVal: ', this.editNode.parent.data.formVal);
+                this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
                 /*console.log('this.editNode.parent.data.formVal[this.editNode.data.pureName]: ',
                     this.editNode.parent.data.formVal[this.editNode.data.pureName]);*/
                 // edit for sessionStorage
@@ -806,6 +824,16 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             jsogS[tempKey] = formInput[tempKey];
         }
         return jsogS;
+    }
+
+    outputObject(node) {
+        if (node.isRoot) {
+            // output form value to server ngFormOutput
+            this.ngTreeService.ouputObject(sessionStorage.getItem(node.data.pureName)).subscribe(response => {
+                console.log('output', response);
+            });
+        }
+        this.closeMenu();
     }
 
 }

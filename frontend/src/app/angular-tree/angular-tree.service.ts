@@ -11,6 +11,9 @@ export class AngularTreeService {
 
     typeUrl = '/ngInputType';
     javaStorageTypeUrl = '/ngJavaStorageType';
+    outputUrl = '/ngFormOutput';
+
+    httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
     constructor( private http: HttpClient ) { }
 
@@ -20,6 +23,10 @@ export class AngularTreeService {
 
     getJavaStorageType() {
         return this.http.get(this.javaStorageTypeUrl);
+    }
+
+    ouputObject(output) {
+        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     }
 
 }

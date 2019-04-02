@@ -1,5 +1,5 @@
 <div>
-    <tree-root [nodes]="nodes" [options]="options" [focused]="true" draggable>
+    <tree-root #tree [nodes]="nodes" [options]="options" [focused]="true" draggable>
         <ng-template #treeNodeTemplate let-node="node">
             <span *ngIf="node === editNode">{{ node.data.pureName }}
                 <input *ngIf=" (node.data.style!=='textarea') " type={{node.data.style}} autofocus [(ngModel)]="node.data.editVal" (change)="stopEdit()" (keyup.enter)="stopEdit()" (click)="preventDe($event)"/>
@@ -18,6 +18,7 @@
     <div *ngIf="isRoot()">Menu for {{ contextMenu.node.data.name }}</div>
     <hr>
     <ul>
+        <li (click)="outputObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Output object</a></li>
         <li (click)="editValue()"><a [style.opacity]="notRoot() && 1 || 0.3">Edit value</a></li>
         <li (click)="copyValue()"><a [style.opacity]="hasVal() && 1 || 0.3">Copy value</a></li>
         <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
@@ -31,6 +32,7 @@
     <div *ngIf="isRoot()">Menu for {{ contextMenu.node.data.name }}</div>
     <hr>
     <ul>
+        <li (click)="outputObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Output object</a></li>
         <li (click)="editValue()"><a [style.opacity]="notRoot() && 1 || 0.3">Edit value</a></li>
         <li (click)="copyValue()"><a [style.opacity]="hasVal() && 1 || 0.3">Copy value</a></li>
         <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
