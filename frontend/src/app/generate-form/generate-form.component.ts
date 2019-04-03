@@ -336,4 +336,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         this.storageIndex = 1;
         this.checkMap.clear();
     }
+
+    output2() {
+        // output form value to server ngFormOutput
+        this.subCreate.ouputObject(sessionStorage.getItem(this.className)).subscribe(response => {
+            console.log('output', response);
+        });
+        console.log(this.className);
+    }
 }

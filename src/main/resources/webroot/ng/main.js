@@ -1658,7 +1658,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2 *ngIf = \" className !== '' \">Form of {{ className }}</h2>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output()\">\n    <ng-container *ngFor = \"let key of MemberKey\">\n        <label *ngIf = \"key!=='@id' && key!=='@type'\">\n            {{ key }} :\n            <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n            <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n        </label>\n    </ng-container>\n    <br>\n    <button type=\"submit\" class=\"btn-dark col-md-8\">Output object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\" class=\"btn-dark col-md-8\" width=\"15em\">Store</button>\n<br>\n<button (click)=\"clearForm()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Form</button>\n\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n\n<button (click)=\"clearSession()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Session Storage</button>"
+module.exports = "<h2 *ngIf = \" className !== '' \">Form of {{ className }}</h2>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output2()\">\n    <ng-container *ngFor = \"let key of MemberKey\">\n        <label *ngIf = \"key!=='@id' && key!=='@type'\">\n            {{ key }} :\n            <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n            <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n        </label>\n    </ng-container>\n    <br>\n    <button type=\"submit\" class=\"btn-dark col-md-8\">Output object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\" class=\"btn-dark col-md-8\" width=\"15em\">Store</button>\n<br>\n<button (click)=\"clearForm()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Form</button>\n\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n\n<button (click)=\"clearSession()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Session Storage</button>"
 
 /***/ }),
 
@@ -1994,6 +1994,13 @@ var GenerateFormComponent = /** @class */ (function () {
         this.storageIndex = 1;
         this.checkMap.clear();
     };
+    GenerateFormComponent.prototype.output2 = function () {
+        // output form value to server ngFormOutput
+        this.subCreate.ouputObject(sessionStorage.getItem(this.className)).subscribe(function (response) {
+            console.log('output', response);
+        });
+        console.log(this.className);
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -2043,6 +2050,9 @@ var GenerateFormService = /** @class */ (function () {
     };
     GenerateFormService.prototype.outputsessionStorage = function (session) {
         return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
+    };
+    GenerateFormService.prototype.ouputObject2 = function (output) {
+        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     };
     GenerateFormService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

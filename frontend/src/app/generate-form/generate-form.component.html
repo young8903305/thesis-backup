@@ -1,6 +1,6 @@
 <h2 *ngIf = " className !== '' ">Form of {{ className }}</h2>
 
-<form [formGroup] = "form_receive" (ngSubmit) = "output()">
+<form [formGroup] = "form_receive" (ngSubmit) = "output2()">
     <ng-container *ngFor = "let key of MemberKey">
         <label *ngIf = "key!=='@id' && key!=='@type'">
             {{ key }} :

@@ -20,4 +20,8 @@ export class GenerateFormService {
     outputsessionStorage(session) {
         return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
     }
+
+    ouputObject2(output) {
+        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    }
 }
