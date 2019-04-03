@@ -276,23 +276,26 @@ var AngularTreeComponent = /** @class */ (function () {
                 _this.closeMenu();
             }
         };
+        // copy object, then add its formValue into Map
         this.copyObj = function () {
             if (!_this.isRoot) {
                 return false;
             }
             // this.sourceNode = this.contextMenu.node;
             _this.doCut = false;
-            var itemCopy = sessionStorage.getItem(_this.contextMenu.node.data.name);
-            var itemCopyJson = JSON.parse(itemCopy);
+            var itemCopy = sessionStorage.getItem(_this.contextMenu.node.data.pureName);
+            var itemCopyJsog = JSON.parse(itemCopy);
             var temp = {};
-            for (var _i = 0, _a = Object.entries(itemCopyJson); _i < _a.length; _i++) {
+            for (var _i = 0, _a = Object.entries(itemCopyJsog); _i < _a.length; _i++) {
                 var _b = _a[_i], k = _b[0], v = _b[1];
                 if (k === '@id') {
                     v = v + '123';
                 }
                 temp[k] = v;
             }
-            sessionStorage.setItem(_this.contextMenu.node.data.name + '123', JSON.stringify(temp)); // need to set an unique seiral id
+            sessionStorage.setItem(_this.contextMenu.node.data.pureName + '123', JSON.stringify(temp)); // need to set an unique seiral id
+            var itemCopyFormValue = _this.formValueMap.get(_this.contextMenu.node.data.pureName);
+            _this.formValueMap.set(_this.contextMenu.node.data.name + '123', itemCopyFormValue);
             _this.closeMenu();
         };
         this.isRoot = function () {
@@ -2148,7 +2151,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"upload()\">\n    <label>\n        choose json file :\n        <input type=\"file\" size=\"80\" accept=\".json\" />\n    </label>\n    <div class=\"mt-3\">\n        <button class=\"btn btn-info\" type=\"submit\">upload</button>\n    </div>\n</form>\n<br>\n\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n"
+module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"upload()\">\n    <label>\n        choose json file :\n        <input type=\"file\" size=\"80\" accept=\".json\" />\n    </label>\n    <div class=\"mt-3\">\n        <button class=\"btn btn-info\" type=\"submit\">upload</button>\n    </div>\n</form>\n<br>\n<!--\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n-->"
 
 /***/ }),
 

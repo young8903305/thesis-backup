@@ -464,22 +464,25 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         }
     }
 
+    // copy object, then add its formValue into Map
     copyObj = () => {
         if (!this.isRoot) {
             return false;
         }
         // this.sourceNode = this.contextMenu.node;
         this.doCut = false;
-        const itemCopy = sessionStorage.getItem(this.contextMenu.node.data.name);
-        const itemCopyJson = JSON.parse(itemCopy);
+        const itemCopy = sessionStorage.getItem(this.contextMenu.node.data.pureName);
+        const itemCopyJsog = JSON.parse(itemCopy);
         const temp = {};
-        for (let [k, v] of Object.entries(itemCopyJson )) {
+        for (let [k, v] of Object.entries(itemCopyJsog )) {
             if (k === '@id') {
                 v = v + '123';
             }
             temp[k] = v;
         }
-        sessionStorage.setItem(this.contextMenu.node.data.name + '123', JSON.stringify(temp));  // need to set an unique seiral id
+        sessionStorage.setItem(this.contextMenu.node.data.pureName + '123', JSON.stringify(temp));  // need to set an unique seiral id
+        const itemCopyFormValue = this.formValueMap.get(this.contextMenu.node.data.pureName);
+        this.formValueMap.set(this.contextMenu.node.data.name + '123', itemCopyFormValue);
         this.closeMenu();
     }
 

@@ -99,7 +99,15 @@ public class Check {
 	    }
 		return out;
 	}
-	
+
+	public static void jsogToFormValue(JsonNode jsog) {
+		
+		Iterator<Entry<String, JsonNode>> jsonNodes = jsog.fields();
+		while (jsonNodes.hasNext()) {  
+	        Entry<String, JsonNode> node = jsonNodes.next();
+	        JsonNode jNodeValue = node.getValue();
+		}
+	}
 	public static void main(String...args) throws IOException {
 		String person = "{\"@id\":\"2\",\"@type\":\"jetty.demo.Family\",\"father (PersonDemo)\": {\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"time\":null,\"spouse\":null},\"mother (PersonDemo)\": {\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},\"children\":[{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
 		String view = "mother (PersonDemo)";
