@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 255, 0.9);\n  padding: 7px;\n  border-radius: 5px;\n  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);\n}\n\nul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\nli {\n  padding: 7px;\n  border-radius: 3px;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: aliceblue;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYW5ndWxhci10cmVlL2FuZ3VsYXItdHJlZS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Usa0JBQWtCO0VBQ2xCLG9DQUFvQztFQUNwQyxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLDBDQUEwQztBQUM1Qzs7QUFFQTtFQUNFLGdCQUFnQjtFQUNoQixVQUFVO0VBQ1YsU0FBUztBQUNYOztBQUVBO0VBQ0UsWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixlQUFlO0FBQ2pCOztBQUVBO0VBQ0UsMkJBQTJCO0FBQzdCIiwiZmlsZSI6InNyYy9hcHAvYW5ndWxhci10cmVlL2FuZ3VsYXItdHJlZS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1lbnUge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGJhY2tncm91bmQ6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC45KTtcbiAgcGFkZGluZzogN3B4O1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIGJveC1zaGFkb3c6IDAgMCAycHggMnB4IHJnYmEoMCwgMCwgMCwgMC4yKTtcbn1cblxudWwge1xuICBsaXN0LXN0eWxlOiBub25lO1xuICBwYWRkaW5nOiAwO1xuICBtYXJnaW46IDA7XG59XG5cbmxpIHtcbiAgcGFkZGluZzogN3B4O1xuICBib3JkZXItcmFkaXVzOiAzcHg7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxubGk6aG92ZXIge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiBhbGljZWJsdWU7XG59Il19 */"
+module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 255, 0.9);\n  padding: 7px;\n  border-radius: 5px;\n  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);\n}\n\nul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\nli {\n  padding: 7px;\n  border-radius: 3px;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: aliceblue;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9hbmd1bGFyLXRyZWUvYW5ndWxhci10cmVlLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxrQkFBa0I7RUFDbEIsb0NBQW9DO0VBQ3BDLFlBQVk7RUFDWixrQkFBa0I7RUFDbEIsMENBQTBDO0FBQzVDOztBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLFVBQVU7RUFDVixTQUFTO0FBQ1g7O0FBRUE7RUFDRSxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLGVBQWU7QUFDakI7O0FBRUE7RUFDRSwyQkFBMkI7QUFDN0IiLCJmaWxlIjoiYXBwL2FuZ3VsYXItdHJlZS9hbmd1bGFyLXRyZWUuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5tZW51IHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOSk7XG4gIHBhZGRpbmc6IDdweDtcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xuICBib3gtc2hhZG93OiAwIDAgMnB4IDJweCByZ2JhKDAsIDAsIDAsIDAuMik7XG59XG5cbnVsIHtcbiAgbGlzdC1zdHlsZTogbm9uZTtcbiAgcGFkZGluZzogMDtcbiAgbWFyZ2luOiAwO1xufVxuXG5saSB7XG4gIHBhZGRpbmc6IDdweDtcbiAgYm9yZGVyLXJhZGl1czogM3B4O1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbmxpOmhvdmVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogYWxpY2VibHVlO1xufSJdfQ== */"
 
 /***/ }),
 
@@ -60,6 +60,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
 /* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
 /* harmony import */ var _angular_tree_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./angular-tree.service */ "./src/app/angular-tree/angular-tree.service.ts");
+/* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../form-data-interface */ "./src/app/form-data-interface.ts");
+
 
 
 
@@ -67,16 +69,16 @@ __webpack_require__.r(__webpack_exports__);
 
 var a;
 var AngularTreeComponent = /** @class */ (function () {
-    function AngularTreeComponent(data, ngTreeService) {
+    function AngularTreeComponent(data, ngTreeService, formDataInterface) {
         var _this = this;
         this.data = data;
         this.ngTreeService = ngTreeService;
+        this.formDataInterface = formDataInterface;
         this.storageLength = 0;
         this.contextMenu = null;
         this.editNode = null;
         this.sourceNode = null;
         this.doCut = false;
-        this.finishPaste = true;
         this.checkMap = new Map(); // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
         this.idMap = new Map(); // <sessionStorage-key, @id>: store id for @ref-using
         this.isJsogMap = new Map(); // <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
@@ -441,7 +443,8 @@ var AngularTreeComponent = /** @class */ (function () {
     AngularTreeComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.data.currentFlag.subscribe(function (flagInput) { return _this.flagReceive = flagInput; });
-        this.data.currentFormValue.subscribe(function (formValueMapInput) { return _this.formValueMap = formValueMapInput; });
+        // this.data.currentFormValue.subscribe(formValueMapInput => this.formValueMap = formValueMapInput);
+        this.formDataInterface.currentFormValueMap.subscribe(function (formValueMapInput) { return _this.formValueMap = formValueMapInput; });
     };
     // generate ng-tree childGen( sessionStorage's inputtype, jsog-in-sessionStorage )
     AngularTreeComponent.prototype.childGen = function (InputTypeValIn, sessionStorageSingleIn) {
@@ -658,7 +661,8 @@ var AngularTreeComponent = /** @class */ (function () {
                 this.editNode.data.val = this.editNode.data.editVal;
                 this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal;
                 console.log('this.editNode.parent.data.formVal: ', this.editNode.parent.data.formVal);
-                this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
+                // this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
+                this.formDataInterface.addFormValue(this.editNode.parent.data.pureName, JSON.stringify(this.editNode.parent.data.formVal));
                 /*console.log('this.editNode.parent.data.formVal[this.editNode.data.pureName]: ',
                     this.editNode.parent.data.formVal[this.editNode.data.pureName]);*/
                 // edit for sessionStorage
@@ -866,7 +870,8 @@ var AngularTreeComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./angular-tree.component.css */ "./src/app/angular-tree/angular-tree.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_form_data_service__WEBPACK_IMPORTED_MODULE_3__["FormDataService"],
-            _angular_tree_service__WEBPACK_IMPORTED_MODULE_4__["AngularTreeService"]])
+            _angular_tree_service__WEBPACK_IMPORTED_MODULE_4__["AngularTreeService"],
+            _form_data_interface__WEBPACK_IMPORTED_MODULE_5__["FormDataInterface"]])
     ], AngularTreeComponent);
     return AngularTreeComponent;
 }());
@@ -982,7 +987,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/*\nh1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;\n}\n\nh2 {\n  font-size: 2em;\n  margin-top: 0;\n  padding-top: 0;\n}\n\nnav a {\n  padding: 5px 10px;\n  text-decoration: none;\n  margin-top: 10px;\n  display: inline-block;\n  background-color: #eee;\n  border-radius: 4px;\n}\n\nnav a:visited,\na:link {\n  color: #607d8b;\n}\n\nnav a:hover {\n  color: #039be5;\n  background-color: #cfd8dc;\n}\n\nnav a.active {\n  color: #039be5;\n}\n\n.main {\n  margin-left: 8em;\n  margin-top: 3em;\n  /* Same as the width of the sidenav //\n}\n\n.sidenav div:hover {\n  color: #f1f1f1;\n}\n\n.sidenav div {\n  padding: 6px 6px 6px 32px;\n  text-decoration: none;\n  font-size: 16px;\n  color: #818181;\n  display: block;\n}\n\n.sidenav {\n  height: 100%;\n  width: 6em;\n  position: fixed;\n  z-index: 1;\n  top: 0;\n  left: 0;\n  background-color: #111;\n  overflow-x: hidden;\n  padding-top: 20px;\n}\n*/\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0NBaUVDIiwiZmlsZSI6InNyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuaDEge1xuICBmb250LXNpemU6IDEuMmVtO1xuICBjb2xvcjogIzk5OTtcbiAgbWFyZ2luLWJvdHRvbTogMDtcbn1cblxuaDIge1xuICBmb250LXNpemU6IDJlbTtcbiAgbWFyZ2luLXRvcDogMDtcbiAgcGFkZGluZy10b3A6IDA7XG59XG5cbm5hdiBhIHtcbiAgcGFkZGluZzogNXB4IDEwcHg7XG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgbWFyZ2luLXRvcDogMTBweDtcbiAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xuICBib3JkZXItcmFkaXVzOiA0cHg7XG59XG5cbm5hdiBhOnZpc2l0ZWQsXG5hOmxpbmsge1xuICBjb2xvcjogIzYwN2Q4Yjtcbn1cblxubmF2IGE6aG92ZXIge1xuICBjb2xvcjogIzAzOWJlNTtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2NmZDhkYztcbn1cblxubmF2IGEuYWN0aXZlIHtcbiAgY29sb3I6ICMwMzliZTU7XG59XG5cbi5tYWluIHtcbiAgbWFyZ2luLWxlZnQ6IDhlbTtcbiAgbWFyZ2luLXRvcDogM2VtO1xuICAvKiBTYW1lIGFzIHRoZSB3aWR0aCBvZiB0aGUgc2lkZW5hdiAvL1xufVxuXG4uc2lkZW5hdiBkaXY6aG92ZXIge1xuICBjb2xvcjogI2YxZjFmMTtcbn1cblxuLnNpZGVuYXYgZGl2IHtcbiAgcGFkZGluZzogNnB4IDZweCA2cHggMzJweDtcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xuICBmb250LXNpemU6IDE2cHg7XG4gIGNvbG9yOiAjODE4MTgxO1xuICBkaXNwbGF5OiBibG9jaztcbn1cblxuLnNpZGVuYXYge1xuICBoZWlnaHQ6IDEwMCU7XG4gIHdpZHRoOiA2ZW07XG4gIHBvc2l0aW9uOiBmaXhlZDtcbiAgei1pbmRleDogMTtcbiAgdG9wOiAwO1xuICBsZWZ0OiAwO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjMTExO1xuICBvdmVyZmxvdy14OiBoaWRkZW47XG4gIHBhZGRpbmctdG9wOiAyMHB4O1xufVxuKi8iXX0= */"
+module.exports = "/*\nh1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom: 0;\n}\n\nh2 {\n  font-size: 2em;\n  margin-top: 0;\n  padding-top: 0;\n}\n\nnav a {\n  padding: 5px 10px;\n  text-decoration: none;\n  margin-top: 10px;\n  display: inline-block;\n  background-color: #eee;\n  border-radius: 4px;\n}\n\nnav a:visited,\na:link {\n  color: #607d8b;\n}\n\nnav a:hover {\n  color: #039be5;\n  background-color: #cfd8dc;\n}\n\nnav a.active {\n  color: #039be5;\n}\n\n.main {\n  margin-left: 8em;\n  margin-top: 3em;\n  /* Same as the width of the sidenav //\n}\n\n.sidenav div:hover {\n  color: #f1f1f1;\n}\n\n.sidenav div {\n  padding: 6px 6px 6px 32px;\n  text-decoration: none;\n  font-size: 16px;\n  color: #818181;\n  display: block;\n}\n\n.sidenav {\n  height: 100%;\n  width: 6em;\n  position: fixed;\n  z-index: 1;\n  top: 0;\n  left: 0;\n  background-color: #111;\n  overflow-x: hidden;\n  padding-top: 20px;\n}\n*/\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9hcHAuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Q0FpRUMiLCJmaWxlIjoiYXBwL2FwcC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLypcbmgxIHtcbiAgZm9udC1zaXplOiAxLjJlbTtcbiAgY29sb3I6ICM5OTk7XG4gIG1hcmdpbi1ib3R0b206IDA7XG59XG5cbmgyIHtcbiAgZm9udC1zaXplOiAyZW07XG4gIG1hcmdpbi10b3A6IDA7XG4gIHBhZGRpbmctdG9wOiAwO1xufVxuXG5uYXYgYSB7XG4gIHBhZGRpbmc6IDVweCAxMHB4O1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gIG1hcmdpbi10b3A6IDEwcHg7XG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgYmFja2dyb3VuZC1jb2xvcjogI2VlZTtcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xufVxuXG5uYXYgYTp2aXNpdGVkLFxuYTpsaW5rIHtcbiAgY29sb3I6ICM2MDdkOGI7XG59XG5cbm5hdiBhOmhvdmVyIHtcbiAgY29sb3I6ICMwMzliZTU7XG4gIGJhY2tncm91bmQtY29sb3I6ICNjZmQ4ZGM7XG59XG5cbm5hdiBhLmFjdGl2ZSB7XG4gIGNvbG9yOiAjMDM5YmU1O1xufVxuXG4ubWFpbiB7XG4gIG1hcmdpbi1sZWZ0OiA4ZW07XG4gIG1hcmdpbi10b3A6IDNlbTtcbiAgLyogU2FtZSBhcyB0aGUgd2lkdGggb2YgdGhlIHNpZGVuYXYgLy9cbn1cblxuLnNpZGVuYXYgZGl2OmhvdmVyIHtcbiAgY29sb3I6ICNmMWYxZjE7XG59XG5cbi5zaWRlbmF2IGRpdiB7XG4gIHBhZGRpbmc6IDZweCA2cHggNnB4IDMycHg7XG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgZm9udC1zaXplOiAxNnB4O1xuICBjb2xvcjogIzgxODE4MTtcbiAgZGlzcGxheTogYmxvY2s7XG59XG5cbi5zaWRlbmF2IHtcbiAgaGVpZ2h0OiAxMDAlO1xuICB3aWR0aDogNmVtO1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIHotaW5kZXg6IDE7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzExMTtcbiAgb3ZlcmZsb3cteDogaGlkZGVuO1xuICBwYWRkaW5nLXRvcDogMjBweDtcbn1cbiovIl19 */"
 
 /***/ }),
 
@@ -1083,6 +1088,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ng-drag-drop */ "./node_modules/ng-drag-drop/index.js");
 /* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__);
 /* harmony import */ var _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./angular-tree/angular-tree.service */ "./src/app/angular-tree/angular-tree.service.ts");
+/* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./form-data-interface */ "./src/app/form-data-interface.ts");
+
 
 
 
@@ -1127,7 +1134,8 @@ var AppModule = /** @class */ (function () {
             ],
             providers: [
                 _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"],
-                _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__["AngularTreeService"]
+                _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__["AngularTreeService"],
+                { provide: _form_data_interface__WEBPACK_IMPORTED_MODULE_18__["FormDataInterface"], useExisting: _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"] }
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]],
         })
@@ -1180,7 +1188,7 @@ var AppService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 255, 0.9);\n  padding: 7px;\n  border-radius: 5px;\n  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);\n}\n\nul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\nli {\n  padding: 7px;\n  border-radius: 3px;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: aliceblue;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29udGV4dG1lbnUvY29udGV4dG1lbnUuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLGtCQUFrQjtFQUNsQixvQ0FBb0M7RUFDcEMsWUFBWTtFQUNaLGtCQUFrQjtFQUNsQiwwQ0FBMEM7QUFDNUM7O0FBRUE7RUFDRSxnQkFBZ0I7RUFDaEIsVUFBVTtFQUNWLFNBQVM7QUFDWDs7QUFFQTtFQUNFLFlBQVk7RUFDWixrQkFBa0I7RUFDbEIsZUFBZTtBQUNqQjs7QUFFQTtFQUNFLDJCQUEyQjtBQUM3QiIsImZpbGUiOiJzcmMvYXBwL2NvbnRleHRtZW51L2NvbnRleHRtZW51LmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubWVudSB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgYmFja2dyb3VuZDogcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjkpO1xuICBwYWRkaW5nOiA3cHg7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgYm94LXNoYWRvdzogMCAwIDJweCAycHggcmdiYSgwLCAwLCAwLCAwLjIpO1xufVxuXG51bCB7XG4gIGxpc3Qtc3R5bGU6IG5vbmU7XG4gIHBhZGRpbmc6IDA7XG4gIG1hcmdpbjogMDtcbn1cblxubGkge1xuICBwYWRkaW5nOiA3cHg7XG4gIGJvcmRlci1yYWRpdXM6IDNweDtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG5saTpob3ZlciB7XG4gIGJhY2tncm91bmQtY29sb3I6IGFsaWNlYmx1ZTtcbn0iXX0= */"
+module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 255, 0.9);\n  padding: 7px;\n  border-radius: 5px;\n  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);\n}\n\nul {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\nli {\n  padding: 7px;\n  border-radius: 3px;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: aliceblue;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9jb250ZXh0bWVudS9jb250ZXh0bWVudS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0Usa0JBQWtCO0VBQ2xCLG9DQUFvQztFQUNwQyxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLDBDQUEwQztBQUM1Qzs7QUFFQTtFQUNFLGdCQUFnQjtFQUNoQixVQUFVO0VBQ1YsU0FBUztBQUNYOztBQUVBO0VBQ0UsWUFBWTtFQUNaLGtCQUFrQjtFQUNsQixlQUFlO0FBQ2pCOztBQUVBO0VBQ0UsMkJBQTJCO0FBQzdCIiwiZmlsZSI6ImFwcC9jb250ZXh0bWVudS9jb250ZXh0bWVudS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1lbnUge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIGJhY2tncm91bmQ6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC45KTtcbiAgcGFkZGluZzogN3B4O1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIGJveC1zaGFkb3c6IDAgMCAycHggMnB4IHJnYmEoMCwgMCwgMCwgMC4yKTtcbn1cblxudWwge1xuICBsaXN0LXN0eWxlOiBub25lO1xuICBwYWRkaW5nOiAwO1xuICBtYXJnaW46IDA7XG59XG5cbmxpIHtcbiAgcGFkZGluZzogN3B4O1xuICBib3JkZXItcmFkaXVzOiAzcHg7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxubGk6aG92ZXIge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiBhbGljZWJsdWU7XG59Il19 */"
 
 /***/ }),
 
@@ -1322,7 +1330,7 @@ function uuid() {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/*\n.sidenav div:hover {\n  color: #f1f1f1;\n}\n\n.sidenav div {\n  padding: 6px 6px 6px 32px;\n  text-decoration: none;\n  font-size: 25px;\n  color: #818181;\n  display: block;\n}\n\n.sidenav {\n  height: 100%;\n  width: 200px;\n  position: fixed;\n  z-index: 1;\n  top: 0;\n  left: 0;\n  background-color: #111;\n  overflow-x: hidden;\n  padding-top: 20px;\n}\n*/\nbutton {\n  margin-left: 5px\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY3JlYXRlL2NyZWF0ZS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Q0F3QkM7QUFDRDtFQUNFO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9jcmVhdGUvY3JlYXRlLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuLnNpZGVuYXYgZGl2OmhvdmVyIHtcbiAgY29sb3I6ICNmMWYxZjE7XG59XG5cbi5zaWRlbmF2IGRpdiB7XG4gIHBhZGRpbmc6IDZweCA2cHggNnB4IDMycHg7XG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgZm9udC1zaXplOiAyNXB4O1xuICBjb2xvcjogIzgxODE4MTtcbiAgZGlzcGxheTogYmxvY2s7XG59XG5cbi5zaWRlbmF2IHtcbiAgaGVpZ2h0OiAxMDAlO1xuICB3aWR0aDogMjAwcHg7XG4gIHBvc2l0aW9uOiBmaXhlZDtcbiAgei1pbmRleDogMTtcbiAgdG9wOiAwO1xuICBsZWZ0OiAwO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjMTExO1xuICBvdmVyZmxvdy14OiBoaWRkZW47XG4gIHBhZGRpbmctdG9wOiAyMHB4O1xufVxuKi9cbmJ1dHRvbiB7XG4gIG1hcmdpbi1sZWZ0OiA1cHhcbn1cbiJdfQ== */"
+module.exports = "/*\n.sidenav div:hover {\n  color: #f1f1f1;\n}\n\n.sidenav div {\n  padding: 6px 6px 6px 32px;\n  text-decoration: none;\n  font-size: 25px;\n  color: #818181;\n  display: block;\n}\n\n.sidenav {\n  height: 100%;\n  width: 200px;\n  position: fixed;\n  z-index: 1;\n  top: 0;\n  left: 0;\n  background-color: #111;\n  overflow-x: hidden;\n  padding-top: 20px;\n}\n*/\nbutton {\n  margin-left: 5px\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9jcmVhdGUvY3JlYXRlLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztDQXdCQztBQUNEO0VBQ0U7QUFDRiIsImZpbGUiOiJhcHAvY3JlYXRlL2NyZWF0ZS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLypcbi5zaWRlbmF2IGRpdjpob3ZlciB7XG4gIGNvbG9yOiAjZjFmMWYxO1xufVxuXG4uc2lkZW5hdiBkaXYge1xuICBwYWRkaW5nOiA2cHggNnB4IDZweCAzMnB4O1xuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gIGZvbnQtc2l6ZTogMjVweDtcbiAgY29sb3I6ICM4MTgxODE7XG4gIGRpc3BsYXk6IGJsb2NrO1xufVxuXG4uc2lkZW5hdiB7XG4gIGhlaWdodDogMTAwJTtcbiAgd2lkdGg6IDIwMHB4O1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIHotaW5kZXg6IDE7XG4gIHRvcDogMDtcbiAgbGVmdDogMDtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzExMTtcbiAgb3ZlcmZsb3cteDogaGlkZGVuO1xuICBwYWRkaW5nLXRvcDogMjBweDtcbn1cbiovXG5idXR0b24ge1xuICBtYXJnaW4tbGVmdDogNXB4XG59XG4iXX0= */"
 
 /***/ }),
 
@@ -1450,7 +1458,7 @@ var CreateService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  display: flex;\n  flex-direction: column;\n  padding-top: 24px;\n}\nlabel {\n  display: block;\n  width: 6em;\n  margin: .5em 0;\n  color: #607D8B;\n  font-weight: bold;\n}\ninput {\n  height: 2em;\n  font-size: 1em;\n  padding-left: .4em;\n}\nbutton {\n  font-family: Arial;\n  background-color: #eee;\n  border: none;\n  padding: 5px 10px;\n  border-radius: 4px;\n  cursor: pointer;\n}\nbutton:hover {\n  background-color: #cfd8dc;\n}\nbutton:disabled {\n  background-color: #eee;\n  color: #ccc;\n  cursor: auto;\n}\n/*\nCopyright 2017-2018 Google Inc. All Rights Reserved.\nUse of this source code is governed by an MIT-style license that\ncan be found in the LICENSE file at http://angular.io/license\n*/\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZWRpdC9lZGl0LmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsZ0RBQWdEO0FBQ2hEO0VBQ0UsYUFBYTtFQUNiLHNCQUFzQjtFQUN0QixpQkFBaUI7QUFDbkI7QUFFQTtFQUNFLGNBQWM7RUFDZCxVQUFVO0VBQ1YsY0FBYztFQUNkLGNBQWM7RUFDZCxpQkFBaUI7QUFDbkI7QUFFQTtFQUNFLFdBQVc7RUFDWCxjQUFjO0VBQ2Qsa0JBQWtCO0FBQ3BCO0FBRUE7RUFDRSxrQkFBa0I7RUFDbEIsc0JBQXNCO0VBQ3RCLFlBQVk7RUFDWixpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLGVBQWU7QUFDakI7QUFFQTtFQUNFLHlCQUF5QjtBQUMzQjtBQUVBO0VBQ0Usc0JBQXNCO0VBQ3RCLFdBQVc7RUFDWCxZQUFZO0FBQ2Q7QUFHQTs7OztDQUlDIiwiZmlsZSI6InNyYy9hcHAvZWRpdC9lZGl0LmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBQcm9maWxlRWRpdG9yQ29tcG9uZW50J3MgcHJpdmF0ZSBDU1Mgc3R5bGVzICovXG46aG9zdCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIHBhZGRpbmctdG9wOiAyNHB4O1xufVxuXG5sYWJlbCB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICB3aWR0aDogNmVtO1xuICBtYXJnaW46IC41ZW0gMDtcbiAgY29sb3I6ICM2MDdEOEI7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuXG5pbnB1dCB7XG4gIGhlaWdodDogMmVtO1xuICBmb250LXNpemU6IDFlbTtcbiAgcGFkZGluZy1sZWZ0OiAuNGVtO1xufVxuXG5idXR0b24ge1xuICBmb250LWZhbWlseTogQXJpYWw7XG4gIGJhY2tncm91bmQtY29sb3I6ICNlZWU7XG4gIGJvcmRlcjogbm9uZTtcbiAgcGFkZGluZzogNXB4IDEwcHg7XG4gIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG5idXR0b246aG92ZXIge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjY2ZkOGRjO1xufVxuXG5idXR0b246ZGlzYWJsZWQge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xuICBjb2xvcjogI2NjYztcbiAgY3Vyc29yOiBhdXRvO1xufVxuXG5cbi8qXG5Db3B5cmlnaHQgMjAxNy0yMDE4IEdvb2dsZSBJbmMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQuXG5Vc2Ugb2YgdGhpcyBzb3VyY2UgY29kZSBpcyBnb3Zlcm5lZCBieSBhbiBNSVQtc3R5bGUgbGljZW5zZSB0aGF0XG5jYW4gYmUgZm91bmQgaW4gdGhlIExJQ0VOU0UgZmlsZSBhdCBodHRwOi8vYW5ndWxhci5pby9saWNlbnNlXG4qLyJdfQ== */"
+module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  display: flex;\n  flex-direction: column;\n  padding-top: 24px;\n}\nlabel {\n  display: block;\n  width: 6em;\n  margin: .5em 0;\n  color: #607D8B;\n  font-weight: bold;\n}\ninput {\n  height: 2em;\n  font-size: 1em;\n  padding-left: .4em;\n}\nbutton {\n  font-family: Arial;\n  background-color: #eee;\n  border: none;\n  padding: 5px 10px;\n  border-radius: 4px;\n  cursor: pointer;\n}\nbutton:hover {\n  background-color: #cfd8dc;\n}\nbutton:disabled {\n  background-color: #eee;\n  color: #ccc;\n  cursor: auto;\n}\n/*\nCopyright 2017-2018 Google Inc. All Rights Reserved.\nUse of this source code is governed by an MIT-style license that\ncan be found in the LICENSE file at http://angular.io/license\n*/\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9lZGl0L2VkaXQuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnREFBZ0Q7QUFDaEQ7RUFDRSxhQUFhO0VBQ2Isc0JBQXNCO0VBQ3RCLGlCQUFpQjtBQUNuQjtBQUVBO0VBQ0UsY0FBYztFQUNkLFVBQVU7RUFDVixjQUFjO0VBQ2QsY0FBYztFQUNkLGlCQUFpQjtBQUNuQjtBQUVBO0VBQ0UsV0FBVztFQUNYLGNBQWM7RUFDZCxrQkFBa0I7QUFDcEI7QUFFQTtFQUNFLGtCQUFrQjtFQUNsQixzQkFBc0I7RUFDdEIsWUFBWTtFQUNaLGlCQUFpQjtFQUNqQixrQkFBa0I7RUFDbEIsZUFBZTtBQUNqQjtBQUVBO0VBQ0UseUJBQXlCO0FBQzNCO0FBRUE7RUFDRSxzQkFBc0I7RUFDdEIsV0FBVztFQUNYLFlBQVk7QUFDZDtBQUdBOzs7O0NBSUMiLCJmaWxlIjoiYXBwL2VkaXQvZWRpdC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogUHJvZmlsZUVkaXRvckNvbXBvbmVudCdzIHByaXZhdGUgQ1NTIHN0eWxlcyAqL1xuOmhvc3Qge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBwYWRkaW5nLXRvcDogMjRweDtcbn1cblxubGFiZWwge1xuICBkaXNwbGF5OiBibG9jaztcbiAgd2lkdGg6IDZlbTtcbiAgbWFyZ2luOiAuNWVtIDA7XG4gIGNvbG9yOiAjNjA3RDhCO1xuICBmb250LXdlaWdodDogYm9sZDtcbn1cblxuaW5wdXQge1xuICBoZWlnaHQ6IDJlbTtcbiAgZm9udC1zaXplOiAxZW07XG4gIHBhZGRpbmctbGVmdDogLjRlbTtcbn1cblxuYnV0dG9uIHtcbiAgZm9udC1mYW1pbHk6IEFyaWFsO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xuICBib3JkZXI6IG5vbmU7XG4gIHBhZGRpbmc6IDVweCAxMHB4O1xuICBib3JkZXItcmFkaXVzOiA0cHg7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuYnV0dG9uOmhvdmVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2NmZDhkYztcbn1cblxuYnV0dG9uOmRpc2FibGVkIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2VlZTtcbiAgY29sb3I6ICNjY2M7XG4gIGN1cnNvcjogYXV0bztcbn1cblxuXG4vKlxuQ29weXJpZ2h0IDIwMTctMjAxOCBHb29nbGUgSW5jLiBBbGwgUmlnaHRzIFJlc2VydmVkLlxuVXNlIG9mIHRoaXMgc291cmNlIGNvZGUgaXMgZ292ZXJuZWQgYnkgYW4gTUlULXN0eWxlIGxpY2Vuc2UgdGhhdFxuY2FuIGJlIGZvdW5kIGluIHRoZSBMSUNFTlNFIGZpbGUgYXQgaHR0cDovL2FuZ3VsYXIuaW8vbGljZW5zZVxuKi8iXX0= */"
 
 /***/ }),
 
@@ -1586,6 +1594,26 @@ var EditService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/form-data-interface.ts":
+/*!****************************************!*\
+  !*** ./src/app/form-data-interface.ts ***!
+  \****************************************/
+/*! exports provided: FormDataInterface */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormDataInterface", function() { return FormDataInterface; });
+var FormDataInterface = /** @class */ (function () {
+    function FormDataInterface() {
+    }
+    return FormDataInterface;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/form-data.service.ts":
 /*!**************************************!*\
   !*** ./src/app/form-data.service.ts ***!
@@ -1607,16 +1635,22 @@ __webpack_require__.r(__webpack_exports__);
 })*/
 var FormDataService = /** @class */ (function () {
     function FormDataService() {
-        this.storageSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]); // ng-tree -> create
+        // ng-tree edit sessionStorage -> create
+        this.storageSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
         this.currentStorage = this.storageSource.asObservable();
         // tree drag, form drop, pass the value
         this.dragdropNode = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
         this.currentNode = this.dragdropNode.asObservable();
         this.flagSource = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]); // form finish edit and switch the flag
         this.currentFlag = this.flagSource.asObservable();
+        // formValueMap will replace it
         this.formValue = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]); // pass form value to ng-tree, for root
         this.currentFormValue = this.formValue.asObservable();
+        this.formValueMap = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](new Map());
+        // currentFormValueMap: Observable<Map<string, string>> = this.formValueMap;
+        this.currentFormValueMap = this.formValueMap.asObservable();
     }
+    // ng-tree send sessionStorage to form
     FormDataService.prototype.editSessionStorage = function (storageInput) {
         this.storageSource.next(storageInput);
     };
@@ -1626,8 +1660,17 @@ var FormDataService = /** @class */ (function () {
     FormDataService.prototype.changeFlag = function (flagInput) {
         this.flagSource.next(flagInput);
     };
+    // formValueMap will replace it
     FormDataService.prototype.passFormValue = function (formValueInput) {
         this.formValue.next(formValueInput);
+    };
+    // add formValue into shared FormValueMap
+    FormDataService.prototype.addFormValue = function (key, value) {
+        this.formValueMap.next(this.formValueMap.getValue().set(key, value));
+    };
+    // get formValue from FromValueMap
+    FormDataService.prototype.getFormValue = function () {
+        return this.formValueMap.getValue();
     };
     FormDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
@@ -1647,7 +1690,7 @@ var FormDataService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  display: flex;\n  flex-direction: column;\n  padding-top: 24px;\n}\nlabel {\n  display: block;\n  width: 15em;\n  margin: .5em 0;\n  color: #607D8B;\n  font-weight: bold;\n}\ninput {\n  height: 2em;\n  font-size: 1em;\n  padding-left: .4em;\n}\n/*\nbutton {\n  font-family: Arial;\n  background-color: #eee;\n  border: none;\n  padding: 5px 10px;\n  border-radius: 4px;\n  cursor: pointer;\n}\n*/\nbutton:hover {\n  background-color: #cfd8dc;\n}\nbutton:disabled {\n  background-color: #eee;\n  color: #ccc;\n  cursor: auto;\n}\n/*\nCopyright 2017-2018 Google Inc. All Rights Reserved.\nUse of this source code is governed by an MIT-style license that\ncan be found in the LICENSE file at http://angular.io/license\n*/\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZ2VuZXJhdGUtZm9ybS9nZW5lcmF0ZS1mb3JtLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsZ0RBQWdEO0FBQ2hEO0VBQ0UsYUFBYTtFQUNiLHNCQUFzQjtFQUN0QixpQkFBaUI7QUFDbkI7QUFFQTtFQUNFLGNBQWM7RUFDZCxXQUFXO0VBQ1gsY0FBYztFQUNkLGNBQWM7RUFDZCxpQkFBaUI7QUFDbkI7QUFFQTtFQUNFLFdBQVc7RUFDWCxjQUFjO0VBQ2Qsa0JBQWtCO0FBQ3BCO0FBQ0E7Ozs7Ozs7OztDQVNDO0FBQ0Q7RUFDRSx5QkFBeUI7QUFDM0I7QUFFQTtFQUNFLHNCQUFzQjtFQUN0QixXQUFXO0VBQ1gsWUFBWTtBQUNkO0FBR0E7Ozs7Q0FJQyIsImZpbGUiOiJzcmMvYXBwL2dlbmVyYXRlLWZvcm0vZ2VuZXJhdGUtZm9ybS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogUHJvZmlsZUVkaXRvckNvbXBvbmVudCdzIHByaXZhdGUgQ1NTIHN0eWxlcyAqL1xuOmhvc3Qge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBwYWRkaW5nLXRvcDogMjRweDtcbn1cblxubGFiZWwge1xuICBkaXNwbGF5OiBibG9jaztcbiAgd2lkdGg6IDE1ZW07XG4gIG1hcmdpbjogLjVlbSAwO1xuICBjb2xvcjogIzYwN0Q4QjtcbiAgZm9udC13ZWlnaHQ6IGJvbGQ7XG59XG5cbmlucHV0IHtcbiAgaGVpZ2h0OiAyZW07XG4gIGZvbnQtc2l6ZTogMWVtO1xuICBwYWRkaW5nLWxlZnQ6IC40ZW07XG59XG4vKlxuYnV0dG9uIHtcbiAgZm9udC1mYW1pbHk6IEFyaWFsO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xuICBib3JkZXI6IG5vbmU7XG4gIHBhZGRpbmc6IDVweCAxMHB4O1xuICBib3JkZXItcmFkaXVzOiA0cHg7XG4gIGN1cnNvcjogcG9pbnRlcjtcbn1cbiovXG5idXR0b246aG92ZXIge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjY2ZkOGRjO1xufVxuXG5idXR0b246ZGlzYWJsZWQge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xuICBjb2xvcjogI2NjYztcbiAgY3Vyc29yOiBhdXRvO1xufVxuXG5cbi8qXG5Db3B5cmlnaHQgMjAxNy0yMDE4IEdvb2dsZSBJbmMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQuXG5Vc2Ugb2YgdGhpcyBzb3VyY2UgY29kZSBpcyBnb3Zlcm5lZCBieSBhbiBNSVQtc3R5bGUgbGljZW5zZSB0aGF0XG5jYW4gYmUgZm91bmQgaW4gdGhlIExJQ0VOU0UgZmlsZSBhdCBodHRwOi8vYW5ndWxhci5pby9saWNlbnNlXG4qLyJdfQ== */"
+module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  display: flex;\n  flex-direction: column;\n  padding-top: 24px;\n}\nlabel {\n  display: block;\n  width: 15em;\n  margin: .5em 0;\n  color: #607D8B;\n  font-weight: bold;\n}\ninput {\n  height: 2em;\n  font-size: 1em;\n  padding-left: .4em;\n}\n/*\nbutton {\n  font-family: Arial;\n  background-color: #eee;\n  border: none;\n  padding: 5px 10px;\n  border-radius: 4px;\n  cursor: pointer;\n}\n*/\nbutton:hover {\n  background-color: #cfd8dc;\n}\nbutton:disabled {\n  background-color: #eee;\n  color: #ccc;\n  cursor: auto;\n}\n/*\nCopyright 2017-2018 Google Inc. All Rights Reserved.\nUse of this source code is governed by an MIT-style license that\ncan be found in the LICENSE file at http://angular.io/license\n*/\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC9nZW5lcmF0ZS1mb3JtL2dlbmVyYXRlLWZvcm0uY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxnREFBZ0Q7QUFDaEQ7RUFDRSxhQUFhO0VBQ2Isc0JBQXNCO0VBQ3RCLGlCQUFpQjtBQUNuQjtBQUVBO0VBQ0UsY0FBYztFQUNkLFdBQVc7RUFDWCxjQUFjO0VBQ2QsY0FBYztFQUNkLGlCQUFpQjtBQUNuQjtBQUVBO0VBQ0UsV0FBVztFQUNYLGNBQWM7RUFDZCxrQkFBa0I7QUFDcEI7QUFDQTs7Ozs7Ozs7O0NBU0M7QUFDRDtFQUNFLHlCQUF5QjtBQUMzQjtBQUVBO0VBQ0Usc0JBQXNCO0VBQ3RCLFdBQVc7RUFDWCxZQUFZO0FBQ2Q7QUFHQTs7OztDQUlDIiwiZmlsZSI6ImFwcC9nZW5lcmF0ZS1mb3JtL2dlbmVyYXRlLWZvcm0uY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qIFByb2ZpbGVFZGl0b3JDb21wb25lbnQncyBwcml2YXRlIENTUyBzdHlsZXMgKi9cbjpob3N0IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgcGFkZGluZy10b3A6IDI0cHg7XG59XG5cbmxhYmVsIHtcbiAgZGlzcGxheTogYmxvY2s7XG4gIHdpZHRoOiAxNWVtO1xuICBtYXJnaW46IC41ZW0gMDtcbiAgY29sb3I6ICM2MDdEOEI7XG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xufVxuXG5pbnB1dCB7XG4gIGhlaWdodDogMmVtO1xuICBmb250LXNpemU6IDFlbTtcbiAgcGFkZGluZy1sZWZ0OiAuNGVtO1xufVxuLypcbmJ1dHRvbiB7XG4gIGZvbnQtZmFtaWx5OiBBcmlhbDtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2VlZTtcbiAgYm9yZGVyOiBub25lO1xuICBwYWRkaW5nOiA1cHggMTBweDtcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG4qL1xuYnV0dG9uOmhvdmVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2NmZDhkYztcbn1cblxuYnV0dG9uOmRpc2FibGVkIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogI2VlZTtcbiAgY29sb3I6ICNjY2M7XG4gIGN1cnNvcjogYXV0bztcbn1cblxuXG4vKlxuQ29weXJpZ2h0IDIwMTctMjAxOCBHb29nbGUgSW5jLiBBbGwgUmlnaHRzIFJlc2VydmVkLlxuVXNlIG9mIHRoaXMgc291cmNlIGNvZGUgaXMgZ292ZXJuZWQgYnkgYW4gTUlULXN0eWxlIGxpY2Vuc2UgdGhhdFxuY2FuIGJlIGZvdW5kIGluIHRoZSBMSUNFTlNFIGZpbGUgYXQgaHR0cDovL2FuZ3VsYXIuaW8vbGljZW5zZVxuKi8iXX0= */"
 
 /***/ }),
 
@@ -1677,16 +1720,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _generate_form_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./generate-form.service */ "./src/app/generate-form/generate-form.service.ts");
 /* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
+/* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../form-data-interface */ "./src/app/form-data-interface.ts");
+
 
 
 
 
 
 var GenerateFormComponent = /** @class */ (function () {
-    function GenerateFormComponent(fb, subCreate, formDataService) {
+    function GenerateFormComponent(fb, subCreate, formDataService, formDataInterface) {
+        var _this = this;
         this.fb = fb;
         this.subCreate = subCreate;
         this.formDataService = formDataService;
+        this.formDataInterface = formDataInterface;
         this.MemberKey = []; // defaultValue: generate_form_receive[0]
         this.MemberStyle = {}; // styleNode
         this.MemberType = {}; // typeNode. use for list
@@ -1697,19 +1744,25 @@ var GenerateFormComponent = /** @class */ (function () {
         this.idMap = new Map(); // <sessionStorage-key, @id>: store id for @ref-using
         this.checkMap = new Map(); // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
         this.storageTypeMap = new Map(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
-        this.formValueMap = new Map(); // <session-key, Object>
-        this.isJsogMap = new Map(); // <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
+        this.formValueMap = new Map(); // <session-key, object in string>
+        this.isJsogMap = new Map(); // (discard) <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
+        subCreate.getJavaStorageType().subscribe(function (response) {
+            _this.javaStorageTypeMap = response;
+        });
     }
     GenerateFormComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.formDataService.currentNode.subscribe(function (nodeIn) { return _this.dropNodeVal = nodeIn; });
+        this.formDataInterface.currentFormValueMap.subscribe(function (formValueMapInput) { return _this.formValueMap$ = formValueMapInput; });
     };
     GenerateFormComponent.prototype.CheckStrToNum = function (input) {
-        for (var key in this.MemberType) { // change string default value to number
-            if (this.MemberType[key] === 'byte' || this.MemberType[key] === 'short' || this.MemberType[key] === 'int' ||
-                this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
-                this.MemberType[key] === 'Byte' || this.MemberType[key] === 'Short' || this.MemberType[key] === 'Integer' ||
-                this.MemberType[key] === 'Long' || this.MemberType[key] === 'Float' || this.MemberType[key] === 'Double') {
+        var className = input['@type'];
+        var javaType = JSON.parse(this.javaStorageTypeMap[className]);
+        for (var key in javaType) { // change string default value to number
+            if (javaType[key] === 'byte' || javaType[key] === 'short' || javaType[key] === 'int' ||
+                javaType[key] === 'long' || javaType[key] === 'float' || javaType[key] === 'double' ||
+                javaType[key] === 'Byte' || javaType[key] === 'Short' || javaType[key] === 'Integer' ||
+                javaType[key] === 'Long' || javaType[key] === 'Float' || javaType[key] === 'Double') {
                 input[key] = +input[key]; // string to number
             }
         }
@@ -1801,14 +1854,18 @@ var GenerateFormComponent = /** @class */ (function () {
                         }
                         else { // haven't used it yet, set checkMap to true, and write it
                             this.checkMap.set(tempSingleVal[i], true);
-                            var typein = this.storageTypeMap.get(tempSingleVal[i]);
+                            // const typein = this.storageTypeMap.get(tempSingleVal[i]);
                             console.log('JSON.parse(sessionStorage.getItem(tempSingleVal[i])): ', JSON.parse(sessionStorage.getItem(tempSingleVal[i])));
-                            if (this.isJsogMap.has(tempSingleVal[i])) { // sessionStorage already been jsog, use it directly
+                            /*if (this.isJsogMap.has(tempSingleVal[i])) { // sessionStorage already been jsog, use it directly
                                 tempListVal[i] = JSON.parse(sessionStorage.getItem(tempSingleVal[i]));
-                            }
-                            else {
+                                console.log('////////////////////////////////isJSOG/////////////////////////');
+                            } else {    // a new object
+                                const typein = JSON.parse(this.javaStorageTypeMap[tempSingleVal[i]]);
                                 tempListVal[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempSingleVal[i])), typein);
-                            }
+                            }*/
+                            var typeInJsog = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@type'];
+                            var typein = JSON.parse(this.javaStorageTypeMap[typeInJsog]);
+                            tempListVal[i] = this.jsogGen(JSON.parse(this.formValueMap$.get(tempSingleVal[i])), typein);
                             console.log('tempListVal[i]: ', tempListVal[i]);
                             // console.log('checkMap', this.checkMap);
                         }
@@ -1850,9 +1907,11 @@ var GenerateFormComponent = /** @class */ (function () {
                     }
                     else { // haven't used it yet, set checkMap to true, and write it
                         this.checkMap.set(StrTempVal, true);
-                        var typein = this.storageTypeMap.get(StrTempVal);
-                        reVal = this.jsogGen(JSON.parse(sessionStorage.getItem(StrTempVal)), typein);
-                        // console.log('checkMap', this.checkMap);
+                        // const typein = this.storageTypeMap.get(StrTempVal);
+                        var typein = JSON.parse(this.javaStorageTypeMap[JSON.parse(sessionStorage.getItem(StrTempVal))['@type']]);
+                        // reVal = this.jsogGen(JSON.parse(sessionStorage.getItem(StrTempVal)), typein);
+                        // reVal = this.jsogGen(this.formValueMap.get(StrTempVal), typein);
+                        reVal = this.jsogGen(JSON.parse(this.formValueMap$.get(StrTempVal)), typein);
                     }
                     // console.log('reVal: ', reVal);
                     return reVal;
@@ -1866,6 +1925,9 @@ var GenerateFormComponent = /** @class */ (function () {
     // formInput = this.form_receive.value (object); typein: object of outer type from storageTypeMap
     GenerateFormComponent.prototype.jsogGen = function (formInput, typein) {
         var jsogS = {};
+        var aaa = formInput['@type'].concat(formInput['@id']);
+        var bbb = aaa.split('.')[aaa.split('.').length - 1];
+        this.checkMap.set(bbb, true);
         for (var i = 0; i < Object.keys(formInput).length; i++) {
             var tempKey = Object.keys(formInput)[i];
             if ((tempKey !== '@id') && (tempKey !== '@type')) {
@@ -1877,7 +1939,7 @@ var GenerateFormComponent = /** @class */ (function () {
         }
         return jsogS;
     };
-    // output object and transmit sessionStorage value & form value to server
+    // (discard) output object and transmit sessionStorage value & form value to server
     GenerateFormComponent.prototype.output = function () {
         for (var i = 0; i < sessionStorage.length; i++) {
             this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
@@ -1919,6 +1981,7 @@ var GenerateFormComponent = /** @class */ (function () {
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
          */
+        var sessionKey;
         var aaa = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
         var bbb = aaa.split('.')[aaa.split('.').length - 1];
         if (sessionStorage.getItem(bbb) === null) { // sessionStorage don't have this item, create object
@@ -1932,42 +1995,55 @@ var GenerateFormComponent = /** @class */ (function () {
                 // this.form_receive.value['@id'] = 1;
             }*/
             this.form_receive.value['@id'] = this.storageIndex.toString();
-            /* temp: sessionStorage's class type and index;
-               key: split temp and use the last one be the tree-root/sessionStorage key */
-            /*const temp = this.form_receive.value['@type'].concat(
-                this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));*/
             var temp = this.form_receive.value['@type'].concat(this.storageIndex); // use storage count as id postfix
             var key = temp.split('.')[temp.split('.').length - 1];
-            this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
-            this.storageTypeMap.set(key, this.MemberType);
+            // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
+            this.formDataInterface.addFormValue(key, JSON.stringify(this.form_receive.value));
+            // this.storageTypeMap.set(key, this.MemberType);
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
-            console.log('this.storageTypeMap.get(key): ', this.storageTypeMap.get(key));
-            this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            // console.log('this.storageTypeMap.get(key): ', this.storageTypeMap.get(key));
+            // this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            this.ValueTemp = this.jsogGen(this.ValueTemp, JSON.parse(this.javaStorageTypeMap[this.form_receive.value['@type']]));
             console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
-            this.isJsogMap.set(key, true);
+            // this.isJsogMap.set(key, true);
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             // console.log('this.storageTypeMap: ', this.storageTypeMap);
             this.storageIndex++;
+            sessionKey = key;
         }
         else { // sessioinStorage had this item, edit object, overwrite old value
             var temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
             var key = temp.split('.')[temp.split('.').length - 1];
-            this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
+            // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
+            this.formDataInterface.addFormValue(key, JSON.stringify(this.form_receive.value));
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
             // turn it to jsog then store it
-            this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            // this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            this.ValueTemp = this.jsogGen(this.ValueTemp, JSON.parse(this.javaStorageTypeMap[this.form_receive.value['@type']]));
             console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
-            this.isJsogMap.set(key, true);
+            // this.isJsogMap.set(key, true);
+            sessionKey = key;
+        }
+        for (var _i = 0, _a = Object.keys(sessionStorage); _i < _a.length; _i++) {
+            var k = _a[_i];
+            this.checkMap.clear();
+            if (k !== sessionKey) {
+                var typeIn = JSON.parse(this.javaStorageTypeMap[JSON.parse(sessionStorage.getItem(k))['@type']]);
+                var jsog = this.jsogGen(JSON.parse(this.formValueMap$.get(k)), typeIn);
+                sessionStorage.setItem(k, JSON.stringify(jsog));
+            }
         }
         this.clearForm();
         this.formDataService.changeFlag(true);
         // console.log('this.formValueMap: ', this.formValueMap);
-        this.formDataService.passFormValue(this.formValueMap);
+        // this.formDataService.passFormValue(this.formValueMap);
+        // update formValue. let formValueMap shared, replace formDataService.passFormValue to ng-tree
+        // this.formDataInterface.addFormValue(sessionKey, JSON.stringify(this.form_receive.value));
         this.className = '';
         this.MemberKey = []; // defaultValue: generate_form_receive[0]
         this.MemberStyle = {}; // styleNode
@@ -1990,7 +2066,7 @@ var GenerateFormComponent = /** @class */ (function () {
     GenerateFormComponent.prototype.clearSession = function () {
         sessionStorage.clear();
         this.storageMap.clear();
-        this.storageTypeMap.clear();
+        // this.storageTypeMap.clear();
         this.storageIndex = 1;
         this.checkMap.clear();
     };
@@ -2013,7 +2089,8 @@ var GenerateFormComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
             _generate_form_service__WEBPACK_IMPORTED_MODULE_3__["GenerateFormService"],
-            _form_data_service__WEBPACK_IMPORTED_MODULE_4__["FormDataService"]])
+            _form_data_service__WEBPACK_IMPORTED_MODULE_4__["FormDataService"],
+            _form_data_interface__WEBPACK_IMPORTED_MODULE_5__["FormDataInterface"]])
     ], GenerateFormComponent);
     return GenerateFormComponent;
 }());
@@ -2043,16 +2120,20 @@ var GenerateFormService = /** @class */ (function () {
         this.http = http;
         this.outputUrl = '/ngFormOutput';
         this.sessionStorageUrl = '/ngSessionStorage';
+        this.javaStorageTypeUrl = '/ngJavaStorageType';
         this.httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
     }
     GenerateFormService.prototype.ouputObject = function (output) {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     };
+    GenerateFormService.prototype.ouputObject2 = function (output) {
+        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    };
     GenerateFormService.prototype.outputsessionStorage = function (session) {
         return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
     };
-    GenerateFormService.prototype.ouputObject2 = function (output) {
-        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    GenerateFormService.prototype.getJavaStorageType = function () {
+        return this.http.get(this.javaStorageTypeUrl);
     };
     GenerateFormService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -2074,7 +2155,7 @@ var GenerateFormService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2pzdHJlZS9qc3RyZWUuY29tcG9uZW50LmNzcyJ9 */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAvanN0cmVlL2pzdHJlZS5jb21wb25lbnQuY3NzIn0= */"
 
 /***/ }),
 
@@ -2150,7 +2231,7 @@ var JstreeComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3VwbG9hZGVyL3VwbG9hZGVyLmNvbXBvbmVudC5jc3MifQ== */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAvdXBsb2FkZXIvdXBsb2FkZXIuY29tcG9uZW50LmNzcyJ9 */"
 
 /***/ }),
 

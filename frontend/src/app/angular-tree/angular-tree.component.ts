@@ -3,6 +3,7 @@ import { TreeNode, TreeModel, TREE_ACTIONS, KEYS, IActionMapping, ITreeOptions, 
 import { FormDataService } from '../form-data.service';
 import { AngularTreeService } from './angular-tree.service';
 import { nodeChildrenAsMap } from '@angular/router/src/utils/tree';
+import { FormDataInterface } from '../form-data-interface';
 
 let a;
 
@@ -15,7 +16,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
 
 
     constructor(private data: FormDataService,
-                private ngTreeService: AngularTreeService) {
+                private ngTreeService: AngularTreeService,
+                private formDataInterface: FormDataInterface) {
                     this.ngTreeService.getInputType().subscribe( response => {
                         this.InputTypeMap = response;
                     });
@@ -31,13 +33,13 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     sessionStorageTemp;
     flagReceive;    // in form-data service, for resize the component if sessionStorage been motified
     // formReceive;    // form pass the form-value, use on root node
-    formValueMap;   // <session-key, string-form-value>
+    // formValueMap;   // <string-session-key, string-form-value>
+    formValueMap;
 
     contextMenu: { node: TreeNode, x: number, y: number } = null;
     editNode: TreeNode = null;
     sourceNode: TreeNode = null;
     doCut = false;
-    finishPaste = true;
     InputTypeMap: any;
     javaStorageTypeMap;
 
@@ -204,7 +206,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
 
     ngOnInit() {
         this.data.currentFlag.subscribe(flagInput => this.flagReceive = flagInput);
-        this.data.currentFormValue.subscribe(formValueMapInput => this.formValueMap = formValueMapInput);
+        // this.data.currentFormValue.subscribe(formValueMapInput => this.formValueMap = formValueMapInput);
+        this.formDataInterface.currentFormValueMap.subscribe(formValueMapInput => this.formValueMap = formValueMapInput);
     }
 
     // generate ng-tree childGen( sessionStorage's inputtype, jsog-in-sessionStorage )
@@ -639,7 +642,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 this.editNode.data.val = this.editNode.data.editVal;
                 this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal;
                 console.log('this.editNode.parent.data.formVal: ', this.editNode.parent.data.formVal);
-                this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
+                // this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
+                this.formDataInterface.addFormValue(this.editNode.parent.data.pureName,
+                                                    JSON.stringify(this.editNode.parent.data.formVal));
                 /*console.log('this.editNode.parent.data.formVal[this.editNode.data.pureName]: ',
                     this.editNode.parent.data.formVal[this.editNode.data.pureName]);*/
                 // edit for sessionStorage

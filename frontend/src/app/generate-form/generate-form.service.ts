@@ -11,9 +11,15 @@ export class GenerateFormService {
 
     outputUrl = '/ngFormOutput';
     sessionStorageUrl = '/ngSessionStorage';
+    javaStorageTypeUrl = '/ngJavaStorageType';
+
     httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
     ouputObject(output) {
+        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    }
+
+    ouputObject2(output) {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     }
 
@@ -21,7 +27,7 @@ export class GenerateFormService {
         return this.http.post(this.sessionStorageUrl, session, { headers: this.httpHeaders, observe: 'response' });
     }
 
-    ouputObject2(output) {
-        return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    getJavaStorageType() {
+        return this.http.get(this.javaStorageTypeUrl);
     }
 }

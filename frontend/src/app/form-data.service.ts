@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
+import { FormDataInterface } from './form-data-interface';
 
 /*@Injectable({
   providedIn: 'root'
 })*/
 
 @Injectable()
-export class FormDataService {
+export class FormDataService implements FormDataInterface {
 
-    private storageSource = new BehaviorSubject<Object>([]);    // ng-tree -> create
+    // ng-tree edit sessionStorage -> create
+    private storageSource = new BehaviorSubject<Object>([]);
     currentStorage = this.storageSource.asObservable();
 
     // tree drag, form drop, pass the value
@@ -19,12 +21,18 @@ export class FormDataService {
     private flagSource = new BehaviorSubject<Object>([]);   // form finish edit and switch the flag
     currentFlag = this.flagSource.asObservable();
 
+    // formValueMap will replace it
     private formValue = new BehaviorSubject<Object>([]);   // pass form value to ng-tree, for root
     currentFormValue = this.formValue.asObservable();
 
+    private formValueMap: BehaviorSubject<Map<string, string>> = new BehaviorSubject<Map<string, string>>(new Map<string, string>());
+    // currentFormValueMap: Observable<Map<string, string>> = this.formValueMap;
+    currentFormValueMap: Observable<Map<string, string>> = this.formValueMap.asObservable();
+
     constructor() { }
 
-    editSessionStorage(storageInput) {  // ng-tree send Storage to form
+    // ng-tree send sessionStorage to form
+    editSessionStorage(storageInput) {
         this.storageSource.next(storageInput);
     }
 
@@ -36,8 +44,19 @@ export class FormDataService {
         this.flagSource.next(flagInput);
     }
 
+    // formValueMap will replace it
     passFormValue(formValueInput) {    // pass form value to ng-tree, for root
         this.formValue.next(formValueInput);
+    }
+
+    // add formValue into shared FormValueMap
+    addFormValue(key: string, value: string): void {
+        this.formValueMap.next(this.formValueMap.getValue().set(key, value));
+    }
+
+    // get formValue from FromValueMap
+    getFormValue(): Map<string, string> {
+        return this.formValueMap.getValue();
     }
 
 }

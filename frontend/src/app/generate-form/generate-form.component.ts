@@ -7,6 +7,8 @@ import { store, template } from '@angular/core/src/render3';
 import { createOfflineCompileUrlResolver } from '@angular/compiler';
 import { clearModulesForTest } from '@angular/core/src/linker/ng_module_factory_loader';
 import { FormDataService } from '../form-data.service';
+import { FormDataInterface } from '../form-data-interface';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-generate-form',
@@ -28,26 +30,37 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     idMap = new Map<string, string>();      // <sessionStorage-key, @id>: store id for @ref-using
     checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
     storageTypeMap = new Map<string, Object>(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
-    formValueMap = new Map<string, string>();   // <session-key, Object>
-    isJsogMap = new Map<string, boolean>(); // <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
+    formValueMap = new Map<string, string>();   // <session-key, object in string>
+    isJsogMap = new Map<string, boolean>(); // (discard) <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
     jsog;
     dropNodeVal;
 
+    // replace storageTypeMap
+    javaStorageTypeMap; // Map<session-key-type-name: string, session-key-type-value: string>: store java type
+    formValueMap$; // get FromValueMap
+
     constructor(private fb: FormBuilder,
         private subCreate: GenerateFormService,
-        private formDataService: FormDataService) {
+        private formDataService: FormDataService,
+        private formDataInterface: FormDataInterface ) {
+        subCreate.getJavaStorageType().subscribe(response => {
+            this.javaStorageTypeMap = response;
+        });
     }
 
     ngOnInit() {
         this.formDataService.currentNode.subscribe(nodeIn => this.dropNodeVal = nodeIn);
+        this.formDataInterface.currentFormValueMap.subscribe(formValueMapInput => this.formValueMap$ = formValueMapInput);
     }
 
     CheckStrToNum(input) {  // input = this.form_receive.value (Object)
-        for (const key in this.MemberType) { // change string default value to number
-            if (this.MemberType[key] === 'byte' || this.MemberType[key] === 'short' || this.MemberType[key] === 'int' ||
-                this.MemberType[key] === 'long' || this.MemberType[key] === 'float' || this.MemberType[key] === 'double' ||
-                this.MemberType[key] === 'Byte' || this.MemberType[key] === 'Short' || this.MemberType[key] === 'Integer' ||
-                this.MemberType[key] === 'Long' || this.MemberType[key] === 'Float' || this.MemberType[key] === 'Double') {
+        const className = input['@type'];
+        const javaType = JSON.parse(this.javaStorageTypeMap[className]);
+        for (const key in javaType) { // change string default value to number
+            if (javaType[key] === 'byte' || javaType[key] === 'short' || javaType[key] === 'int' ||
+                javaType[key] === 'long' || javaType[key] === 'float' || javaType[key] === 'double' ||
+                javaType[key] === 'Byte' || javaType[key] === 'Short' || javaType[key] === 'Integer' ||
+                javaType[key] === 'Long' || javaType[key] === 'Float' || javaType[key] === 'Double') {
                 input[key] = +input[key];   // string to number
             }
         }
@@ -137,14 +150,19 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                             // console.log('tempListVal[i]: ', tempListVal[i]);
                         } else {    // haven't used it yet, set checkMap to true, and write it
                             this.checkMap.set(tempSingleVal[i], true);
-                            const typein = this.storageTypeMap.get(tempSingleVal[i]);
+                            // const typein = this.storageTypeMap.get(tempSingleVal[i]);
                             console.log('JSON.parse(sessionStorage.getItem(tempSingleVal[i])): ',
                                 JSON.parse(sessionStorage.getItem(tempSingleVal[i])));
-                            if (this.isJsogMap.has(tempSingleVal[i])) { // sessionStorage already been jsog, use it directly
+                            /*if (this.isJsogMap.has(tempSingleVal[i])) { // sessionStorage already been jsog, use it directly
                                 tempListVal[i] = JSON.parse(sessionStorage.getItem(tempSingleVal[i]));
-                            } else {
+                                console.log('////////////////////////////////isJSOG/////////////////////////');
+                            } else {    // a new object
+                                const typein = JSON.parse(this.javaStorageTypeMap[tempSingleVal[i]]);
                                 tempListVal[i] = this.jsogGen(JSON.parse(sessionStorage.getItem(tempSingleVal[i])), typein);
-                            }
+                            }*/
+                            const typeInJsog = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@type'];
+                            const typein = JSON.parse(this.javaStorageTypeMap[typeInJsog]);
+                            tempListVal[i] = this.jsogGen(JSON.parse(this.formValueMap$.get(tempSingleVal[i])), typein);
                             console.log('tempListVal[i]: ', tempListVal[i]);
                             // console.log('checkMap', this.checkMap);
                         }
@@ -180,9 +198,11 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         reVal = temp;
                     } else {    // haven't used it yet, set checkMap to true, and write it
                         this.checkMap.set(StrTempVal, true);
-                        const typein = this.storageTypeMap.get(StrTempVal);
-                        reVal = this.jsogGen(JSON.parse(sessionStorage.getItem(StrTempVal)), typein);
-                        // console.log('checkMap', this.checkMap);
+                        // const typein = this.storageTypeMap.get(StrTempVal);
+                        const typein = JSON.parse(this.javaStorageTypeMap[JSON.parse(sessionStorage.getItem(StrTempVal))['@type']]);
+                        // reVal = this.jsogGen(JSON.parse(sessionStorage.getItem(StrTempVal)), typein);
+                        // reVal = this.jsogGen(this.formValueMap.get(StrTempVal), typein);
+                        reVal = this.jsogGen(JSON.parse(this.formValueMap$.get(StrTempVal)), typein);
                     }
                     // console.log('reVal: ', reVal);
                     return reVal;
@@ -197,6 +217,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     jsogGen(formInput: any, typein: Object) {
         const jsogS = {};
 
+        const aaa = formInput['@type'].concat(formInput['@id']);
+        const bbb = aaa.split('.')[aaa.split('.').length - 1];
+        this.checkMap.set(bbb, true);
         for (let i = 0; i < Object.keys(formInput).length; i++) {
             const tempKey = Object.keys(formInput)[i];
             if ( (tempKey !== '@id') && (tempKey !== '@type') ) {
@@ -209,7 +232,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         return jsogS;
     }
 
-    // output object and transmit sessionStorage value & form value to server
+    // (discard) output object and transmit sessionStorage value & form value to server
     output() {
         for (let i = 0; i < sessionStorage.length; i++) {
             this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
@@ -259,6 +282,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
          */
+        let sessionKey;
         const aaa = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
         const bbb = aaa.split('.')[aaa.split('.').length - 1];
         if (sessionStorage.getItem(bbb) === null) { // sessionStorage don't have this item, create object
@@ -273,41 +297,56 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             }*/
             this.form_receive.value['@id'] = this.storageIndex.toString();
 
-            /* temp: sessionStorage's class type and index;
-               key: split temp and use the last one be the tree-root/sessionStorage key */
-            /*const temp = this.form_receive.value['@type'].concat(
-                this.storageMap.get(JSON.stringify(this.form_receive.value['@type'])));*/
             const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
-            this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
-            this.storageTypeMap.set(key, this.MemberType);
+            // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
+            this.formDataInterface.addFormValue(key, JSON.stringify(this.form_receive.value));
+            // this.storageTypeMap.set(key, this.MemberType);
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
-            console.log('this.storageTypeMap.get(key): ', this.storageTypeMap.get(key));
-            this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            // console.log('this.storageTypeMap.get(key): ', this.storageTypeMap.get(key));
+            // this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            this.ValueTemp = this.jsogGen(this.ValueTemp, JSON.parse(this.javaStorageTypeMap[this.form_receive.value['@type']]));
             console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
-            this.isJsogMap.set(key, true);
+            // this.isJsogMap.set(key, true);
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             // console.log('this.storageTypeMap: ', this.storageTypeMap);
             this.storageIndex++;
+            sessionKey = key;
         } else {    // sessioinStorage had this item, edit object, overwrite old value
             const temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
             const key = temp.split('.')[temp.split('.').length - 1];
-            this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
+            // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
+            this.formDataInterface.addFormValue(key, JSON.stringify(this.form_receive.value));
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
             // turn it to jsog then store it
-            this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            // this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
+            this.ValueTemp = this.jsogGen(this.ValueTemp, JSON.parse(this.javaStorageTypeMap[this.form_receive.value['@type']]));
             console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
-            this.isJsogMap.set(key, true);
+            // this.isJsogMap.set(key, true);
+            sessionKey = key;
+        }
+
+        for (const k of Object.keys(sessionStorage)) {
+            this.checkMap.clear();
+            if (k !== sessionKey) {
+                const typeIn = JSON.parse(this.javaStorageTypeMap[JSON.parse(sessionStorage.getItem(k))['@type']]);
+                const jsog = this.jsogGen(JSON.parse(this.formValueMap$.get(k)), typeIn);
+                sessionStorage.setItem(k, JSON.stringify(jsog));
+            }
         }
         this.clearForm();
         this.formDataService.changeFlag(true);
         // console.log('this.formValueMap: ', this.formValueMap);
-        this.formDataService.passFormValue(this.formValueMap);
+        // this.formDataService.passFormValue(this.formValueMap);
+
+        // update formValue. let formValueMap shared, replace formDataService.passFormValue to ng-tree
+        // this.formDataInterface.addFormValue(sessionKey, JSON.stringify(this.form_receive.value));
+
         this.className = '';
         this.MemberKey = [];         // defaultValue: generate_form_receive[0]
         this.MemberStyle = {};    // styleNode
@@ -332,7 +371,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     clearSession() {
         sessionStorage.clear();
         this.storageMap.clear();
-        this.storageTypeMap.clear();
+        // this.storageTypeMap.clear();
         this.storageIndex = 1;
         this.checkMap.clear();
     }
