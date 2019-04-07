@@ -112,7 +112,7 @@ public class Main {
 	private static HashMap<String, String> InputTypeMap = new HashMap<String, String>();	// name-type
 	private static HashMap<String, String> javaStorageTypeMap = new HashMap<String, String>();	// name-javaType
 	
-	private static String re;
+	private static String output_Jsog;
 	
 	public static void ConstructViewToSourceMap (String arg) {
 		Class<?> pClass = null;
@@ -736,16 +736,16 @@ public class Main {
 			String str = fileContentStr.toString();
 			
 			ObjectMapper mapper = new ObjectMapper();
-			re = str;
+			output_Jsog = str;
 			JsonNode jsog = mapper.readTree(str);
 			
 			String source;
 			String view;
 			for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
-				jsog = mapper.readTree(re);
+				jsog = mapper.readTree(output_Jsog);
 			    source = entry.getKey();
 			    view = entry.getValue();
-			    re = "{" + parse(jsog, view, source) + "}";
+			    output_Jsog = "{" + parse(jsog, view, source) + "}";
 			}
 			
 			// System.out.println(re);
@@ -754,7 +754,7 @@ public class Main {
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(re);
+			response.getWriter().write(output_Jsog);
 		}
 	}
 	
@@ -1128,6 +1128,8 @@ public class Main {
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
+			output_Jsog = "";
+			
 			StringBuilder sb = new StringBuilder();
 		    BufferedReader reader = request.getReader();
 		    try {
@@ -1141,17 +1143,15 @@ public class Main {
 			String str = sb.toString();
 			
 			ObjectMapper mapper = new ObjectMapper();
-			re = str;
 			JsonNode jsog = mapper.readTree(str);
 			
 			String source;
 			String view;
 			for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
-				jsog = mapper.readTree(re);
 			    source = entry.getKey();
 			    view = entry.getValue();
-			    re = "{" + parse(jsog, source, view) + "}";
-			    // System.out.println(re);
+			    output_Jsog = "{" + parse(jsog, source, view) + "}";
+			    jsog = mapper.readTree(output_Jsog);
 			}
 			// System.out.println("Map: " + ViewToSourceMap);
 			// System.out.println("form value: " + str);
@@ -1171,10 +1171,11 @@ public class Main {
 		    // write json string out to the file
 			//FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
 			FileOutputStream outputStream = new FileOutputStream(fileToSave.getAbsolutePath());
-		    byte[] strToBytes = re.getBytes();
+		    byte[] strToBytes = output_Jsog.getBytes();
 		    outputStream.write(strToBytes);
 		    outputStream.close();
 		    System.out.println("done.");
+		    
 		    
 		    
 		    
@@ -1182,7 +1183,7 @@ public class Main {
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("{true}");
+			response.getWriter().write("true");
 		}
 	}
 	
@@ -1273,6 +1274,89 @@ public class Main {
 	        
 	    }
 		return out;
+	}
+	
+	public static class ngOutputAll extends HttpServlet{
+		
+		JFrame parentFrame = new JFrame();
+	    JFileChooser fileChooser = new JFileChooser();
+	    
+		public void init() throws ServletException {}
+		
+		@Override
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			output_Jsog = "";
+			
+			StringBuilder sb = new StringBuilder();
+		    BufferedReader reader = request.getReader();
+		    try {
+		        String line;
+		        while ((line = reader.readLine()) != null) {
+		            sb.append(line).append('\n');
+		        }
+		    } finally {
+		        reader.close();
+		    }
+			String str = sb.toString();
+			// System.out.println(str);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode allInArray = mapper.readTree(str);
+			
+			Iterator<JsonNode> elements = allInArray.elements();
+			String tempJsogOb = "";
+			JsonNode jsog;
+			String source;
+			String view;
+		    while (elements.hasNext()) {
+		        JsonNode realElement = elements.next();
+		        jsog = realElement;
+		        for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
+		        	source = entry.getKey();
+	        		view = entry.getValue();
+		        	if(realElement.isObject()) {
+				    	tempJsogOb = "{" + parse(jsog, source, view) + "}";
+				    } else if(realElement.isArray()) {
+				    	tempJsogOb = "[" + parse(jsog, source, view) + "]";
+				    }
+		        	jsog = mapper.readTree(tempJsogOb);
+				}
+		        if (elements.hasNext()) {
+		        	output_Jsog = output_Jsog + tempJsogOb + ",";
+   				} else {
+   					output_Jsog = output_Jsog + tempJsogOb;
+   				}
+		    }
+		    output_Jsog = "[" + output_Jsog + "]";
+		    
+		    fileChooser.setDialogTitle("Specify a file to save");   
+		     
+		    int userSelection = fileChooser.showSaveDialog(parentFrame);
+		    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    File fileToSave = null;
+		     
+		    if (userSelection == JFileChooser.APPROVE_OPTION) {
+		        fileToSave = fileChooser.getSelectedFile();
+		        System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+		    }
+		    
+		    // write json string out to the file
+			//FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
+			FileOutputStream outputStream = new FileOutputStream(fileToSave.getAbsolutePath());
+		    byte[] strToBytes = output_Jsog.getBytes();
+		    outputStream.write(strToBytes);
+		    outputStream.close();
+		    System.out.println("done.");
+		    
+			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
+			response.setContentType("text/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("true");
+			
+		}
+		
 	}
 	
 	public static class ngEdit extends HttpServlet{
@@ -1707,6 +1791,7 @@ public class Main {
 		servletContextHandler.addServlet(ngEditSessionStorage.class, "/ngEditSessionStorage");
 		servletContextHandler.addServlet(ngInputType.class, "/ngInputType");
 		servletContextHandler.addServlet(ngJavaStorageType.class, "/ngJavaStorageType");
+		servletContextHandler.addServlet(ngOutputAll.class, "/ngOutputAll");
 		
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());

@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Check {
 	
+	// parse the json, change the view-name to source-name
 	public static String parse (JsonNode jsog, String source_name, String view_name) {
 		
 		String view = view_name;
@@ -108,12 +109,26 @@ public class Check {
 	        JsonNode jNodeValue = node.getValue();
 		}
 	}
+	
+	public static void handleElements(JsonNode arrayNode) {
+		Iterator<JsonNode> elements = arrayNode.elements();
+		String sourceJsogOb;
+		String source = "name";
+		String view = "Your Name (String)";
+	    while (elements.hasNext()) {
+	        JsonNode realElement = elements.next();
+	        sourceJsogOb = "{" + parse(realElement, source, view) + "}";
+	        System.out.println(sourceJsogOb);
+	    }
+	}
+	
 	public static void main(String...args) throws IOException {
 		String person = "{\"@id\":\"2\",\"@type\":\"jetty.demo.Family\",\"father (PersonDemo)\": {\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"time\":null,\"spouse\":null},\"mother (PersonDemo)\": {\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},\"children\":[{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
 		String view = "mother (PersonDemo)";
-		String source = "fuck";
+		String source = "MMMMMM";
 		String test = "{\"@id\":\"1\",\"@type\":\"jetty.demo.Teacher\",\"name\":\"asfasasa\",\"years\":-2,\"lessons\":[\"sgfss\",\"sdfk\",\"aksjfh\"]}";
 		String family = "{\"@id\":\"2\",\"@type\":\"jetty.demo.Family\",\"father\": {\"@id\":\"1\",\"@type\":\"jetty.demo.PersonDemo\",\"age\":1,\"lastName\":\"huang\",\"firstName\":\"yi\",\"password\":\"aaa\",\"email\":\"123@gmail.com\",\"color\":\"#ff0000\",\"time\":null,\"spouse\":null},\"mother\": {\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},\"children\":[{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"},{\"@ref\":\"1\",\"@type\":\"jetty.demo.PersonDemo\"}]}";
+		String allObject  = "[{\"@id\":\"1\",\"@type\":\"jetty.demo.SimplePerson\",\"Your Name (String)\":\"huang\",\"Spouse (SimplePerson)\":null},{\"@id\":\"2\",\"@type\":\"jetty.demo.SimplePerson\",\"Your Name (String)\":\"huang\",\"Spouse (SimplePerson)\":null}]";
 		
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode jsog = mapper.readTree(person);
@@ -123,11 +138,10 @@ public class Check {
 		//JsonNode jsog = mapper.readTree(test);
 		
 		re = "{" + parse(jsog, source, view) + "}";
-		// System.out.println(re);
+		//System.out.println(re);
 		
 		Family ff = mapper.readerFor(Family.class).readValue(family);
 		// System.out.println("ff.getFather().getEmail(): " + ff.getFather().getEmail());
-		
 		
 		
 		Car c = new Car();
@@ -164,7 +178,10 @@ public class Check {
     	
     	//*convert java object to json string and pretty print
     	String car_JSOG_check = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(car_check);
-    	System.out.println(car_JSOG_check);
+    	// System.out.println(car_JSOG_check);
+    	
+    	JsonNode jsogAllObject = mapper.readTree(allObject);
+    	handleElements(jsogAllObject);
 	}
 	
 	

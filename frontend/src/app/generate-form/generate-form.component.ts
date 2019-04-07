@@ -300,7 +300,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
             // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
-            this.formDataInterface.addFormValue(key, JSON.stringify(this.form_receive.value));
+            this.formDataInterface.setFormValue(key, JSON.stringify(this.form_receive.value));
             // this.storageTypeMap.set(key, this.MemberType);
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
@@ -318,7 +318,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             const temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
             const key = temp.split('.')[temp.split('.').length - 1];
             // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
-            this.formDataInterface.addFormValue(key, JSON.stringify(this.form_receive.value));
+            this.formDataInterface.setFormValue(key, JSON.stringify(this.form_receive.value));
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
             // turn it to jsog then store it
@@ -378,9 +378,20 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     output2() {
         // output form value to server ngFormOutput
-        this.subCreate.ouputObject(sessionStorage.getItem(this.className)).subscribe(response => {
+        this.subCreate.ouputObject2(sessionStorage.getItem(this.className)).subscribe(response => {
             console.log('output', response);
         });
         console.log(this.className);
+    }
+
+    outputAll() {
+        const all = [];
+        for (const value of Object.values(sessionStorage)) {
+            all.push(JSON.parse(value));
+        }
+        console.log('length: ', all.length);
+        this.subCreate.outputAll(JSON.stringify(all)).subscribe(response => {
+            console.log('output', response);
+        });
     }
 }

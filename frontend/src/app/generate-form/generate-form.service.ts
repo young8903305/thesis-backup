@@ -10,17 +10,23 @@ export class GenerateFormService {
     constructor(private http: HttpClient) { }
 
     outputUrl = '/ngFormOutput';
+    outputAllUrl = '/ngOutputAll';
     sessionStorageUrl = '/ngSessionStorage';
     javaStorageTypeUrl = '/ngJavaStorageType';
 
     httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
+    // (discard)
     ouputObject(output) {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
     }
 
     ouputObject2(output) {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    }
+
+    outputAll(outputAll) {
+        return this.http.post(this.outputAllUrl, outputAll, { headers: this.httpHeaders, observe: 'response' });
     }
 
     outputsessionStorage(session) {

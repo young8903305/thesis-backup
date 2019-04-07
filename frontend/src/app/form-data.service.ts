@@ -50,7 +50,7 @@ export class FormDataService implements FormDataInterface {
     }
 
     // add formValue into shared FormValueMap
-    addFormValue(key: string, value: string): void {
+    setFormValue(key: string, value: string): void {
         this.formValueMap.next(this.formValueMap.getValue().set(key, value));
     }
 
