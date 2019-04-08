@@ -55,20 +55,6 @@ export class UploaderComponent implements OnInit {
         if (this.upJsog instanceof Array) { // multiple objects
             console.log('multiple');
         } else if (this.upJsog instanceof Object) { // single object
-            /*for (const [key, value] of Object.entries(this.upJsog)) {
-                if (value instanceof Array) {
-                    let tempArray;
-                    tempArray = this.createArray(value);
-                } else if (value instanceof Object) {
-                    this.createObject(value);
-                } else {
-                    this.tempSingleFormValue[key] = value;
-                }
-            }
-            const temp = this.tempSingleFormValue['@type'].concat(this.tempSingleFormValue['@id']);
-            const sessionKey = temp.split('.')[temp.split('.').length - 1];
-            sessionStorage.setItem(sessionKey, JSON.stringify(this.tempSingleFormValue));
-            this.formDataInterface.setFormValue(sessionKey, JSON.stringify(this.tempSingleFormValue));*/
             this.createObject(this.upJsog);
         }
     }
