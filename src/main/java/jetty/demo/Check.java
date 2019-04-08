@@ -110,7 +110,7 @@ public class Check {
 		}
 	}
 	
-	public static void handleElements(JsonNode arrayNode) {
+	public static void allObjectOutputChangeName(JsonNode arrayNode) {
 		Iterator<JsonNode> elements = arrayNode.elements();
 		String sourceJsogOb;
 		String source = "name";
@@ -181,7 +181,7 @@ public class Check {
     	// System.out.println(car_JSOG_check);
     	
     	JsonNode jsogAllObject = mapper.readTree(allObject);
-    	handleElements(jsogAllObject);
+    	allObjectOutputChangeName(jsogAllObject);
 	}
 	
 	

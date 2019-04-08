@@ -5,7 +5,7 @@ export abstract class FormDataInterface {
 
     abstract currentFormValueMap: Observable< Map<string, string> >;
 
-    abstract setFormValue(key, value): void;
+    abstract setFormValue(key: string, value: string): void;
 
     abstract getFormValue(): Map<string, string>;   // it's worked
 }

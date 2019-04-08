@@ -590,7 +590,10 @@ public class Main {
 	}
 	
 	
-	// file upload: get the file part and readin the file's string, then send to ng-uploader-component
+	/* file upload:
+	 * Get the file part and readin the jsog string, then send to ng-uploader-component
+	 * May have multiple objects or single object
+	 */
 	@MultipartConfig(
 			fileSizeThreshold = 1024 * 1024 * 2,
 			maxRequestSize = 1024 * 1024 * 10,
@@ -602,119 +605,6 @@ public class Main {
 		
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			/*InputStream fileContent = null;
-			String fileContentStr;
-			try {
-				fileContent = request.getPart("file").getInputStream();
-				
-				ByteArrayOutputStream result = new ByteArrayOutputStream();
-				byte[] buffer = new byte[1024];
-				int length;
-				while ((length = fileContent.read(buffer)) != -1) {
-				    result.write(buffer, 0, length);
-				}
-				fileContentStr = result.toString(StandardCharsets.UTF_8.name());
-				System.out.println("from file: " + fileContentStr);
-			} finally {
-			   fileContent.close();
-			}
-			
-			String typeName = "";
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode node = mapper.readTree(fileContentStr);
-			Iterator<Entry<String, JsonNode>> jsonNodes = node.fields();
-			while (jsonNodes.hasNext()) {
-				Entry<String, JsonNode> jnode = jsonNodes.next();
-				JsonNode jNode = jnode.getValue();
-				if(jnode.getKey().equals("@type")) {
-					typeName = jnode.getValue().asText();
-					break;
-				}
-			}
-			
-			ObjectMapper ob = new ObjectMapper();
-			
-			Class<?> pClass = null;
-		    ObjectNode styleNode = ob.createObjectNode();	// [ fieldName : style ]
-		    ObjectNode typeNode = ob.createObjectNode();	// [ fieldName : type ]
-			try {
-				pClass = Class.forName(typeName);
-				// Field
-				Field[] fieldlist = pClass.getDeclaredFields(); // include private members
-				
-				
-				Annotation annotation;
-				AnnotationForm var;
-				for (Field f : fieldlist) {
-					annotation = f.getAnnotation(AnnotationForm.class);
-					var = (AnnotationForm) annotation;
-					System.out.println(var.style()[0]);
-					if(var.style()[0].input() != AnnotationStyle.InputTypeControl.none) {
-						switch (var.style()[0].input()) {
-							case color :
-								styleNode.put(f.getName(), "color");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case date:
-								styleNode.put(f.getName(), "date");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case email:
-								styleNode.put(f.getName(), "email");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case month:
-								styleNode.put(f.getName(), "month");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case number:
-								styleNode.put(f.getName(), "number");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case password :
-								styleNode.put(f.getName(), "password");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case text :
-								styleNode.put(f.getName(), var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case time :
-								styleNode.put(f.getName(), "time");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case week :
-								styleNode.put(f.getName(), "week");
-								typeNode.put(f.getName(), f.getType().getSimpleName());
-								break;
-							case none :
-								break;
-							default :
-								break;
-						}
-					}else if(var.style()[0].textarea().length() > 0) {
-						styleNode.put(f.getName(), "textarea");
-						typeNode.put(f.getName(), f.getType().getSimpleName());
-					}
-				}
-				
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			
-			// System.out.println("objectNode: " + ob.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode));
-			System.out.println("defaultValueNode: " + fileContentStr);
-			System.out.println("styleNode: " + styleNode.toString());
-			System.out.println("typeNode: " + typeNode.toString());
-			
-			String responce_json = "[" + fileContentStr + "," + styleNode.toString() + "," + typeNode.toString() + "]";
-			
-			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
-			response.setContentType("text/json");
-			response.setCharacterEncoding("UTF-8");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(responce_json);*/
 			
 			InputStream fileContent = null;
 			String fileContentStr;
@@ -728,33 +618,55 @@ public class Main {
 				    result.write(buffer, 0, length);
 				}
 				fileContentStr = result.toString(StandardCharsets.UTF_8.name());
-				System.out.println("from file: " + fileContentStr);
+				// System.out.println("from file: " + fileContentStr);
 			} finally {
 			   fileContent.close();
 			}
 			
-			String str = fileContentStr.toString();
-			
+			String upJsog = fileContentStr.toString();
 			ObjectMapper mapper = new ObjectMapper();
-			output_Jsog = str;
-			JsonNode jsog = mapper.readTree(str);
+			JsonNode jsog = mapper.readTree(upJsog);
 			
+			String upJsog_after = "";
+			String single_ob_jsog = "";
 			String source;
 			String view;
-			for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
-				jsog = mapper.readTree(output_Jsog);
-			    source = entry.getKey();
-			    view = entry.getValue();
-			    output_Jsog = "{" + parse(jsog, view, source) + "}";
+			if(jsog.isArray()) {
+				// change multiple objects source-name into view-name
+				Iterator<JsonNode> elements = jsog.elements();  
+			    while (elements.hasNext()) {
+			        JsonNode single_ob = elements.next();
+			        for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
+					    source = entry.getKey();
+					    view = entry.getValue();
+					    single_ob_jsog = "{" + parse(single_ob, view, source) + "}";
+					    single_ob = mapper.readTree(single_ob_jsog);
+					}
+			        if (elements.hasNext()) {
+			        	upJsog_after = upJsog_after + single_ob_jsog + ",";
+	   				} else {
+	   					upJsog_after = upJsog_after + single_ob_jsog;
+	   				}
+			    }
+			    upJsog_after = "[" + upJsog_after + "]";
+			} else if(jsog.isObject()) {
+				upJsog_after = upJsog;
+				// change single object source-name into view-name
+				for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
+					jsog = mapper.readTree(upJsog_after);
+				    source = entry.getKey();
+				    view = entry.getValue();
+				    upJsog_after = "{" + parse(jsog, view, source) + "}";
+				}
 			}
 			
-			// System.out.println(re);
+			System.out.println(upJsog_after);
 			
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write(output_Jsog);
+			response.getWriter().write(upJsog_after);
 		}
 	}
 	
@@ -1187,7 +1099,10 @@ public class Main {
 		}
 	}
 	
-	// parse the json, then change the view-name to source-name, then send back to ngFormOutput 
+	/* parse the jsog:
+	 * 1. change the view-name to source-name,
+	 * 2. send back to ngFormOutput
+	 */ 
 	public static String parse (JsonNode jsog, String source_name, String view_name) {
 		
 		String source = source_name;
@@ -1301,9 +1216,9 @@ public class Main {
 			String str = sb.toString();
 			// System.out.println(str);
 			
+			// change all objects view-name to source-name
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode allInArray = mapper.readTree(str);
-			
 			Iterator<JsonNode> elements = allInArray.elements();
 			String tempJsogOb = "";
 			JsonNode jsog;
@@ -1330,8 +1245,8 @@ public class Main {
 		    }
 		    output_Jsog = "[" + output_Jsog + "]";
 		    
+		    
 		    fileChooser.setDialogTitle("Specify a file to save");   
-		     
 		    int userSelection = fileChooser.showSaveDialog(parentFrame);
 		    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		    File fileToSave = null;

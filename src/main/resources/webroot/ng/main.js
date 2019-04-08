@@ -2278,7 +2278,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"upload()\">\n    <label>\n        choose json file :\n        <input type=\"file\" size=\"80\" accept=\".json\" />\n    </label>\n    <div class=\"mt-3\">\n        <button class=\"btn btn-info\" type=\"submit\">upload</button>\n    </div>\n</form>\n<br>\n<!--\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n-->"
+module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"upload()\">\n    <label>\n        choose a json file :\n        <input type=\"file\" size=\"80\" accept=\".json\" />\n    </label>\n    <div class=\"mt-3\">\n        <button class=\"btn btn-info\" type=\"submit\">upload</button>\n    </div>\n</form>\n<br>\n<!--\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n-->"
 
 /***/ }),
 
@@ -2296,23 +2296,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _uploader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploader.service */ "./src/app/uploader/uploader.service.ts");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form-data-interface */ "./src/app/form-data-interface.ts");
 
 
 
 
 
 var UploaderComponent = /** @class */ (function () {
-    function UploaderComponent(fb, uploaderService, http) {
+    function UploaderComponent(fb, uploaderService, formDataInterface) {
         this.fb = fb;
         this.uploaderService = uploaderService;
-        this.http = http;
+        this.formDataInterface = formDataInterface;
         this.uploader = this.fb.group({});
+        this.tempSingleFormValue = {};
     }
-    UploaderComponent.prototype.ngOnInit = function () { };
+    UploaderComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.formDataInterface.currentFormValueMap.subscribe(function (formValueMapInput) { return _this.formValueMap = formValueMapInput; });
+    };
     UploaderComponent.prototype.fileChange = function (fileList) {
         this.fileList = fileList;
-        console.log('fileList', this.fileList);
     };
     UploaderComponent.prototype.upload = function () {
         var _this = this;
@@ -2321,17 +2324,97 @@ var UploaderComponent = /** @class */ (function () {
         // console.log('this.fileToUpload.name ', this.fileToUpload.name);
         var formData = new FormData();
         formData.append('file', this.fileToUpload, this.fileToUpload.name);
-        // console.log('formData', formData);
+        console.log('formData', formData);
         this.uploaderService.uploadFile(formData).subscribe(function (response) {
-            console.log('response', response);
-            _this.uploadString = response.body;
-            var tempType = _this.uploadString['@type'].concat(_this.uploadString['@id']);
-            var key = tempType.split('.')[tempType.split('.').length - 1];
+            _this.upJsog = response.body;
+            /*const tempType = this.upJsog['@type'].concat(this.upJsog['@id']);
+            const key = tempType.split('.')[tempType.split('.').length - 1];
             console.log('key: ', key);
-            sessionStorage.setItem(key, JSON.stringify(_this.uploadString));
-            // console.log('response.body', response.body);
-            // this.fileForm = response.body;
+            sessionStorage.setItem(key, JSON.stringify(this.upJsog));*/
+            _this.jsogToFormValue_sessionStorage();
         });
+    };
+    // parse jsog into formValue & sessionStorage
+    UploaderComponent.prototype.jsogToFormValue_sessionStorage = function () {
+        console.log('this.upJsog: ', this.upJsog);
+        if (this.upJsog instanceof Array) { // multiple objects
+            console.log('multiple');
+        }
+        else if (this.upJsog instanceof Object) { // single object
+            /*for (const [key, value] of Object.entries(this.upJsog)) {
+                if (value instanceof Array) {
+                    let tempArray;
+                    tempArray = this.createArray(value);
+                } else if (value instanceof Object) {
+                    this.createObject(value);
+                } else {
+                    this.tempSingleFormValue[key] = value;
+                }
+            }
+            const temp = this.tempSingleFormValue['@type'].concat(this.tempSingleFormValue['@id']);
+            const sessionKey = temp.split('.')[temp.split('.').length - 1];
+            sessionStorage.setItem(sessionKey, JSON.stringify(this.tempSingleFormValue));
+            this.formDataInterface.setFormValue(sessionKey, JSON.stringify(this.tempSingleFormValue));*/
+            this.createObject(this.upJsog);
+        }
+    };
+    UploaderComponent.prototype.createObject = function (ob) {
+        var temp;
+        if (ob['@ref'] !== undefined) {
+            temp = ob['@type'].concat(ob['@ref']);
+        }
+        else {
+            temp = ob['@type'].concat(ob['@id']);
+        }
+        var sessionKey = temp.split('.')[temp.split('.').length - 1];
+        sessionStorage.setItem(sessionKey, JSON.stringify(ob));
+        var tempFormValue = {};
+        for (var _i = 0, _a = Object.entries(ob); _i < _a.length; _i++) {
+            var _b = _a[_i], key = _b[0], value = _b[1];
+            if (value instanceof Array) {
+                var tempArrayRepresent = this.createArray(value);
+                tempFormValue[key] = tempArrayRepresent;
+            }
+            else if (value instanceof Object) {
+                var aaa = value['@type'].concat(value['@id']);
+                var bbb = aaa.split('.')[aaa.split('.').length - 1];
+                tempFormValue[key] = bbb;
+                this.createObject(value);
+            }
+            else { // single string/boolean/number
+                tempFormValue[key] = value;
+            }
+        }
+        console.log('tempFormValue: ', tempFormValue);
+        this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));
+    };
+    UploaderComponent.prototype.createArray = function (arrayIn) {
+        var arrayRepresent = '';
+        for (var i = 0; i < arrayIn.length; i++) {
+            console.log('element: ', arrayIn[i]);
+            if (arrayIn[i] instanceof Object) { // array of object
+                var aaa = void 0;
+                if (arrayIn[i]['@ref'] !== undefined) {
+                    aaa = arrayIn[i]['@type'].concat(arrayIn[i]['@ref']);
+                }
+                else {
+                    aaa = arrayIn[i]['@type'].concat(arrayIn[i]['@id']);
+                    this.createObject(arrayIn[i]);
+                }
+                var bbb = aaa.split('.')[aaa.split('.').length - 1];
+                if (i !== arrayIn.length - 1) {
+                    arrayRepresent = arrayRepresent + bbb + ', ';
+                }
+                else {
+                    arrayRepresent = arrayRepresent + bbb;
+                }
+            }
+            else { // array of string, array of boolean
+                arrayRepresent = arrayRepresent + arrayIn[i];
+            }
+        }
+        console.log('arrayRepresent: ', arrayRepresent);
+        return arrayRepresent;
     };
     UploaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -2341,7 +2424,7 @@ var UploaderComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
             _uploader_service__WEBPACK_IMPORTED_MODULE_3__["UploaderService"],
-            _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]])
+            _form_data_interface__WEBPACK_IMPORTED_MODULE_4__["FormDataInterface"]])
     ], UploaderComponent);
     return UploaderComponent;
 }());
