@@ -12,19 +12,19 @@ public class SimplePerson {
 	@AnnotationForm(
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "huang") },
 			name = "Your Name")
-	private String name;
+	private String person_name;
 	
 	@AnnotationForm(
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "") },
 			name = "Spouse")
 	private SimplePerson spouse;
 	
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String person_name) {
+		this.person_name = person_name;
 	}
 	
 	public String getName() {
-		return this.name;
+		return this.person_name;
 	}
 	
 	public void setSpouse(SimplePerson spouse) {

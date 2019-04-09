@@ -1849,6 +1849,7 @@ var GenerateFormComponent = /** @class */ (function () {
         var tempKey = Object.keys(jsonInput); //  age, children
         var tempVal = Object.values(jsonInput); // 1, [p1, p2], [1, 2], ["1", "2"]
         var tempType = typeCheck[tempKey.toString()]; // long, list PersonDemo, list int, list string
+        console.log('typeCheck: ', typeCheck, '\ntempKey: ', tempKey, '\ntempType: ', tempType);
         if (tempVal.toString() === '') { // no value, put null
             return null;
         }
@@ -2065,6 +2066,7 @@ var GenerateFormComponent = /** @class */ (function () {
             this.checkMap.clear();
             if (k !== sessionKey) {
                 var typeIn = JSON.parse(this.javaStorageTypeMap[JSON.parse(sessionStorage.getItem(k))['@type']]);
+                console.log('k: ', k, '\ntypeIn: ', typeIn);
                 var jsog = this.jsogGen(JSON.parse(this.formValueMap$.get(k)), typeIn);
                 sessionStorage.setItem(k, JSON.stringify(jsog));
             }

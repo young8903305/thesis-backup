@@ -335,6 +335,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             this.checkMap.clear();
             if (k !== sessionKey) {
                 const typeIn = JSON.parse(this.javaStorageTypeMap[JSON.parse(sessionStorage.getItem(k))['@type']]);
+                console.log('k: ', k, '\ntypeIn: ', typeIn);
                 const jsog = this.jsogGen(JSON.parse(this.formValueMap$.get(k)), typeIn);
                 sessionStorage.setItem(k, JSON.stringify(jsog));
             }
