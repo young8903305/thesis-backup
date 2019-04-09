@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { from } from 'rxjs';
 import { UploaderService } from './uploader.service';
 import { FormDataInterface } from '../form-data-interface';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormDataService } from '../form-data.service';
 
 @Component({
   selector: 'app-uploader',
@@ -19,10 +19,12 @@ export class UploaderComponent implements OnInit {
     upJsog;
     formValueMap;   // <string-session-key, string-form-value>
     tempSingleFormValue = {};
+    checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
 
     constructor(private fb: FormBuilder,
         private uploaderService: UploaderService,
-        private formDataInterface: FormDataInterface) { }
+        private formDataInterface: FormDataInterface,
+        private formDataService: FormDataService) { }
 
     ngOnInit() {
         this.formDataInterface.currentFormValueMap.subscribe(formValueMapInput => this.formValueMap = formValueMapInput);
@@ -46,6 +48,7 @@ export class UploaderComponent implements OnInit {
             console.log('key: ', key);
             sessionStorage.setItem(key, JSON.stringify(this.upJsog));*/
             this.jsogToFormValue_sessionStorage();
+            this.formDataService.changeFlag(true);
         });
     }
 
@@ -54,6 +57,9 @@ export class UploaderComponent implements OnInit {
         console.log('this.upJsog: ', this.upJsog);
         if (this.upJsog instanceof Array) { // multiple objects
             console.log('multiple');
+            for (const element of this.upJsog) {
+                this.createObject(element);
+            }
         } else if (this.upJsog instanceof Object) { // single object
             this.createObject(this.upJsog);
         }
@@ -61,15 +67,42 @@ export class UploaderComponent implements OnInit {
 
     createObject(ob: Object) {
         let temp;
+        let sessionKey;
         if (ob['@ref'] !== undefined) {
             temp = ob['@type'].concat(ob['@ref']);
         } else {
             temp = ob['@type'].concat(ob['@id']);
+            sessionKey = temp.split('.')[temp.split('.').length - 1];
+            sessionStorage.setItem(sessionKey, JSON.stringify(ob));
+            const tempFormValue = {};
+            for (const [key, value] of Object.entries(ob)) {
+                if (value instanceof Array) {
+                    const tempArrayRepresent = this.createArray(value);
+                    tempFormValue[key] = tempArrayRepresent;
+                } else if (value instanceof Object) {
+                    if (value['@ref'] !== undefined) {  // has @ref
+                        const aaa = value['@type'].concat(value['@ref']);
+                        const bbb = aaa.split('.')[aaa.split('.').length - 1];
+                        tempFormValue[key] = bbb;
+                        // this.createObject(value);
+                        const refOb = JSON.parse(sessionStorage.getItem(bbb));
+                        ob[key] = refOb;
+                        sessionStorage.setItem(sessionKey, JSON.stringify(ob));
+                    } else {    // has @id
+                        const aaa = value['@type'].concat(value['@id']);
+                        const bbb = aaa.split('.')[aaa.split('.').length - 1];
+                        tempFormValue[key] = bbb;
+                        this.createObject(value);
+                    }
+                } else {    // single string/boolean/number
+                    tempFormValue[key] = value;
+                }
+            }
+            console.log('tempFormValue: ', tempFormValue);
+            this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));
         }
-        const sessionKey = temp.split('.')[temp.split('.').length - 1];
-        sessionStorage.setItem(sessionKey, JSON.stringify(ob));
 
-        const tempFormValue = {};
+        /*const tempFormValue = {};
         for (const [key, value] of Object.entries(ob)) {
             if (value instanceof Array) {
                 const tempArrayRepresent = this.createArray(value);
@@ -84,7 +117,7 @@ export class UploaderComponent implements OnInit {
             }
         }
         console.log('tempFormValue: ', tempFormValue);
-        this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));
+        this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));*/
     }
 
     createArray(arrayIn) {

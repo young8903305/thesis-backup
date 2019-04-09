@@ -69,9 +69,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var a;
 var AngularTreeComponent = /** @class */ (function () {
-    function AngularTreeComponent(data, ngTreeService, formDataInterface) {
+    function AngularTreeComponent(formDataService, ngTreeService, formDataInterface) {
         var _this = this;
-        this.data = data;
+        this.formDataService = formDataService;
         this.ngTreeService = ngTreeService;
         this.formDataInterface = formDataInterface;
         this.storageLength = 0;
@@ -201,10 +201,10 @@ var AngularTreeComponent = /** @class */ (function () {
                     },
                     drag: function (treeModel, treeNode, e) {
                         if (treeNode.isRoot) {
-                            _this.data.passNodeVal(treeNode.data.name);
+                            _this.formDataService.passNodeVal(treeNode.data.name);
                         }
                         else {
-                            _this.data.passNodeVal(treeNode.data.val);
+                            _this.formDataService.passNodeVal(treeNode.data.val);
                         }
                     }
                     /*drop: (treeModel: TreeModel, treeNode: TreeNode, $event: any, { from, to }) => {
@@ -448,14 +448,14 @@ var AngularTreeComponent = /** @class */ (function () {
     }
     AngularTreeComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.data.currentFlag.subscribe(function (flagInput) { return _this.flagReceive = flagInput; });
+        this.formDataService.currentFlag.subscribe(function (flagInput) { return _this.flagReceive = flagInput; });
         // this.data.currentFormValue.subscribe(formValueMapInput => this.formValueMap = formValueMapInput);
         this.formDataInterface.currentFormValueMap.subscribe(function (formValueMapInput) { return _this.formValueMap = formValueMapInput; });
     };
-    // generate ng-tree childGen( sessionStorage's inputtype, jsog-in-sessionStorage )
+    // generate ng-tree childGen( sessionStorage's inputType, jsog-in-sessionStorage )
     AngularTreeComponent.prototype.childGen = function (InputTypeValIn, sessionStorageSingleIn) {
         var reArray = [];
-        console.log('InputTypeValIn: ', InputTypeValIn);
+        console.log('InputTypeValIn: ', InputTypeValIn, '\nsessionStorageSingleIn: ', sessionStorageSingleIn);
         for (var _i = 0, sessionStorageSingleIn_1 = sessionStorageSingleIn; _i < sessionStorageSingleIn_1.length; _i++) {
             var _a = sessionStorageSingleIn_1[_i], key = _a[0], value = _a[1];
             console.log('key: ', key, '\nvalue: ', value);
@@ -532,7 +532,7 @@ var AngularTreeComponent = /** @class */ (function () {
                         children: []
                     };
                     console.log('value: ', value);
-                    console.log('value[@type]: ', value['@type']);
+                    console.log('value[@type]: ', value['@type'], '\nvalue[@id]: ', value['@id'], '\nvalue[@ref]: ', value['@ref']);
                     var childType = this.InputTypeMap[value['@type']];
                     console.log('childType: ', childType);
                     var aaa = void 0;
@@ -604,7 +604,8 @@ var AngularTreeComponent = /** @class */ (function () {
         return node;
     };
     AngularTreeComponent.prototype.ngDoCheck = function () {
-        if (this.storageLength !== sessionStorage.length || this.flagReceive === true) {
+        // if (this.storageLength !== sessionStorage.length || this.flagReceive === true) {
+        if (this.flagReceive === true) {
             // console.log('length: ', this.temp);
             this.nodes = [];
             for (var i = 0; i < sessionStorage.length; i++) {
@@ -654,7 +655,7 @@ var AngularTreeComponent = /** @class */ (function () {
         /*this.sessionStorageTemp = a;
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));*/
         console.log('edit Object: ', a);
-        this.data.editSessionStorage(a);
+        this.formDataService.editSessionStorage(a);
     };
     AngularTreeComponent.prototype.editValue = function () {
         this.editNode = this.contextMenu.node;
@@ -692,14 +693,12 @@ var AngularTreeComponent = /** @class */ (function () {
         while (virtualRoot.parent !== null) {
             virtualRoot = virtualRoot.parent;
         }
-        // console.log('this.javaStorageTypeMap: ', this.javaStorageTypeMap);
         // reload in order, to make sure all elements been update.
-        for (var i = 1; i <= virtualRoot.data.children.length; i++) {
-            for (var _c = 0, _d = virtualRoot.data.children; _c < _d.length; _c++) {
-                var element = _d[_c];
+        /*for (let i = 1; i <= virtualRoot.data.children.length; i++) {
+            for (const element of virtualRoot.data.children) {
                 if (element.pureName.includes(i.toString())) {
                     /*console.log('JSON.parse(this.InputTypeMap[element.formVal[@type]]): ',
-                    JSON.parse(this.InputTypeMap[element.formVal['@type']]));*/
+                    JSON.parse(this.InputTypeMap[element.formVal['@type']]));///
                     if (element.pureName === this.editNode.parent.data.pureName) {
                         element.formVal = this.editNode.parent.data.formVal;
                     } /*else {
@@ -712,14 +711,26 @@ var AngularTreeComponent = /** @class */ (function () {
                         formValueTemp = this.jsogGen(formValueTemp, typeTemp);
                         console.log('ValueTemp: ', formValueTemp);
                         sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
-                    }*/
+                    }///
                     this.checkMap.clear();
-                    var typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
-                    var formValueTemp = this.CheckStrToNum(element.formVal);
+                    const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+                    let formValueTemp = this.CheckStrToNum(element.formVal);
                     formValueTemp = this.jsogGen(formValueTemp, typeTemp);
                     sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
                 }
             }
+        }*/
+        for (var _c = 0, _d = virtualRoot.data.children; _c < _d.length; _c++) {
+            var element = _d[_c];
+            if (element.pureName === this.editNode.parent.data.pureName) {
+                element.formVal = this.editNode.parent.data.formVal;
+            }
+            this.checkMap.clear();
+            var typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+            var formValueTemp = this.CheckStrToNum(element.formVal);
+            formValueTemp = this.jsogGen(formValueTemp, typeTemp);
+            console.log('formValueTemp: ', formValueTemp);
+            sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
         }
         // make tree to reload
         this.flagReceive = true;
@@ -835,7 +846,7 @@ var AngularTreeComponent = /** @class */ (function () {
                     if (this.checkMap.has(StrTempVal)) { // used, add as @ref
                         var temp = {};
                         var refType = JSON.parse(sessionStorage.getItem(StrTempVal))['@type'];
-                        temp['@ref'] = this.idMap.get(StrTempVal);
+                        temp['@ref'] = JSON.parse(sessionStorage.getItem(StrTempVal))['@id'];
                         temp['@type'] = refType;
                         reVal = temp;
                     }
@@ -2059,6 +2070,7 @@ var GenerateFormComponent = /** @class */ (function () {
             }
         }
         this.clearForm();
+        // sessionStorage modified, change flag to ng-tree recomposed
         this.formDataService.changeFlag(true);
         // console.log('this.formValueMap: ', this.formValueMap);
         // this.formDataService.passFormValue(this.formValueMap);
@@ -2089,6 +2101,7 @@ var GenerateFormComponent = /** @class */ (function () {
         // this.storageTypeMap.clear();
         this.storageIndex = 1;
         this.checkMap.clear();
+        this.formDataService.changeFlag(true);
     };
     GenerateFormComponent.prototype.output2 = function () {
         // output form value to server ngFormOutput
@@ -2297,18 +2310,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _uploader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploader.service */ "./src/app/uploader/uploader.service.ts");
 /* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form-data-interface */ "./src/app/form-data-interface.ts");
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../form-data.service */ "./src/app/form-data.service.ts");
+
 
 
 
 
 
 var UploaderComponent = /** @class */ (function () {
-    function UploaderComponent(fb, uploaderService, formDataInterface) {
+    function UploaderComponent(fb, uploaderService, formDataInterface, formDataService) {
         this.fb = fb;
         this.uploaderService = uploaderService;
         this.formDataInterface = formDataInterface;
+        this.formDataService = formDataService;
         this.uploader = this.fb.group({});
         this.tempSingleFormValue = {};
+        this.checkMap = new Map(); // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
     }
     UploaderComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -2332,6 +2349,7 @@ var UploaderComponent = /** @class */ (function () {
             console.log('key: ', key);
             sessionStorage.setItem(key, JSON.stringify(this.upJsog));*/
             _this.jsogToFormValue_sessionStorage();
+            _this.formDataService.changeFlag(true);
         });
     };
     // parse jsog into formValue & sessionStorage
@@ -2339,54 +2357,72 @@ var UploaderComponent = /** @class */ (function () {
         console.log('this.upJsog: ', this.upJsog);
         if (this.upJsog instanceof Array) { // multiple objects
             console.log('multiple');
+            for (var _i = 0, _a = this.upJsog; _i < _a.length; _i++) {
+                var element = _a[_i];
+                this.createObject(element);
+            }
         }
         else if (this.upJsog instanceof Object) { // single object
-            /*for (const [key, value] of Object.entries(this.upJsog)) {
-                if (value instanceof Array) {
-                    let tempArray;
-                    tempArray = this.createArray(value);
-                } else if (value instanceof Object) {
-                    this.createObject(value);
-                } else {
-                    this.tempSingleFormValue[key] = value;
-                }
-            }
-            const temp = this.tempSingleFormValue['@type'].concat(this.tempSingleFormValue['@id']);
-            const sessionKey = temp.split('.')[temp.split('.').length - 1];
-            sessionStorage.setItem(sessionKey, JSON.stringify(this.tempSingleFormValue));
-            this.formDataInterface.setFormValue(sessionKey, JSON.stringify(this.tempSingleFormValue));*/
             this.createObject(this.upJsog);
         }
     };
     UploaderComponent.prototype.createObject = function (ob) {
         var temp;
+        var sessionKey;
         if (ob['@ref'] !== undefined) {
             temp = ob['@type'].concat(ob['@ref']);
         }
         else {
             temp = ob['@type'].concat(ob['@id']);
-        }
-        var sessionKey = temp.split('.')[temp.split('.').length - 1];
-        sessionStorage.setItem(sessionKey, JSON.stringify(ob));
-        var tempFormValue = {};
-        for (var _i = 0, _a = Object.entries(ob); _i < _a.length; _i++) {
-            var _b = _a[_i], key = _b[0], value = _b[1];
-            if (value instanceof Array) {
-                var tempArrayRepresent = this.createArray(value);
-                tempFormValue[key] = tempArrayRepresent;
+            sessionKey = temp.split('.')[temp.split('.').length - 1];
+            sessionStorage.setItem(sessionKey, JSON.stringify(ob));
+            var tempFormValue = {};
+            for (var _i = 0, _a = Object.entries(ob); _i < _a.length; _i++) {
+                var _b = _a[_i], key = _b[0], value = _b[1];
+                if (value instanceof Array) {
+                    var tempArrayRepresent = this.createArray(value);
+                    tempFormValue[key] = tempArrayRepresent;
+                }
+                else if (value instanceof Object) {
+                    if (value['@ref'] !== undefined) { // has @ref
+                        var aaa = value['@type'].concat(value['@ref']);
+                        var bbb = aaa.split('.')[aaa.split('.').length - 1];
+                        tempFormValue[key] = bbb;
+                        // this.createObject(value);
+                        var refOb = JSON.parse(sessionStorage.getItem(bbb));
+                        ob[key] = refOb;
+                        sessionStorage.setItem(sessionKey, JSON.stringify(ob));
+                    }
+                    else { // has @id
+                        var aaa = value['@type'].concat(value['@id']);
+                        var bbb = aaa.split('.')[aaa.split('.').length - 1];
+                        tempFormValue[key] = bbb;
+                        this.createObject(value);
+                    }
+                }
+                else { // single string/boolean/number
+                    tempFormValue[key] = value;
+                }
             }
-            else if (value instanceof Object) {
-                var aaa = value['@type'].concat(value['@id']);
-                var bbb = aaa.split('.')[aaa.split('.').length - 1];
+            console.log('tempFormValue: ', tempFormValue);
+            this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));
+        }
+        /*const tempFormValue = {};
+        for (const [key, value] of Object.entries(ob)) {
+            if (value instanceof Array) {
+                const tempArrayRepresent = this.createArray(value);
+                tempFormValue[key] = tempArrayRepresent;
+            } else if (value instanceof Object) {
+                const aaa = value['@type'].concat(value['@id']);
+                const bbb = aaa.split('.')[aaa.split('.').length - 1];
                 tempFormValue[key] = bbb;
                 this.createObject(value);
-            }
-            else { // single string/boolean/number
+            } else {    // single string/boolean/number
                 tempFormValue[key] = value;
             }
         }
         console.log('tempFormValue: ', tempFormValue);
-        this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));
+        this.formDataInterface.setFormValue(sessionKey, JSON.stringify(tempFormValue));*/
     };
     UploaderComponent.prototype.createArray = function (arrayIn) {
         var arrayRepresent = '';
@@ -2424,7 +2460,8 @@ var UploaderComponent = /** @class */ (function () {
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"],
             _uploader_service__WEBPACK_IMPORTED_MODULE_3__["UploaderService"],
-            _form_data_interface__WEBPACK_IMPORTED_MODULE_4__["FormDataInterface"]])
+            _form_data_interface__WEBPACK_IMPORTED_MODULE_4__["FormDataInterface"],
+            _form_data_service__WEBPACK_IMPORTED_MODULE_5__["FormDataService"]])
     ], UploaderComponent);
     return UploaderComponent;
 }());

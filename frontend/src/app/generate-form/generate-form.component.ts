@@ -340,6 +340,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             }
         }
         this.clearForm();
+        // sessionStorage modified, change flag to ng-tree recomposed
         this.formDataService.changeFlag(true);
         // console.log('this.formValueMap: ', this.formValueMap);
         // this.formDataService.passFormValue(this.formValueMap);
@@ -374,6 +375,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         // this.storageTypeMap.clear();
         this.storageIndex = 1;
         this.checkMap.clear();
+        this.formDataService.changeFlag(true);
     }
 
     output2() {
