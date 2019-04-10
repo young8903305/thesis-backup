@@ -8,10 +8,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class UploaderService {
 
     uploadUrl = '/ngUploader';
+    javaStorageTypeUrl = '/ngJavaStorageType';
 
     constructor(private http: HttpClient) { }
 
     uploadFile(upload) {
         return this.http.post(this.uploadUrl, upload, { observe: 'response' });
+    }
+
+    getJavaStorageType() {
+        return this.http.get(this.javaStorageTypeUrl);
     }
 }

@@ -848,7 +848,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     }
 
     // formInput = this.form_receive.value (object); typein: object of outer type from storageTypeMap
-    jsogGen(formInput: any, typein: Object) {
+    jsogGen(formInput: Object, typein: Object) {
         const jsogS = {};
 
         const aaa = formInput['@type'].concat(formInput['@id']);

@@ -43,14 +43,17 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         private subCreate: GenerateFormService,
         private formDataService: FormDataService,
         private formDataInterface: FormDataInterface ) {
-        subCreate.getJavaStorageType().subscribe(response => {
+        /*subCreate.getJavaStorageType().subscribe(response => {
             this.javaStorageTypeMap = response;
-        });
+        });*/
     }
 
     ngOnInit() {
         this.formDataService.currentNode.subscribe(nodeIn => this.dropNodeVal = nodeIn);
         this.formDataInterface.currentFormValueMap.subscribe(formValueMapInput => this.formValueMap$ = formValueMapInput);
+        this.subCreate.getJavaStorageType().subscribe(response => {
+            this.javaStorageTypeMap = response;
+        });
     }
 
     CheckStrToNum(input) {  // input = this.form_receive.value (Object)
@@ -305,7 +308,6 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
             // console.log('this.storageTypeMap.get(key): ', this.storageTypeMap.get(key));
-            // this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
             this.ValueTemp = this.jsogGen(this.ValueTemp, JSON.parse(this.javaStorageTypeMap[this.form_receive.value['@type']]));
             console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
@@ -322,7 +324,6 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             this.ValueTemp = this.CheckStrToNum(this.form_receive.value);
             console.log('this.ValueTemp: ', this.ValueTemp);
             // turn it to jsog then store it
-            // this.ValueTemp = this.jsogGen(this.ValueTemp, this.storageTypeMap.get(key));
             this.ValueTemp = this.jsogGen(this.ValueTemp, JSON.parse(this.javaStorageTypeMap[this.form_receive.value['@type']]));
             console.log('after: ', this.ValueTemp);
             sessionStorage.setItem(key, JSON.stringify(this.ValueTemp));
