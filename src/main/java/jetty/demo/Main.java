@@ -18,12 +18,16 @@
 
 package jetty.demo;
 
+import static java.lang.System.*;
+
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
 
 import java.awt.Desktop;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,6 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -111,6 +116,7 @@ public class Main {
 	private static HashMap<String, String> Source_ViewMap = new HashMap<String, String>();	// source-view
 	private static HashMap<String, String> InputTypeMap = new HashMap<String, String>();	// name-type
 	private static HashMap<String, String> javaStorageTypeMap = new HashMap<String, String>();	// name-javaType
+	private static HashMap<String, String> formValueMap = new HashMap<String, String>();	// objectName-formValue
 	
 	private static String output_Jsog;
 	
@@ -1068,6 +1074,7 @@ public class Main {
 			// System.out.println("Map: " + ViewToSourceMap);
 			// System.out.println("form value: " + str);
 			// System.out.println("final value: " + re);
+			
 		    
 		    fileChooser.setDialogTitle("Specify a file to save");   
 		     
@@ -1201,6 +1208,10 @@ public class Main {
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
+			formValueMap.forEach( (k, v) -> {
+				System.out.println(k + ": " + v.toString());
+		    });
+			
 			output_Jsog = "";
 			
 			StringBuilder sb = new StringBuilder();
@@ -1230,9 +1241,9 @@ public class Main {
 		        for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
 		        	source = entry.getKey();
 	        		view = entry.getValue();
-		        	if(realElement.isObject()) {
+		        	if(jsog.isObject()) {
 				    	tempJsogOb = "{" + parse(jsog, source, view) + "}";
-				    } else if(realElement.isArray()) {
+				    } else if(jsog.isArray()) {
 				    	tempJsogOb = "[" + parse(jsog, source, view) + "]";
 				    }
 		        	jsog = mapper.readTree(tempJsogOb);
@@ -1250,19 +1261,19 @@ public class Main {
 		    int userSelection = fileChooser.showSaveDialog(parentFrame);
 		    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		    File fileToSave = null;
-		     
+		    
 		    if (userSelection == JFileChooser.APPROVE_OPTION) {
 		        fileToSave = fileChooser.getSelectedFile();
 		        System.out.println("Save as file: " + fileToSave.getAbsolutePath());
 		    }
 		    
 		    // write json string out to the file
-			//FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
 			FileOutputStream outputStream = new FileOutputStream(fileToSave.getAbsolutePath());
-		    byte[] strToBytes = output_Jsog.getBytes();
-		    outputStream.write(strToBytes);
-		    outputStream.close();
-		    System.out.println("done.");
+			byte[] strToBytes = output_Jsog.getBytes();
+			outputStream.write(strToBytes);
+			outputStream.close();
+			System.out.println("done.");
+		    
 		    
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
@@ -1270,8 +1281,257 @@ public class Main {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write("true");
 			
+			/*
+			 * read back to java object.
+			 * objectMap <class-name, real-object>
+			 * formValueMap <>
+			 */
+			
+			Map<String, Object> objectMap = new HashMap<>();	// <simple-className-id, real-object>
+			mapper = new ObjectMapper();
+			JsonNode jsog2 = mapper.readTree(output_Jsog);
+			Iterator<JsonNode> elements2 = jsog2.elements();
+			List<Object> MyOb = new ArrayList<Object>();	// for test
+		    while (elements2.hasNext()) {
+		    	JsonNode eachJsog = elements2.next();
+		        // System.out.println("realElement: " + eachJsog.toString());
+		        String className = eachJsog.get("@type").asText();
+		        String id = eachJsog.get("@id").asText();
+				Class<?> pClass = null;
+				try {
+					pClass = Class.forName(className);
+					Object check = mapper.readValue(eachJsog.toString(), pClass);
+					//System.out.println("Object class: " + check.getClass().getName());
+					objectMap.put(check.getClass().getSimpleName()+id, check);
+					MyOb.add(check);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+		    }
+		    
+		    
+		    objectMap.forEach((k, v) -> {
+		    	System.out.println(k + ": " + v.getClass());
+		    });
+		    
+		    // formValueMap;
+		    objectMap.forEach((key, ob_value) -> {
+		    	ObjectMapper obMapper = new ObjectMapper();
+		    	try {
+		    		Class<?> ob_class = ob_value.getClass();
+		    		// ob_class.getDeclaredField(name);
+					JsonNode ob_node = obMapper.readTree(formValueMap.get(key));
+					Iterator<Entry<String, JsonNode>> jsonNodes = ob_node.fields();  
+				    while (jsonNodes.hasNext()) {  
+				        Entry<String, JsonNode> node = jsonNodes.next();
+				        if( (node.getKey()!="@id") && (node.getKey()!="@type")) {
+				        	String[] split_value = node.getValue().asText().split(", ");	// get real-string without double quote
+				        	if( split_value.length > 1 ) {	// array/list object
+					        	if (ob_class.getDeclaredField(node.getKey()).getType().getSimpleName().contains("List") ) {
+					        		List temp_list = new ArrayList<>();
+						        	for(int i = 0; i < split_value.length; i++) {
+						        		if (objectMap.containsKey(split_value[i])) {
+						        			System.out.println(split_value[i] + " type: " + objectMap.get(split_value[i]).getClass());
+								       		temp_list.add( objectMap.get(split_value[i]));
+						        		}
+						        	}
+					                callSetter(ob_value, node.getKey(), temp_list);
+					        	} else if (ob_class.getDeclaredField(node.getKey()).getType().isArray()) {
+					        		// else if (ob_class.getDeclaredField(node.getKey()).getType().getSimpleName().contains("[]")) {
+					        		System.out.println("1339 " + ob_class.getDeclaredField(node.getKey()).getType().getSimpleName() + ": []");
+					        		Class c = ob_class.getDeclaredField(node.getKey()).getType();
+					        		// To create array of c items, you need to get component class and pass it to newInstance method: 
+					        		Object arrayObject = Array.newInstance(c.getComponentType(), split_value.length);
+					                for (int i = 0; i < split_value.length; i++) {
+					                    Array.set(arrayObject, i, objectMap.get(split_value[i]) ); // set value here
+					                }
+					                callSetter(ob_value, node.getKey(), arrayObject);
+					        	}
+				        	} else {	// single object
+				        		if (objectMap.containsKey(split_value[0])) {
+				        			System.out.println("single: " + split_value[0]);
+				        			callSetter(ob_value, node.getKey(), objectMap.get(split_value[0]));
+				        		}
+				        	}
+				        }  
+				    }  
+				} catch (IOException | NoSuchFieldException | SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    });
+
+		    
+		    int brandIndex = 0;
+			int tiresIndex = 0;
+			int carIndex = 0;
+			int personDemoIndex = 0;
+			int familyIndex = 0;
+			int simplePersonIndex1 = 0;
+			int simplePersonIndex2 = 0;
+			for (int i = 0; i < MyOb.size(); i++) {
+				if ( MyOb.get(i).getClass().getName() == "jetty.demo.CarTiresBrand") {
+					brandIndex = i;
+				}
+				if ( MyOb.get(i).getClass().getName() == "jetty.demo.CarTires" ) {
+					tiresIndex = i;
+				}
+				if (MyOb.get(i).getClass().getName() == "jetty.demo.Car") {
+					carIndex = i;
+				}
+				if(MyOb.get(i).getClass().getName() == "jetty.demo.PersonDemo") {
+					personDemoIndex = i;
+				}
+				if (MyOb.get(i).getClass().getName() == "jetty.demo.Family") {
+					familyIndex = i;
+				}
+				if (MyOb.get(i).getClass().getName() == "jetty.demo.SimplePerson") {
+					if( i!=simplePersonIndex1 && simplePersonIndex1==0) {
+						simplePersonIndex1 = i;
+					}else {
+						simplePersonIndex2 = i;
+					}
+				}
+				System.out.println("ob: " + MyOb.get(i));
+			}
+			
+			System.out.println("brandIndex: " + brandIndex + "\ttiresIndex: " + tiresIndex);
+			if(((CarTires)MyOb.get(tiresIndex)).getBrand().equals(((CarTiresBrand)MyOb.get(brandIndex)))) {
+				System.out.println("1382 equals: true");
+			} else {
+				System.out.println("1384 equals: false");
+			}
+			if( ((CarTires)MyOb.get(tiresIndex)).getBrand() == ((CarTiresBrand)MyOb.get(brandIndex)) ) {
+				System.out.println("1387 ==: true");
+			} else {
+				System.out.println("1389 ==: false");
+				((CarTires)MyOb.get(tiresIndex)).setBrand(((CarTiresBrand)MyOb.get(brandIndex)));
+				System.out.println( "1391 replace: " + (((CarTires)MyOb.get(tiresIndex)).getBrand() == ((CarTiresBrand)MyOb.get(brandIndex))) );
+			}
+			
+			Car c = (Car)MyOb.get(carIndex);
+			CarTires[] ct = c.getTires();
+			System.out.println("tiresIndex: " + tiresIndex + "\tcarIndex: " + carIndex);
+			if( ct[0].getBrand().equals(ct[1].getBrand()) ) {
+				System.out.println("==: true");
+			} else {
+				System.out.println("==: flase");
+			}
+			if( ct[0].getBrand()==(ct[1].getBrand()) ) {
+				System.out.println("equals: true");
+			} else {
+				System.out.println("equals: false");
+			}
+			
+			System.out.println("personDemoIndex: " + personDemoIndex + "\tfamilyIndex: " + familyIndex);
+			Family family = (Family) MyOb.get(familyIndex);
+			System.out.println(MyOb.get(familyIndex).getClass());
+			if( MyOb.get(personDemoIndex) == (family.getChildren().get(0)) ) {
+				System.out.println("1420 Persondemo==: true" );
+			} else {
+				System.out.println("1422 PersonDemo==: false");
+			}
+			if( MyOb.get(personDemoIndex) == (family.getChildren().get(1)) ) {
+				System.out.println("1420 Persondemo==: true" );
+			} else {
+				System.out.println("1422 PersonDemo==: false");
+			}
+			
+			System.out.println("1440 simplePersonIndex1: " + simplePersonIndex1 + "\tsimplePersonIndex2: " + simplePersonIndex2);
+			SimplePerson p1 = (SimplePerson) MyOb.get(simplePersonIndex1);
+			SimplePerson p2 = (SimplePerson) MyOb.get(simplePersonIndex2);
+			if( p1.getSpouse() == p2 ) {
+				System.out.println("1444 p1.getSpouse()==p2: true" );
+			} else {
+				System.out.println("1446 p1.getSpouse()==p2: false");
+			}
+			if( p1.getSpouse().equals(p2) ) {
+				System.out.println("1449 p1.getSpouse().equals(p2): true" );
+			} else {
+				System.out.println("1451 p1.getSpouse().equals(p2): false");
+			}
+			if( p2.getSpouse() == p1 ) {
+				System.out.println("1454 p2.getSpouse()==p1: true" );
+			} else {
+				System.out.println("1456 p2.getSpouse()==p1: false");
+			}
+			if( p2.getSpouse().equals(p1) ) {
+				System.out.println("1459 p2.getSpouse().equals(p1): true" );
+			} else {
+				System.out.println("1461 p2.getSpouse().equals(p1): false");
+			}
 		}
 		
+	}
+	
+	private static void callSetter(Object obj, String fieldName, Object value){
+		PropertyDescriptor pd;
+		try {
+			pd = new PropertyDescriptor(fieldName, obj.getClass());
+			pd.getWriteMethod().invoke(obj, value);
+		} catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static class ngOutputFormValueMap extends HttpServlet{
+		
+		public void init() throws ServletException{}
+		
+		@Override
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			StringBuilder sb = new StringBuilder();
+		    BufferedReader reader = request.getReader();
+		    try {
+		        String line;
+		        while ((line = reader.readLine()) != null) {
+		            sb.append(line).append('\n');
+		        }
+		    } finally {
+		        reader.close();
+		    }
+			String str = sb.toString();
+			System.out.println(str);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode mapJsog = mapper.readTree(str);
+			
+			Iterator<Entry<String, JsonNode>> jsonNodes = mapJsog.fields();
+		    while (jsonNodes.hasNext()) {
+		        Entry<String, JsonNode> node = jsonNodes.next();
+		        JsonNode nodeJsog = node.getValue();
+		        if (nodeJsog.isObject()) {
+		        	String source;
+					String view;
+					String tempNodeJsog;
+					for ( Entry<String, String> entry : Source_ViewMap.entrySet()) {
+					    source = entry.getKey();
+					    view = entry.getValue();
+					    tempNodeJsog = "{" + parse(nodeJsog, source, view) + "}";
+					    nodeJsog = mapper.readTree(tempNodeJsog);
+					}
+		        }
+		        node.setValue(nodeJsog);
+		        
+		    }
+			
+		    Iterator<Entry<String, JsonNode>> nodes = mapJsog.fields();  
+		    while (nodes.hasNext()) {  
+		        Entry<String, JsonNode> node = nodes.next();  
+		        /*System.out.println(node.getKey());  
+		        System.out.println(node.getValue().toString());*/
+		        formValueMap.put(node.getKey(), node.getValue().toString());
+		    }
+		    
+			
+			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
+			response.setContentType("text/json");
+			response.setCharacterEncoding("UTF-8");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("true");
+		}
 	}
 	
 	public static class ngEdit extends HttpServlet{
@@ -1707,6 +1967,7 @@ public class Main {
 		servletContextHandler.addServlet(ngInputType.class, "/ngInputType");
 		servletContextHandler.addServlet(ngJavaStorageType.class, "/ngJavaStorageType");
 		servletContextHandler.addServlet(ngOutputAll.class, "/ngOutputAll");
+		servletContextHandler.addServlet(ngOutputFormValueMap.class, "/ngOutputFormValueMap");
 		
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());

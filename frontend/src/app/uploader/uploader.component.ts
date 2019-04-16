@@ -55,6 +55,7 @@ export class UploaderComponent implements OnInit {
             this.jsogToFormValue_sessionStorage();
             this.formDataService.changeFlag(true);
         });
+        this.uploadFormValue.clear();
     }
 
     // parse jsog into formValue & sessionStorage
@@ -65,6 +66,7 @@ export class UploaderComponent implements OnInit {
             for (const element of this.upJsog) {
                 this.createObject(element);
             }
+            this.setSessionStorage();
         } else if (this.upJsog instanceof Object) { // single object
             this.createObject(this.upJsog);
             this.setSessionStorage();

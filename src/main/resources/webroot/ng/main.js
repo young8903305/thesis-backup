@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <tree-root #tree [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable>\n        <ng-template #treeNodeTemplate let-node=\"node\">\n            <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n                <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.editVal\" (change)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" (click)=\"preventDe($event)\"/>\n                <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.editVal\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n            </span>\n            <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n        </ng-template>\n    </tree-root>\n\n    <button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\">Edit Object</button>\n</div>\n\n\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===true\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n    </ul>\n</div>\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===false && contextMenu.node.parent.parent===null\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n    </ul>\n</div>\n<script>\n    $(\"input\").click(function(event){\n        event.stopPropagation();\n    });\n</script>"
+module.exports = "<div>\n    <tree-root #tree [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable>\n        <ng-template #treeNodeTemplate let-node=\"node\">\n            <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n                <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.editVal\" (change)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" (click)=\"preventDe($event)\"/>\n                <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.editVal\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n            </span>\n            <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n        </ng-template>\n    </tree-root>\n\n    <button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\" class=\"btn-secondary col-md-8\" width=\"15em\">Edit Object</button>\n    <button *ngIf=\"storageLength!==0\" (click)=\"clearSession()\" class=\"btn-secondary col-md-8\" width=\"15em\">Clear SessionStorage</button>\n    <button *ngIf=\"storageLength!==0\" (click)=\"outputAll()\" class=\"btn-secondary col-md-8\" width=\"15em\">Store all Object</button>\n</div>\n\n\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===true\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n    </ul>\n</div>\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===false && contextMenu.node.parent.parent===null\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n    </ul>\n</div>\n<script>\n    $(\"input\").click(function(event){\n        event.stopPropagation();\n    });\n</script>"
 
 /***/ }),
 
@@ -304,6 +304,7 @@ var AngularTreeComponent = /** @class */ (function () {
             // this.formValueMap.set(this.contextMenu.node.data.name + '123', itemCopyFormValue);
             _this.formDataInterface.setFormValue(newKeyName, JSON.stringify(itemCopyFormValue));
             _this.closeMenu();
+            _this.flagReceive = true;
         };
         this.isRoot = function () {
             if (_this.contextMenu.node.isRoot) {
@@ -894,6 +895,29 @@ var AngularTreeComponent = /** @class */ (function () {
         }
         this.closeMenu();
     };
+    AngularTreeComponent.prototype.outputAll = function () {
+        var mapToJson = {};
+        this.formValueMap.forEach(function (value, key) {
+            mapToJson[key] = JSON.parse(value);
+        });
+        console.log('mapToJson: ', mapToJson);
+        this.ngTreeService.outputFormValueMap(JSON.stringify(mapToJson)).subscribe(function (response) {
+            console.log('formValueMap: ', response);
+        });
+        var all = [];
+        for (var _i = 0, _a = Object.values(sessionStorage); _i < _a.length; _i++) {
+            var value = _a[_i];
+            all.push(JSON.parse(value));
+        }
+        console.log('length: ', all.length);
+        this.ngTreeService.outputAll(JSON.stringify(all)).subscribe(function (response) {
+            console.log('output', response);
+        });
+    };
+    AngularTreeComponent.prototype.clearSession = function () {
+        sessionStorage.clear();
+        this.flagReceive = true;
+    };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-angular-tree',
@@ -936,6 +960,8 @@ var AngularTreeService = /** @class */ (function () {
         this.typeUrl = '/ngInputType';
         this.javaStorageTypeUrl = '/ngJavaStorageType';
         this.outputUrl = '/ngFormOutput';
+        this.outputAllUrl = '/ngOutputAll';
+        this.outputFormValueMapUrl = '/ngOutputFormValueMap';
         this.httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
     }
     AngularTreeService.prototype.getInputType = function () {
@@ -946,6 +972,12 @@ var AngularTreeService = /** @class */ (function () {
     };
     AngularTreeService.prototype.ouputObject = function (output) {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    };
+    AngularTreeService.prototype.outputAll = function (outputAll) {
+        return this.http.post(this.outputAllUrl, outputAll, { headers: this.httpHeaders, observe: 'response' });
+    };
+    AngularTreeService.prototype.outputFormValueMap = function (formValue) {
+        return this.http.post(this.outputFormValueMapUrl, formValue, { headers: this.httpHeaders, observe: 'response' });
     };
     AngularTreeService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
@@ -1029,7 +1061,7 @@ module.exports = "/*\nh1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"container-fluid\"> <!-- use ngx-bootstrap -->\n    <br>\n    <br>\n    <div class=\"row\">\n        <br>\n        <div class=\"col-sm-2 col-md-2 col-lg-1 col-xl-1\">\n            <nav class=\"navbar navbar-dark bg-light navbar-expand-sm px-0 flex-row flex-nowrap\">\n                <div class=\"navbar-collapse collapse\">\n                    <div class=\"nav flex-sm-column flex-row\">\n                        <a class=\"nav-item nav-link\" routerLink=\"/uploader\">Upload</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/create\">Create</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n                    </div>\n                </div>\n            </nav>\n        </div>\n        <div>\n            <br>\n            <br>\n            <h1> Welcome!!</h1>\n            <br>\n            <br>\n            <router-outlet></router-outlet>\n            <br>\n            <app-angular-tree></app-angular-tree>\n        </div>\n    </div>\n</div>\n\n"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"container-fluid\"> <!-- use ngx-bootstrap -->\n    <br>\n    <br>\n    <div class=\"row\">\n        <br>\n        <div class=\"col-sm-2 col-md-2 col-lg-1 col-xl-1\">\n            <nav class=\"navbar navbar-dark bg-light navbar-expand-sm px-0 flex-row flex-nowrap\">\n                <div class=\"navbar-collapse collapse\">\n                    <div class=\"nav flex-sm-column flex-row\">\n                        <a class=\"nav-item nav-link\" routerLink=\"/uploader\">Open</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/create\">Create</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n                    </div>\n                </div>\n            </nav>\n        </div>\n        <div>\n            <br>\n            <br>\n            <h1> Welcome!!</h1>\n            <br>\n            <br>\n            <router-outlet></router-outlet>\n            <br>\n            <app-angular-tree></app-angular-tree>\n        </div>\n    </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -1060,6 +1092,7 @@ var AppComponent = /** @class */ (function () {
         this.pathValue = '';
         this.welcomeMessage = true;
         this.dataClassShow = false;
+        this.storageLength = 0;
         sessionStorage.clear();
     }
     AppComponent.prototype.gotoindex = function () {
@@ -1072,6 +1105,23 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.childEventClicked = function (event) {
         this.clickedEvent = event;
         console.log('app print: ', this.clickedEvent);
+    };
+    AppComponent.prototype.ngDoCheck = function () {
+        this.storageLength = sessionStorage.length;
+    };
+    AppComponent.prototype.outputAll = function () {
+        var all = [];
+        for (var _i = 0, _a = Object.values(sessionStorage); _i < _a.length; _i++) {
+            var value = _a[_i];
+            all.push(JSON.parse(value));
+        }
+        console.log('length: ', all.length);
+        this.appService.outputAll(JSON.stringify(all)).subscribe(function (response) {
+            console.log('output', response);
+        });
+    };
+    AppComponent.prototype.clearSession = function () {
+        sessionStorage.clear();
     };
     AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1200,7 +1250,12 @@ __webpack_require__.r(__webpack_exports__);
 var AppService = /** @class */ (function () {
     function AppService(http) {
         this.http = http;
+        this.outputAllUrl = '/ngOutputAll';
+        this.httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'text/plain' });
     }
+    AppService.prototype.outputAll = function (outputAll) {
+        return this.http.post(this.outputAllUrl, outputAll, { headers: this.httpHeaders, observe: 'response' });
+    };
     AppService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
@@ -1732,7 +1787,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2 *ngIf = \" className !== '' \">Form of {{ className }}</h2>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output2()\">\n    <ng-container *ngFor = \"let key of MemberKey\">\n        <label *ngIf = \"key!=='@id' && key!=='@type'\">\n            {{ key }} :\n            <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n            <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n        </label>\n    </ng-container>\n    <br>\n    <button type=\"submit\" class=\"btn-dark col-md-8\">Output object</button>\n</form>\n<br>\n<br>\n<button (click)=\"store()\" class=\"btn-dark col-md-8\" width=\"15em\">Store</button>\n<br>\n<button (click)=\"clearForm()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Form</button>\n<br>\n<button (click)=\"outputAll()\" class=\"btn-dark col-md-8\" width=\"15em\">Output All Object</button>\n\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n\n<button (click)=\"clearSession()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Session Storage</button>"
+module.exports = "<h2 *ngIf = \" className !== '' \">Form of {{ className }}</h2>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output2()\">\n    <ng-container *ngFor = \"let key of MemberKey\">\n        <label *ngIf = \"key!=='@id' && key!=='@type'\">\n            {{ key }} :\n            <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n            <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n        </label>\n    </ng-container>\n    <br>\n    <button type=\"submit\" class=\"btn-dark col-md-8\">Output object</button>\n</form>\n<br>\n<br>\n<button (click)=\"save()\" class=\"btn-dark col-md-8\" width=\"15em\">Save</button>\n<br>\n<button (click)=\"clearForm()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Form</button>\n<br>\n<!--\n<button (click)=\"outputAll()\" class=\"btn-dark col-md-8\" width=\"15em\">Output All Object</button>\n-->\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n<!--\n<button (click)=\"clearSession()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Session Storage</button>\n-->"
 
 /***/ }),
 
@@ -1769,8 +1824,8 @@ var GenerateFormComponent = /** @class */ (function () {
         this.MemberType = {}; // typeNode. use for list
         this.form_receive = this.fb.group({});
         this.className = '';
-        this.storageIndex = 1;
-        this.storageMap = new Map(); // <class-name, count>: record class' count
+        // storageIndex = 1;
+        // storageMap = new Map<string, number>(); // <class-name, count>: record class' count
         this.idMap = new Map(); // <sessionStorage-key, @id>: store id for @ref-using
         this.checkMap = new Map(); // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
         this.storageTypeMap = new Map(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
@@ -1830,19 +1885,21 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     // receieve the class info form create component
     GenerateFormComponent.prototype.ngOnChanges = function () {
-        if (!(this.generate_form_receive instanceof Array)) {
-            this.generate_form_receive = JSON.parse(this.generate_form_receive);
+        if (this.generate_form_receive.length !== 0) {
+            if (!(this.generate_form_receive instanceof Array)) {
+                this.generate_form_receive = JSON.parse(this.generate_form_receive);
+            }
+            this.MemberKey = Object.keys(this.generate_form_receive[0]); // for html, don't delete
+            this.MemberStyle = this.generate_form_receive[1]; // styleNode
+            this.MemberType = this.generate_form_receive[2]; // typeNode
+            this.className = this.generate_form_receive[3];
+            this.form_receive = this.fb.group(this.generate_form_receive[0]);
+            console.log('generate_form_receive: ', this.generate_form_receive);
+            console.log('MemberKey: ', this.MemberKey);
+            console.log('MemberStyle: ', this.MemberStyle);
+            console.log('MemberType: ', this.MemberType);
+            console.log('className: ', this.className);
         }
-        this.MemberKey = Object.keys(this.generate_form_receive[0]); // for html, don't delete
-        this.MemberStyle = this.generate_form_receive[1]; // styleNode
-        this.MemberType = this.generate_form_receive[2]; // typeNode
-        this.className = this.generate_form_receive[3];
-        this.form_receive = this.fb.group(this.generate_form_receive[0]);
-        console.log('generate_form_receive: ', this.generate_form_receive);
-        console.log('MemberKey: ', this.MemberKey);
-        console.log('MemberStyle: ', this.MemberStyle);
-        console.log('MemberType: ', this.MemberType);
-        console.log('className: ', this.className);
     };
     GenerateFormComponent.prototype.jsogForSessionStorage = function (jsonInput, typeCheck) {
         // jsonInput-> { name: yang } typeCheck-> { age: long }
@@ -2004,7 +2061,7 @@ var GenerateFormComponent = /** @class */ (function () {
         });
     };
     // sessionStorage just accept string type key/value
-    GenerateFormComponent.prototype.store = function () {
+    GenerateFormComponent.prototype.save = function () {
         console.log('JSON.stringify(this.form_receive.value): ', JSON.stringify(this.form_receive.value));
         this.idMap.clear();
         for (var i = 0; i < sessionStorage.length; i++) {
@@ -2027,8 +2084,11 @@ var GenerateFormComponent = /** @class */ (function () {
                 this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
                 // this.form_receive.value['@id'] = 1;
             }*/
-            this.form_receive.value['@id'] = this.storageIndex.toString();
-            var temp = this.form_receive.value['@type'].concat(this.storageIndex); // use storage count as id postfix
+            var timeId = new Date().getTime();
+            this.form_receive.value['@id'] = timeId.toString();
+            // this.form_receive.value['@id'] = this.storageIndex.toString();
+            var temp = this.form_receive.value['@type'].concat(timeId.toString()); // use storage count as id postfix
+            // const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             var key = temp.split('.')[temp.split('.').length - 1];
             // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
             this.formDataInterface.setFormValue(key, JSON.stringify(this.form_receive.value));
@@ -2042,7 +2102,7 @@ var GenerateFormComponent = /** @class */ (function () {
             // this.isJsogMap.set(key, true);
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             // console.log('this.storageTypeMap: ', this.storageTypeMap);
-            this.storageIndex++;
+            // this.storageIndex++; // use time be unique id
             sessionKey = key;
         }
         else { // sessioinStorage had this item, edit object, overwrite old value
@@ -2098,9 +2158,9 @@ var GenerateFormComponent = /** @class */ (function () {
     };
     GenerateFormComponent.prototype.clearSession = function () {
         sessionStorage.clear();
-        this.storageMap.clear();
+        // this.storageMap.clear();
         // this.storageTypeMap.clear();
-        this.storageIndex = 1;
+        // this.storageIndex = 1;
         this.checkMap.clear();
         this.formDataService.changeFlag(true);
     };
@@ -2356,6 +2416,7 @@ var UploaderComponent = /** @class */ (function () {
             _this.jsogToFormValue_sessionStorage();
             _this.formDataService.changeFlag(true);
         });
+        this.uploadFormValue.clear();
     };
     // parse jsog into formValue & sessionStorage
     UploaderComponent.prototype.jsogToFormValue_sessionStorage = function () {
@@ -2366,6 +2427,7 @@ var UploaderComponent = /** @class */ (function () {
                 var element = _a[_i];
                 this.createObject(element);
             }
+            this.setSessionStorage();
         }
         else if (this.upJsog instanceof Object) { // single object
             this.createObject(this.upJsog);

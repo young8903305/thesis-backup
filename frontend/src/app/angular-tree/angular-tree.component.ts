@@ -33,7 +33,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     sessionStorageTemp;
     flagReceive;    // in form-data service, for resize the component if sessionStorage been motified
     // formValueMap;   // <string-session-key, string-form-value>
-    formValueMap;   // <string-session-key, string-form-value>
+    formValueMap: Map<string, string>;   // <string-session-key, string-form-value>
 
     contextMenu: { node: TreeNode, x: number, y: number } = null;
     editNode: TreeNode = null;
@@ -497,6 +497,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         // this.formValueMap.set(this.contextMenu.node.data.name + '123', itemCopyFormValue);
         this.formDataInterface.setFormValue(newKeyName, JSON.stringify(itemCopyFormValue));
         this.closeMenu();
+        this.flagReceive = true;
     }
 
     isRoot = () => {
@@ -874,6 +875,33 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             });
         }
         this.closeMenu();
+    }
+
+    outputAll() {
+
+        const mapToJson = {};
+        this.formValueMap.forEach( (value: string, key: string) => {
+            mapToJson[key] = JSON.parse(value);
+        });
+        console.log('mapToJson: ', mapToJson);
+        this.ngTreeService.outputFormValueMap(JSON.stringify(mapToJson)).subscribe(response => {
+            console.log('formValueMap: ', response);
+        });
+
+
+        const all = [];
+        for (const value of Object.values(sessionStorage)) {
+            all.push(JSON.parse(value));
+        }
+        console.log('length: ', all.length);
+        this.ngTreeService.outputAll(JSON.stringify(all)).subscribe(response => {
+            console.log('output', response);
+        });
+    }
+
+    clearSession() {
+        sessionStorage.clear();
+        this.flagReceive = true;
     }
 
 }

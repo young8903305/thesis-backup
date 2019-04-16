@@ -12,8 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 public class Check {
 	
@@ -152,8 +154,12 @@ public class Check {
 		ctb.setColor("#ff0000");
 		ct.setBrand(ctb);
 		ct.setSize(17);
-		c.setName("BENZ");
-		c.setTires(ct, ct, ct, ct);
+		c.setCarName("BENZ");
+		CarTires[] ctTemp = {ct, ct, ct, ct};
+		c.setTires(ctTemp);
+		if (ct.getBrand() == ctb) {
+			System.out.println("true");
+		}
 		String car = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(c);
 		
 		// System.out.println(car);
@@ -166,15 +172,16 @@ public class Check {
 		System.out.println(b.getClass().getSimpleName() + " " + b.getClass().getTypeName().getClass().getSimpleName());
 		System.out.println(d.getClass().getSimpleName() + " " + c.getClass().getTypeName().getClass().getSimpleName());*/
 		
+		/////////////////
 		String car_jsog = "{\"@id\":\"9\",\"@type\":\"jetty.demo.Car\",\"tires\":[{\"@id\":\"5\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"1\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"6\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"2\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"7\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"3\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"8\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"4\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17}],\"carName\":\"KIA\"}";
 		Car car_check = mapper.readerFor(Car.class).readValue(car_jsog);
+		
 		CarTires[] tires_check = car_check.getTires();
 		for (int i = 0; i < tires_check.length; i++) {
 			// System.out.println(tires_check[i].getBrand().getCountry());
 		}
-		
+		///////////////////
         
-    	//mapper.writeValue(new File("jsonObjects.json"), sharedOptions);
     	
     	//*convert java object to json string and pretty print
     	String car_JSOG_check = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(car_check);
@@ -182,6 +189,7 @@ public class Check {
     	
     	JsonNode jsogAllObject = mapper.readTree(allObject);
     	allObjectOutputChangeName(jsogAllObject);
+    	    	
 	}
 	
 	

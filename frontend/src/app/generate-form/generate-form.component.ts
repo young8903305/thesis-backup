@@ -25,8 +25,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     form_receive = this.fb.group({});
     className = '';
 
-    storageIndex = 1;
-    storageMap = new Map<string, number>(); // <class-name, count>: record class' count
+    // storageIndex = 1;
+    // storageMap = new Map<string, number>(); // <class-name, count>: record class' count
     idMap = new Map<string, string>();      // <sessionStorage-key, @id>: store id for @ref-using
     checkMap = new Map<string, boolean>();  // <sessionStorage-key, used/wait>: for @ref, if used then just put @ref & @type
     storageTypeMap = new Map<string, Object>(); // <element-name, memberType>: for jsog generate list, need to check if type is list or not
@@ -98,6 +98,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     // receieve the class info form create component
     ngOnChanges() {
+        if (this.generate_form_receive.length !== 0) {
         if ( !(this.generate_form_receive instanceof Array) ) {
             this.generate_form_receive = JSON.parse(this.generate_form_receive);
         }
@@ -111,6 +112,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
         console.log('MemberStyle: ', this.MemberStyle);
         console.log('MemberType: ', this.MemberType);
         console.log('className: ', this.className);
+        }
     }
 
     jsogForSessionStorage(jsonInput: Object, typeCheck: Object) { // jsonInput(object): k-v pair of form, typeCheck: ob of outer ob's type
@@ -273,7 +275,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     }
 
     // sessionStorage just accept string type key/value
-    store() {
+    save() {
         console.log('JSON.stringify(this.form_receive.value): ', JSON.stringify(this.form_receive.value));
 
         this.idMap.clear();
@@ -298,9 +300,12 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
                 // this.form_receive.value['@id'] = 1;
             }*/
-            this.form_receive.value['@id'] = this.storageIndex.toString();
+            const timeId = new Date().getTime();
+            this.form_receive.value['@id'] = timeId.toString();
+            // this.form_receive.value['@id'] = this.storageIndex.toString();
 
-            const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
+            const temp = this.form_receive.value['@type'].concat(timeId.toString());    // use storage count as id postfix
+            // const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
             // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
             this.formDataInterface.setFormValue(key, JSON.stringify(this.form_receive.value));
@@ -314,7 +319,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             // this.isJsogMap.set(key, true);
             // sessionStorage.setItem(key, JSON.stringify(this.form_receive.value));
             // console.log('this.storageTypeMap: ', this.storageTypeMap);
-            this.storageIndex++;
+
+            // this.storageIndex++; // use time be unique id
             sessionKey = key;
         } else {    // sessioinStorage had this item, edit object, overwrite old value
             const temp = this.form_receive.value['@type'].concat(this.form_receive.value['@id']);
@@ -373,9 +379,9 @@ export class GenerateFormComponent implements OnInit, OnChanges {
 
     clearSession() {
         sessionStorage.clear();
-        this.storageMap.clear();
+        // this.storageMap.clear();
         // this.storageTypeMap.clear();
-        this.storageIndex = 1;
+        // this.storageIndex = 1;
         this.checkMap.clear();
         this.formDataService.changeFlag(true);
     }

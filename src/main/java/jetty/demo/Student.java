@@ -13,7 +13,7 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 public class Student implements Serializable{
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "name")
-	private String name;
+	private String stuName;
 	
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.number, value = "") }, name = "age")
 	private Integer age;
@@ -24,8 +24,8 @@ public class Student implements Serializable{
 	@AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "phone")
 	private String phone;
 	
-	public Student(String name, Integer age, Boolean gender, String phone) {
-		setName(name);
+	public Student(String stuName, Integer age, Boolean gender, String phone) {
+		setStuName(stuName);
 		setAge(age);
 		setGender(gender);
 		setPhone(phone);
@@ -33,12 +33,12 @@ public class Student implements Serializable{
 	
 	public Student() {}
 	
-	public void setName(String name) {
-		this.name = name;
+	public void setStuName(String stuName) {
+		this.stuName = stuName;
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getStuName() {
+		return this.stuName;
 	}
 	
 	public void setAge(Integer age) {

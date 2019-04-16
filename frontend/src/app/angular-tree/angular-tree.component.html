@@ -9,7 +9,9 @@
         </ng-template>
     </tree-root>
 
-    <button *ngIf="storageLength!==0" (click)="onEditClick()">Edit Object</button>
+    <button *ngIf="storageLength!==0" (click)="onEditClick()" class="btn-secondary col-md-8" width="15em">Edit Object</button>
+    <button *ngIf="storageLength!==0" (click)="clearSession()" class="btn-secondary col-md-8" width="15em">Clear SessionStorage</button>
+    <button *ngIf="storageLength!==0" (click)="outputAll()" class="btn-secondary col-md-8" width="15em">Store all Object</button>
 </div>
 
 

@@ -1,4 +1,4 @@
-import { Component, OnChanges} from '@angular/core';
+import { Component, OnChanges, DoCheck} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { analyzeAndValidateNgModules, ConditionalExpr } from '@angular/compiler';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -14,13 +14,14 @@ declare var jquery: any; // 這邊用 var
     providers: [ AppService ]
 })
 
-export class AppComponent implements OnChanges {
+export class AppComponent implements OnChanges, DoCheck {
 
     title = 'ng-test';
     pathValue = '';
     dataClass: any;
     welcomeMessage = true;
     dataClassShow = false;
+    storageLength = 0;
 
     clickedEvent: Event;
 
@@ -43,6 +44,25 @@ export class AppComponent implements OnChanges {
     childEventClicked(event: Event) {
         this.clickedEvent = event;
         console.log('app print: ', this.clickedEvent);
+    }
+
+    ngDoCheck() {
+        this.storageLength = sessionStorage.length;
+    }
+
+    outputAll() {
+        const all = [];
+        for (const value of Object.values(sessionStorage)) {
+            all.push(JSON.parse(value));
+        }
+        console.log('length: ', all.length);
+        this.appService.outputAll(JSON.stringify(all)).subscribe(response => {
+            console.log('output', response);
+        });
+    }
+
+    clearSession() {
+        sessionStorage.clear();
     }
 
 }

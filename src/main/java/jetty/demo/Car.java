@@ -20,10 +20,10 @@ public class Car {
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "KIA") },
 			name = "Your Car's Name")
 	private String carName;
-	
+
 	public Car() {}
 	
-	public void setTires(CarTires...tires) {
+	public void setTires(CarTires... tires) {
 		this.tires = tires;
 	}
 	
@@ -31,11 +31,11 @@ public class Car {
 		return this.tires; 
 	}
 	
-	public void setName(String carName) {
+	public void setCarName(String carName) {
 		this.carName = carName;
 	}
 	
-	public String getName() {
+	public String getCarName() {
 		return this.carName;
 	}
 }

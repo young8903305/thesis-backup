@@ -12,6 +12,8 @@ export class AngularTreeService {
     typeUrl = '/ngInputType';
     javaStorageTypeUrl = '/ngJavaStorageType';
     outputUrl = '/ngFormOutput';
+    outputAllUrl = '/ngOutputAll';
+    outputFormValueMapUrl = '/ngOutputFormValueMap';
 
     httpHeaders = new HttpHeaders({ 'Content-Type': 'text/plain' });
 
@@ -27,6 +29,14 @@ export class AngularTreeService {
 
     ouputObject(output) {
         return this.http.post(this.outputUrl, output, { headers: this.httpHeaders, observe: 'response' });
+    }
+
+    outputAll(outputAll) {
+        return this.http.post(this.outputAllUrl, outputAll, { headers: this.httpHeaders, observe: 'response' });
+    }
+
+    outputFormValueMap (formValue) {
+        return this.http.post(this.outputFormValueMapUrl, formValue, { headers: this.httpHeaders, observe: 'response' });
     }
 
 }
