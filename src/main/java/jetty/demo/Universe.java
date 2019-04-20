@@ -17,6 +17,31 @@ public class Universe {
 	@AnnotationForm(
 			style = { @AnnotationStyle(input=InputTypeControl.text, value = "") })
 	List<Object> object_list;
+	
+	@AnnotationForm(
+			style = { @AnnotationStyle(input=InputTypeControl.text, value = "") })
+	List<Boolean> boolean_list;
+	
+	@AnnotationForm(
+			style = { @AnnotationStyle(input=InputTypeControl.text, value = "") })
+	List<String> string_list;
+
+
+	public List<Boolean> getBoolean_list() {
+		return boolean_list;
+	}
+
+	public void setBoolean_list(List<Boolean> boolean_list) {
+		this.boolean_list = boolean_list;
+	}
+
+	public List<String> getString_list() {
+		return string_list;
+	}
+
+	public void setString_list(List<String> string_list) {
+		this.string_list = string_list;
+	}
 
 	public List<Object> getObject_list() {
 		return object_list;
@@ -28,26 +53,6 @@ public class Universe {
 	
 	public void Universe() {}
 	
-	public static void main(String...args) {
-		
-		Universe uni = new Universe();
-		
-		List<Object> test = new ArrayList<>();
-		
-		Car c = new Car();
-		CarTires ct = new CarTires();
-		test.add(c);
-		test.add(ct);
-		uni.setObject_list(test);
-		
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String uni_jsog = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(uni);
-			System.out.println(uni_jsog);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 }

@@ -1,6 +1,6 @@
 package jetty.demo;
 
-
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerator;
 
@@ -49,12 +49,16 @@ public class JSOGGenerator extends ObjectIdGenerator<JSOGRef> {
         return new IdKey(getClass(), _scope, key);
 	}
 
+	/** 
+	 * change int argument to long for date.getTime()
+	 * */
 	@Override
 	public JSOGRef generateId(Object forPojo) {
-        int id = _nextValue;
-        ++_nextValue;
+        /* int id = _nextValue;
+        ++_nextValue;*/
+		Date date = new Date();
         String inputType = forPojo.getClass().getName();
-        return new JSOGRef(id, inputType);
+        return new JSOGRef(date.getTime(), inputType);
 	}
 
     @Override

@@ -1361,7 +1361,7 @@ public class Main {
 				}
 		    });
 
-		    
+		    /*
 		    int brandIndex = 0;
 			int tiresIndex = 0;
 			int carIndex = 0;
@@ -1422,7 +1422,7 @@ public class Main {
 			} else {
 				System.out.println("equals: false");
 			}
-			
+			/*
 			System.out.println("personDemoIndex: " + personDemoIndex + "\tfamilyIndex: " + familyIndex);
 			Family family = (Family) MyOb.get(familyIndex);
 			System.out.println(MyOb.get(familyIndex).getClass());
@@ -1459,7 +1459,7 @@ public class Main {
 				System.out.println("1459 p2.getSpouse().equals(p1): true" );
 			} else {
 				System.out.println("1461 p2.getSpouse().equals(p1): false");
-			}
+			}*/
 		}
 		
 	}

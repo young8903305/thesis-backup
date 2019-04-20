@@ -41,9 +41,11 @@ public class JSOGRef
 		type = inputType;
 	}
 
-	/** */
-	public JSOGRef(int val, String inputType) {
-		this(Integer.toString(val), inputType);
+	/** 
+	 * change int argument to long for date.getTime()
+	 * */
+	public JSOGRef(long val, String inputType) {
+		this(Long.toString(val), inputType);
 	}
 
 	@Override

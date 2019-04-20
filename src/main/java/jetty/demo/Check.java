@@ -1,6 +1,7 @@
 package jetty.demo;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -16,6 +17,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+
+import java.util.Date;
 
 public class Check {
 	
@@ -145,11 +148,10 @@ public class Check {
 		Family ff = mapper.readerFor(Family.class).readValue(family);
 		// System.out.println("ff.getFather().getEmail(): " + ff.getFather().getEmail());
 		
-		
+		//java -> jsog /////////////////////////////////////////////////////////////
 		Car c = new Car();
 		CarTires ct = new CarTires();
 		CarTiresBrand ctb = new CarTiresBrand();
-		
 		ctb.setCountry("Taiwan");
 		ctb.setColor("#ff0000");
 		ct.setBrand(ctb);
@@ -161,9 +163,14 @@ public class Check {
 			System.out.println("true");
 		}
 		String car = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(c);
-		
-		// System.out.println(car);
-		
+		System.out.println(car);
+		FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
+	    byte[] strToBytes = car.getBytes();
+	    outputStream.write(strToBytes);
+	    outputStream.close();
+	    System.out.println("done.");
+		///////////////////////////////////////////////////////////////////////
+	    
 		String[] a = new String[10];
 		List<String> b = new LinkedList<String>();
 		ArrayList<String> d = new ArrayList<String>();
@@ -189,8 +196,5 @@ public class Check {
     	
     	JsonNode jsogAllObject = mapper.readTree(allObject);
     	allObjectOutputChangeName(jsogAllObject);
-    	    	
 	}
-	
-	
 }

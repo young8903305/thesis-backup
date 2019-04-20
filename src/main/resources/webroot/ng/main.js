@@ -41,7 +41,7 @@ module.exports = ".menu {\n  position: absolute;\n  background: rgba(255, 255, 2
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n    <tree-root #tree [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable>\n        <ng-template #treeNodeTemplate let-node=\"node\">\n            <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n                <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.editVal\" (change)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" (click)=\"preventDe($event)\"/>\n                <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.editVal\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n            </span>\n            <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n        </ng-template>\n    </tree-root>\n\n    <button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\" class=\"btn-secondary col-md-8\" width=\"15em\">Edit Object</button>\n    <button *ngIf=\"storageLength!==0\" (click)=\"clearSession()\" class=\"btn-secondary col-md-8\" width=\"15em\">Clear SessionStorage</button>\n    <button *ngIf=\"storageLength!==0\" (click)=\"outputAll()\" class=\"btn-secondary col-md-8\" width=\"15em\">Store all Object</button>\n</div>\n\n\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===true\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n    </ul>\n</div>\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===false && contextMenu.node.parent.parent===null\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>\n    </ul>\n</div>\n<script>\n    $(\"input\").click(function(event){\n        event.stopPropagation();\n    });\n</script>"
+module.exports = "<div>\n    <tree-root #tree [nodes]=\"nodes\" [options]=\"options\" [focused]=\"true\" draggable (updateData)=\"onUpdateData(tree)\">\n        <ng-template #treeNodeTemplate let-node=\"node\">\n            <span *ngIf=\"node === editNode\">{{ node.data.pureName }}\n                <input *ngIf=\" (node.data.style!=='textarea') \" type={{node.data.style}} autofocus [(ngModel)]=\"node.data.editVal\" (change)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\" (click)=\"preventDe($event)\"/>\n                <textarea *ngIf=\" node.data.style === 'textarea' \" autofocus [(ngModel)]=\"node.data.editVal\" (blur)=\"stopEdit()\" (keyup.enter)=\"stopEdit()\"></textarea>\n            </span>\n            <span *ngIf=\"node !== editNode\">{{ node.data.name }}</span>\n        </ng-template>\n    </tree-root>\n\n    <button *ngIf=\"storageLength!==0\" (click)=\"onEditClick()\" class=\"btn-secondary col-md-8\" width=\"15em\">Edit Object</button>\n    <button *ngIf=\"storageLength!==0\" (click)=\"clearSession()\" class=\"btn-secondary col-md-8\" width=\"15em\">Clear SessionStorage</button>\n    <button *ngIf=\"storageLength!==0\" (click)=\"outputAll()\" class=\"btn-secondary col-md-8\" width=\"15em\">Store all Object</button>\n</div>\n\n\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===true\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <!--<li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>-->\n    </ul>\n</div>\n<div class=\"menu\" *ngIf=\"contextMenu && contextMenu.node.data.canEdit===false && contextMenu.node.parent.parent===null\" [style.left.px]=\"contextMenu.x\" [style.top.px]=\"contextMenu.y\">\n    <div *ngIf=\"notRoot()\">Menu for {{ contextMenu.node.data.pureName }}</div>\n    <div *ngIf=\"isRoot()\">Menu for {{ contextMenu.node.data.name }}</div>\n    <hr>\n    <ul>\n        <li (click)=\"outputObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Output object</a></li>\n        <li (click)=\"editValue()\"><a [style.opacity]=\"notRoot() && 1 || 0.3\">Edit value</a></li>\n        <li (click)=\"copyValue()\"><a [style.opacity]=\"hasVal() && 1 || 0.3\">Copy value</a></li>\n        <li (click)=\"copyObj()\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Copy object</a></li>\n        <li (click)=\"pasteValue()\"><a [style.opacity]=\"notRoot() && canPaste() && 1 || 0.3\">Paste value</a></li>\n        <li (click)=\"deleteValue(contextMenu.node)\"><a [style.opacity]=\"hasVal() && notRoot() && 1 || 0.3\">Delete value</a></li>\n        <!--<li (click)=\"deleteObject(contextMenu.node)\"><a [style.opacity]=\"isRoot() && 1 || 0.3\">Delete object</a></li>-->\n    </ul>\n</div>\n<script>\n    $(\"input\").click(function(event){\n        event.stopPropagation();\n    });\n</script>"
 
 /***/ }),
 
@@ -74,7 +74,9 @@ var AngularTreeComponent = /** @class */ (function () {
         this.formDataService = formDataService;
         this.ngTreeService = ngTreeService;
         this.formDataInterface = formDataInterface;
-        this.storageLength = 0;
+        this.storageLength = 0; // html use it
+        // store ng-tree nodes, must to be initialized as array, then can let expandAll() in UpdateData work after save json in sessionStorage
+        this.nodes = [];
         this.contextMenu = null;
         this.editNode = null;
         this.sourceNode = null;
@@ -242,7 +244,7 @@ var AngularTreeComponent = /** @class */ (function () {
         // copy the contextNode's editVal
         this.copyValue = function () {
             if (_this.isRoot()) { // for root node, copy its name to represent the whole object
-                console.log('this.contextMenu.node.data.name ', _this.contextMenu.node.data.name);
+                // console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
                 document.addEventListener('copy', function (e) {
                     e.clipboardData.setData('text/plain', (_this.contextMenu.node.data.name));
                     e.preventDefault();
@@ -299,9 +301,8 @@ var AngularTreeComponent = /** @class */ (function () {
             var newKeyName = _this.contextMenu.node.data.type + timeId;
             sessionStorage.setItem(newKeyName, JSON.stringify(temp)); // need to set an unique seiral id
             var itemCopyFormValue = JSON.parse(_this.formValueMap.get(_this.contextMenu.node.data.pureName));
-            console.log('itemCopyFormValue: ', itemCopyFormValue);
+            // console.log('itemCopyFormValue: ', itemCopyFormValue);
             itemCopyFormValue['@id'] = timeId.toString();
-            // this.formValueMap.set(this.contextMenu.node.data.name + '123', itemCopyFormValue);
             _this.formDataInterface.setFormValue(newKeyName, JSON.stringify(itemCopyFormValue));
             _this.closeMenu();
             _this.flagReceive = true;
@@ -318,7 +319,7 @@ var AngularTreeComponent = /** @class */ (function () {
             }
             return true;
         };
-        // use to check show 'Delete Value', delete editValue, so check the editVal
+        // to check show 'Delete Value', delete editValue, so check the editVal
         this.hasVal = function () {
             if (_this.contextMenu.node.data.editVal === '') {
                 return false;
@@ -327,8 +328,13 @@ var AngularTreeComponent = /** @class */ (function () {
                 return true;
             }
         };
+        // (discard)
         this.deleteObject = function (node) {
-            sessionStorage.removeItem(node.data.name);
+            sessionStorage.removeItem(node.data.pureName);
+            _this.formDataInterface.deleteFormValue(node.data.pureName);
+            console.log('this.formValueMap: ', _this.formValueMap);
+            // make tree to reload
+            _this.flagReceive = true;
             _this.closeMenu();
         };
         // simple version of stopEdit()
@@ -407,31 +413,57 @@ var AngularTreeComponent = /** @class */ (function () {
                 var _b = Object.entries(_this.sourceNode.parent.data.children[1]), sourceName = _b[0], sourcePureName = _b[1], sourceVal = _b[2];
                 if (val[1].toString() === sourceVal[1].toString()) {
                     if (_this.contextMenu.node.data.pureName === _this.sourceNode.data.pureName) {
-                        _this.contextMenu.node.data.val = _this.sourceNode.data.val; // node's val
+                        // this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
+                        _this.contextMenu.node.parent.data.formVal[_this.contextMenu.node.data.pureName] = _this.sourceNode.data.editVal;
+                        // this.contextMenu.node.parent.data.val[this.contextMenu.node.data.pureName] = this.sourceNode.data.val;
+                        console.log('this.contextMenu.node.parent.data.formVal: ', _this.contextMenu.node.parent.data.formVal);
+                        _this.formDataInterface.setFormValue(_this.contextMenu.node.parent.data.pureName, JSON.stringify(_this.contextMenu.node.parent.data.formVal));
                         // node's view
-                        _this.contextMenu.node.data.name = _this.contextMenu.node.data.pureName + ': ' + _this.contextMenu.node.data.val;
+                        // this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
                         var temp = {};
-                        // console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
-                        // sessionStorage.getItem(this.contextMenu.node.parent.data.name));
-                        for (var _i = 0, _c = Object.entries(JSON.parse(sessionStorage.getItem(_this.contextMenu.node.parent.data.name))); _i < _c.length; _i++) {
+                        for (var _i = 0, _c = Object.entries(JSON.parse(sessionStorage.getItem(_this.contextMenu.node.parent.data.pureName))); _i < _c.length; _i++) {
                             var _d = _c[_i], key = _d[0], value = _d[1];
                             if (key === _this.contextMenu.node.data.pureName) {
                                 value = _this.sourceNode.data.val;
                             }
                             temp[key] = value;
                         }
-                        sessionStorage.setItem(_this.contextMenu.node.parent.data.name, JSON.stringify(temp));
+                        sessionStorage.setItem(_this.contextMenu.node.parent.data.pureName, JSON.stringify(temp));
                         _this.doCut = false;
                         _this.sourceNode = null;
                     }
                     else {
-                        alert('not the same attribute');
+                        alert('same object\n but not the same attribute');
                     }
                 }
                 else {
                     alert('not the same type object');
                 }
             }
+            var virtualRoot = _this.contextMenu.node.parent;
+            while (virtualRoot.parent !== null) {
+                virtualRoot = virtualRoot.parent;
+            }
+            for (var _e = 0, _f = virtualRoot.data.children; _e < _f.length; _e++) {
+                var element = _f[_e];
+                if (element.pureName === _this.contextMenu.node.parent.data.pureName) {
+                    element.formVal = _this.contextMenu.node.parent.data.formVal;
+                }
+                _this.checkMap.clear();
+                var typeTemp = JSON.parse(_this.javaStorageTypeMap[element.formVal['@type']]);
+                var formValueTemp = _this.CheckStrToNum(element.formVal);
+                formValueTemp = _this.jsogGen(formValueTemp, typeTemp);
+                console.log('formValueTemp: ', formValueTemp);
+                sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
+            }
+            // make tree to reload
+            _this.flagReceive = true;
+            /*
+             * change log:
+             * parse into jsog when store.
+             * every ob contain other ob, need to check whether it had been used or not, then clear the map.
+            */
+            _this.checkMap.clear();
             _this.closeMenu();
         };
         this.canPaste = function () {
@@ -462,11 +494,11 @@ var AngularTreeComponent = /** @class */ (function () {
             console.log('key: ', key, '\nvalue: ', value);
             var typeTemp = key.match(/\([^)]+\)/); // catch string in () include (), used in type check
             // console.log('typeTemp: ', typeTemp);
-            if (value === null) {
+            if (value === null || value === undefined) {
                 value = '';
             }
-            if (key.includes('[]') || key.includes('List') || value instanceof Array) { // array of object,  value instanceof Array
-                // array of object
+            if (key.includes('[]') || key.includes('List') || value instanceof Array) { // array of object, value instanceof Array
+                // temp use for store the object node
                 var temp = {
                     name: '',
                     pureName: key,
@@ -480,42 +512,55 @@ var AngularTreeComponent = /** @class */ (function () {
                 var viewNameTemp = '';
                 var count = 1;
                 var length_1 = value.length;
+                // value represent object, make rootNode, the put into this children
                 for (var _b = 0, value_1 = value; _b < value_1.length; _b++) {
                     var obElement = value_1[_b];
-                    var aaa = void 0;
-                    var bbb = void 0;
-                    for (var _c = 0, _d = Object.keys(obElement); _c < _d.length; _c++) {
-                        var k = _d[_c];
-                        if (k === '@id') {
-                            aaa = obElement['@type'].concat(obElement['@id']);
-                            bbb = aaa.split('.')[aaa.split('.').length - 1];
+                    if (obElement instanceof Object) { // array of object
+                        var aaa = void 0;
+                        var bbb = void 0;
+                        for (var _c = 0, _d = Object.keys(obElement); _c < _d.length; _c++) {
+                            var k = _d[_c];
+                            if (k === '@id') {
+                                aaa = obElement['@type'].concat(obElement['@id']);
+                                bbb = aaa.split('.')[aaa.split('.').length - 1];
+                            }
+                            else if (k === '@ref') {
+                                aaa = obElement['@type'].concat(obElement['@ref']);
+                                bbb = aaa.split('.')[aaa.split('.').length - 1];
+                            }
                         }
-                        else if (k === '@ref') {
-                            aaa = obElement['@type'].concat(obElement['@ref']);
-                            bbb = aaa.split('.')[aaa.split('.').length - 1];
+                        /*temp.children.push(
+                            this.makeRootNode(
+                                bbb, JSON.parse(sessionStorage.getItem(bbb.toString())), this.InputTypeMap[obElement['@type']]
+                            )
+                        );*/
+                        /*console.log('1');
+                        console.log('this.formValueMap: ', this.formValueMap);
+                        console.log('this.InputTypeMap[obElement[@type]]: ', this.InputTypeMap[obElement['@type']]);*/
+                        console.log('this.formValueMap.get(bbb)', this.formValueMap.get(bbb));
+                        temp.children.push(this.makeRootNode(bbb, obElement, JSON.parse(this.InputTypeMap[obElement['@type']]), JSON.parse(this.formValueMap.get(bbb))));
+                        if (count !== length_1) {
+                            viewNameTemp = viewNameTemp + bbb + ', ';
+                            count++;
+                        }
+                        else {
+                            viewNameTemp = viewNameTemp + bbb;
                         }
                     }
-                    /*temp.children.push(
-                        this.makeRootNode(
-                            bbb, JSON.parse(sessionStorage.getItem(bbb.toString())), this.InputTypeMap[obElement['@type']]
-                        )
-                    );*/
-                    /*console.log('1');
-                    console.log('this.formValueMap: ', this.formValueMap);
-                    console.log('this.InputTypeMap[obElement[@type]]: ', this.InputTypeMap[obElement['@type']]);
-                    console.log('this.formValueMap.get(bbb)', this.formValueMap.get(bbb));*/
-                    temp.children.push(this.makeRootNode(bbb, obElement, JSON.parse(this.InputTypeMap[obElement['@type']]), JSON.parse(this.formValueMap.get(bbb))));
-                    if (count !== length_1) {
-                        viewNameTemp = viewNameTemp + bbb + ', ';
-                        count++;
+                    else if (obElement instanceof Array) {
                     }
-                    else {
-                        viewNameTemp = viewNameTemp + bbb;
+                    else { // array of value
+                        if (count !== length_1) {
+                            viewNameTemp = viewNameTemp + obElement.toString() + ', ';
+                            count++;
+                        }
+                        else {
+                            viewNameTemp = viewNameTemp + obElement.toString();
+                        }
                     }
                 }
                 temp.name = key + ': ' + viewNameTemp;
                 temp.editVal = viewNameTemp;
-                // array of value, need
                 // array of array, need
                 reArray.push(temp);
             }
@@ -532,21 +577,21 @@ var AngularTreeComponent = /** @class */ (function () {
                         canEdit: true,
                         children: []
                     };
-                    console.log('value: ', value);
-                    console.log('value[@type]: ', value['@type'], '\nvalue[@id]: ', value['@id'], '\nvalue[@ref]: ', value['@ref']);
+                    // console.log('value: ', value);
+                    // console.log('value[@type]: ', value['@type'], '\nvalue[@id]: ', value['@id'], '\nvalue[@ref]: ', value['@ref']);
                     var childType = this.InputTypeMap[value['@type']];
-                    console.log('childType: ', childType);
+                    // console.log('childType: ', childType);
                     var aaa = void 0;
                     if (value['@id'] === undefined) {
                         aaa = value['@type'].concat(value['@ref']);
-                        console.log('ref');
+                        // console.log('ref');
                     }
                     else {
                         aaa = value['@type'].concat(value['@id']);
-                        console.log('id');
+                        // console.log('id');
                     }
                     var bbb = aaa.split('.')[aaa.split('.').length - 1];
-                    console.log('bbb: ', bbb);
+                    // console.log('bbb: ', bbb);
                     temp.name = key + ': ' + bbb;
                     temp.editVal = bbb;
                     console.log('this.formValueMap.get(bbb)): ', JSON.parse(this.formValueMap.get(bbb)));
@@ -555,7 +600,7 @@ var AngularTreeComponent = /** @class */ (function () {
                     reArray.push(temp);
                 }
                 else { // just value
-                    if (typeTemp === null) {
+                    if (typeTemp === null) { // no value
                         typeTemp = 'null';
                         reArray.push({
                             name: key + ': ' + value,
@@ -583,13 +628,14 @@ var AngularTreeComponent = /** @class */ (function () {
         }
         return reArray;
     };
-    // nodeName: key in sessionStorage, nodeData: object of sessionStorage, childInputType: node's child Input type
+    // nodeName: key in sessionStorage\ nodeData: object of sessionStorage\ childInputType: node's child Input type
     AngularTreeComponent.prototype.makeRootNode = function (nodeName, nodeData, childInputType, rootFormValue) {
         var node = {
             name: '',
             pureName: '',
             // val: nodeData,
-            val: rootFormValue,
+            // val: rootFormValue,
+            val: JSON.parse(sessionStorage.getItem(nodeName)),
             editVal: '',
             formVal: rootFormValue,
             style: '',
@@ -655,7 +701,7 @@ var AngularTreeComponent = /** @class */ (function () {
     AngularTreeComponent.prototype.onEditClick = function () {
         /*this.sessionStorageTemp = a;
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));*/
-        console.log('edit Object: ', a);
+        // console.log('edit Object: ', a);
         this.formDataService.editSessionStorage(a);
     };
     AngularTreeComponent.prototype.editValue = function () {
@@ -669,9 +715,9 @@ var AngularTreeComponent = /** @class */ (function () {
             var _b = _a[_i], key = _b[0], value = _b[1];
             if (key === this.editNode.data.pureName) {
                 // edit for view & formVal
-                this.editNode.data.name = this.editNode.data.pureName + ': ' + this.editNode.data.editVal;
+                this.editNode.data.name = this.editNode.data.pureName + ': ' + this.editNode.data.editVal.toString();
                 this.editNode.data.val = this.editNode.data.editVal;
-                this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal;
+                this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal.toString();
                 console.log('this.editNode.parent.data.formVal: ', this.editNode.parent.data.formVal);
                 // this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
                 this.formDataInterface.setFormValue(this.editNode.parent.data.pureName, JSON.stringify(this.editNode.parent.data.formVal));
@@ -916,7 +962,15 @@ var AngularTreeComponent = /** @class */ (function () {
     };
     AngularTreeComponent.prototype.clearSession = function () {
         sessionStorage.clear();
+        this.formDataInterface.cleanFormValue();
         this.flagReceive = true;
+        console.log('this.formValueMap: ', this.formValueMap);
+    };
+    AngularTreeComponent.prototype.onUpdateData = function (treeComponent) {
+        /*setTimeout(() => {
+            treeComponent.treeModel.expandAll();
+        }, 1000);*/
+        treeComponent.treeModel.expandAll();
     };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -1061,7 +1115,7 @@ module.exports = "/*\nh1 {\n  font-size: 1.2em;\n  color: #999;\n  margin-bottom
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"container-fluid\"> <!-- use ngx-bootstrap -->\n    <br>\n    <br>\n    <div class=\"row\">\n        <br>\n        <div class=\"col-sm-2 col-md-2 col-lg-1 col-xl-1\">\n            <nav class=\"navbar navbar-dark bg-light navbar-expand-sm px-0 flex-row flex-nowrap\">\n                <div class=\"navbar-collapse collapse\">\n                    <div class=\"nav flex-sm-column flex-row\">\n                        <a class=\"nav-item nav-link\" routerLink=\"/uploader\">Open</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/create\">Create</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n                    </div>\n                </div>\n            </nav>\n        </div>\n        <div>\n            <br>\n            <br>\n            <h1> Welcome!!</h1>\n            <br>\n            <br>\n            <router-outlet></router-outlet>\n            <br>\n            <app-angular-tree></app-angular-tree>\n        </div>\n    </div>\n</div>\n\n"
+module.exports = "<head>\n    <title>Frontend</title>\n\t<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\n</head>\n\n<div class=\"container-fluid\"> <!-- use ngx-bootstrap -->\n    <br>\n    <br>\n    <div class=\"row\">\n        <br>\n        <div class=\"col-sm-2 col-md-2 col-lg-1 col-xl-1\">\n            <nav class=\"navbar navbar-dark bg-light navbar-expand-sm px-0 flex-row flex-nowrap\">\n                <div class=\"navbar-collapse collapse\">\n                    <div class=\"nav flex-sm-column flex-row\">\n                        <!--<a class=\"nav-item nav-link\" routerLink=\"/uploader\">Open</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/create\">Create</a>\n                        <br>-->\n                        <a class=\"nav-item nav-link\" routerLink=\"/create\">Editor</a>\n                        <br>\n                        <a class=\"nav-item nav-link\" routerLink=\"/\" (click)=\"gotoindex()\">Home</a>\n                    </div>\n                </div>\n            </nav>\n        </div>\n        <div>\n            <br>\n            <br>\n            <h1> Welcome!!</h1>\n            <br>\n            <br>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -1427,7 +1481,7 @@ module.exports = "/*\n.sidenav div:hover {\n  color: #f1f1f1;\n}\n\n.sidenav div
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<button *ngFor=\"let item of dataClassName\" (click)=\"postClass(item)\" class=\"btn btn-primary\">{{ item }}</button>\n<br>\n\n<app-generate-form [generate_form_receive]=\"receive\"></app-generate-form>"
+module.exports = "<button *ngFor=\"let item of dataClassName\" (click)=\"postClass(item)\" class=\"btn btn-primary\">{{ item }}</button>\n<br>\n<br>\n<app-uploader></app-uploader>\n<br>\n\n<app-generate-form [generate_form_receive]=\"receive\"></app-generate-form>\n<br>\n<app-angular-tree></app-angular-tree>"
 
 /***/ }),
 
@@ -1758,6 +1812,15 @@ var FormDataService = /** @class */ (function () {
     FormDataService.prototype.getFormValue = function () {
         return this.formValueMap.getValue();
     };
+    // (discard)
+    FormDataService.prototype.deleteFormValue = function (key) {
+        this.formValueMap.getValue().delete(key);
+        this.formValueMap.next(this.formValueMap.getValue());
+    };
+    FormDataService.prototype.cleanFormValue = function () {
+        this.formValueMap.getValue().clear();
+        this.formValueMap.next(this.formValueMap.getValue());
+    };
     FormDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
@@ -1787,7 +1850,7 @@ module.exports = "/* ProfileEditorComponent's private CSS styles */\n:host {\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2 *ngIf = \" className !== '' \">Form of {{ className }}</h2>\n\n<form [formGroup] = \"form_receive\" (ngSubmit) = \"output2()\">\n    <ng-container *ngFor = \"let key of MemberKey\">\n        <label *ngIf = \"key!=='@id' && key!=='@type'\">\n            {{ key }} :\n            <input *ngIf = \" MemberStyle[key] !== 'textarea' \" type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \">\n            <textarea *ngIf = \" MemberStyle[key] ==='textarea' \" formControlName = {{key}} droppable (onDrop) = \" onNodeDrop($event) \"></textarea>\n        </label>\n    </ng-container>\n    <br>\n    <button type=\"submit\" class=\"btn-dark col-md-8\">Output object</button>\n</form>\n<br>\n<br>\n<button (click)=\"save()\" class=\"btn-dark col-md-8\" width=\"15em\">Save</button>\n<br>\n<button (click)=\"clearForm()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Form</button>\n<br>\n<!--\n<button (click)=\"outputAll()\" class=\"btn-dark col-md-8\" width=\"15em\">Output All Object</button>\n-->\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n<!--\n<button (click)=\"clearSession()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Session Storage</button>\n-->"
+module.exports = "<h2 *ngIf = \" className !== '' \">Form of {{ className }}</h2>\n\n<form class=\"form-group\" [formGroup]=\"form_receive\" (ngSubmit)=\"save()\">\n    <ng-container *ngFor = \"let key of MemberKey\">\n        <label *ngIf = \"key!=='@id' && key!=='@type'\">\n            {{ key }} :\n            <input class=\"form-group\"  *ngIf=\" MemberStyle[key] !== 'textarea' \" type={{MemberStyle[key]}}\n              formControlName={{key}} droppable (onDrop)=\" onNodeDrop($event) \">\n            <textarea class=\"form-group\"  *ngIf=\" MemberStyle[key] ==='textarea' \" formControlName={{key}} droppable\n              (onDrop)=\" onNodeDrop($event) \"></textarea>\n        </label>\n    </ng-container>\n    <br>\n    <button type=\"submit\" class=\"btn-dark col-md-8\" width=\"15em\">Save</button>\n</form>\n<button (click)=\"clearForm()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Form</button>\n<br>\n<br>\n<!--\n<button (click)=\"outputAll()\" class=\"btn-dark col-md-8\" width=\"15em\">Output All Object</button>\n-->\n<!--\n<p>\n  Form Value: {{ form_receive.value | json }}\n</p>\n-->\n<!--\n<button (click)=\"clearSession()\" class=\"btn-dark col-md-8\" width=\"15em\">Clear Session Storage</button>\n-->"
 
 /***/ }),
 
@@ -1937,7 +2000,8 @@ var GenerateFormComponent = /** @class */ (function () {
                         if (this.checkMap.has(tempSingleVal[i])) { // used, add as @ref
                             var temp = {};
                             var refType = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@type'];
-                            temp['@ref'] = this.idMap.get(tempSingleVal[i]);
+                            // temp['@ref'] = this.idMap.get(tempSingleVal[i]);
+                            temp['@ref'] = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@id'];
                             temp['@type'] = refType;
                             tempListVal[i] = temp;
                             // console.log('tempListVal[i]: ', tempListVal[i]);
@@ -1991,7 +2055,8 @@ var GenerateFormComponent = /** @class */ (function () {
                     if (this.checkMap.has(StrTempVal)) { // used, add as @ref
                         var temp = {};
                         var refType = JSON.parse(sessionStorage.getItem(StrTempVal))['@type'];
-                        temp['@ref'] = this.idMap.get(StrTempVal);
+                        // temp['@ref'] = this.idMap.get(StrTempVal);
+                        temp['@ref'] = JSON.parse(sessionStorage.getItem(StrTempVal))['@id'];
                         temp['@type'] = refType;
                         reVal = temp;
                     }
@@ -2063,11 +2128,12 @@ var GenerateFormComponent = /** @class */ (function () {
     // sessionStorage just accept string type key/value
     GenerateFormComponent.prototype.save = function () {
         console.log('JSON.stringify(this.form_receive.value): ', JSON.stringify(this.form_receive.value));
-        this.idMap.clear();
-        for (var i = 0; i < sessionStorage.length; i++) {
+        /*this.idMap.clear();
+        for (let i = 0; i < sessionStorage.length; i++) {
             this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
             // this.checkMap.set(Object.keys(sessionStorage)[i], false);
         }
+
         /* get object type => store object use its type-name and index
          * storageMap: count the same class-name object
          */
@@ -2087,7 +2153,7 @@ var GenerateFormComponent = /** @class */ (function () {
             var timeId = new Date().getTime();
             this.form_receive.value['@id'] = timeId.toString();
             // this.form_receive.value['@id'] = this.storageIndex.toString();
-            var temp = this.form_receive.value['@type'].concat(timeId.toString()); // use storage count as id postfix
+            var temp = this.form_receive.value['@type'].concat(timeId.toString()); // use timeID as id postfix
             // const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             var key = temp.split('.')[temp.split('.').length - 1];
             // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
