@@ -1,5 +1,5 @@
 <div>
-    <tree-root #tree [nodes]="nodes" [options]="options" [focused]="true" draggable>
+    <tree-root #tree [nodes]="nodes" [options]="options" [focused]="true" draggable (updateData)="onUpdateData(tree)">
         <ng-template #treeNodeTemplate let-node="node">
             <span *ngIf="node === editNode">{{ node.data.pureName }}
                 <input *ngIf=" (node.data.style!=='textarea') " type={{node.data.style}} autofocus [(ngModel)]="node.data.editVal" (change)="stopEdit()" (keyup.enter)="stopEdit()" (click)="preventDe($event)"/>
@@ -26,7 +26,7 @@
         <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
         <li (click)="pasteValue()"><a [style.opacity]="notRoot() && canPaste() && 1 || 0.3">Paste value</a></li>
         <li (click)="deleteValue(contextMenu.node)"><a [style.opacity]="hasVal() && notRoot() && 1 || 0.3">Delete value</a></li>
-        <li (click)="deleteObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Delete object</a></li>
+        <!--<li (click)="deleteObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Delete object</a></li>-->
     </ul>
 </div>
 <div class="menu" *ngIf="contextMenu && contextMenu.node.data.canEdit===false && contextMenu.node.parent.parent===null" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
@@ -40,7 +40,7 @@
         <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
         <li (click)="pasteValue()"><a [style.opacity]="notRoot() && canPaste() && 1 || 0.3">Paste value</a></li>
         <li (click)="deleteValue(contextMenu.node)"><a [style.opacity]="hasVal() && notRoot() && 1 || 0.3">Delete value</a></li>
-        <li (click)="deleteObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Delete object</a></li>
+        <!--<li (click)="deleteObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Delete object</a></li>-->
     </ul>
 </div>
 <script>

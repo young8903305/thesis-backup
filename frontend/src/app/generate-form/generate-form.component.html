@@ -1,21 +1,20 @@
 <h2 *ngIf = " className !== '' ">Form of {{ className }}</h2>
 
-<form [formGroup] = "form_receive" (ngSubmit) = "output2()">
+<form class="form-group" [formGroup]="form_receive" (ngSubmit)="save()">
     <ng-container *ngFor = "let key of MemberKey">
         <label *ngIf = "key!=='@id' && key!=='@type'">
             {{ key }} :
-            <input *ngIf = " MemberStyle[key] !== 'textarea' " type = {{MemberStyle[key]}} formControlName = {{key}} droppable (onDrop) = " onNodeDrop($event) ">
-            <textarea *ngIf = " MemberStyle[key] ==='textarea' " formControlName = {{key}} droppable (onDrop) = " onNodeDrop($event) "></textarea>
+            <input class="form-group"  *ngIf=" MemberStyle[key] !== 'textarea' " type={{MemberStyle[key]}}
+              formControlName={{key}} droppable (onDrop)=" onNodeDrop($event) ">
+            <textarea class="form-group"  *ngIf=" MemberStyle[key] ==='textarea' " formControlName={{key}} droppable
+              (onDrop)=" onNodeDrop($event) "></textarea>
         </label>
     </ng-container>
     <br>
-    <button type="submit" class="btn-dark col-md-8">Output object</button>
+    <button type="submit" class="btn-dark col-md-8" width="15em">Save</button>
 </form>
-<br>
-<br>
-<button (click)="save()" class="btn-dark col-md-8" width="15em">Save</button>
-<br>
 <button (click)="clearForm()" class="btn-dark col-md-8" width="15em">Clear Form</button>
+<br>
 <br>
 <!--
 <button (click)="outputAll()" class="btn-dark col-md-8" width="15em">Output All Object</button>

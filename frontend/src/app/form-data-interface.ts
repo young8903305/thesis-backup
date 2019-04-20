@@ -7,5 +7,9 @@ export abstract class FormDataInterface {
 
     abstract setFormValue(key: string, value: string): void;
 
-    abstract getFormValue(): Map<string, string>;   // it's worked
+    abstract getFormValue(): Map<string, string>;
+
+    abstract deleteFormValue(key: string): void;    // (discard)
+
+    abstract cleanFormValue(): void;
 }

@@ -59,4 +59,14 @@ export class FormDataService implements FormDataInterface {
         return this.formValueMap.getValue();
     }
 
+    // (discard)
+    deleteFormValue(key: string): void {
+        this.formValueMap.getValue().delete(key);
+        this.formValueMap.next(this.formValueMap.getValue());
+    }
+
+    cleanFormValue(): void {
+        this.formValueMap.getValue().clear();
+        this.formValueMap.next(this.formValueMap.getValue());
+    }
 }

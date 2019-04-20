@@ -27,8 +27,11 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     }
 
 
-    storageLength = 0;
-    nodes;
+    storageLength = 0;  // html use it
+
+    // store ng-tree nodes, must to be initialized as array, then can let expandAll() in UpdateData work after save json in sessionStorage
+    nodes = [];
+
     str;
     sessionStorageTemp;
     flagReceive;    // in form-data service, for resize the component if sessionStorage been motified
@@ -217,11 +220,11 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             console.log('key: ', key, '\nvalue: ', value);
                 let typeTemp: any = key.match(/\([^)]+\)/); // catch string in () include (), used in type check
                 // console.log('typeTemp: ', typeTemp);
-                if (value === null) {
+                if (value === null || value === undefined) {
                     value = '';
                 }
-                if (key.includes('[]') || key.includes('List') || value instanceof Array) { // array of object,  value instanceof Array
-                    // array of object
+                if (key.includes('[]') || key.includes('List') || value instanceof Array) { // array of object, value instanceof Array
+                    // temp use for store the object node
                     const temp = {
                         name: '',  // for view
                         pureName: key,
@@ -235,42 +238,53 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     let viewNameTemp = '';
                     let count = 1;
                     const length = value.length;
+                    // value represent object, make rootNode, the put into this children
                     for ( const obElement of value) {
-                        let aaa;
-                        let bbb: string;
-                        for (const k of Object.keys(obElement)) {
-                            if ( k === '@id') {
-                                aaa = obElement['@type'].concat(obElement['@id']);
-                                bbb = aaa.split('.')[aaa.split('.').length - 1];
-                            } else if (k === '@ref') {
-                                aaa = obElement['@type'].concat(obElement['@ref']);
-                                bbb = aaa.split('.')[aaa.split('.').length - 1];
+                        if (obElement instanceof Object) {  // array of object
+                            let aaa;
+                            let bbb: string;
+                            for (const k of Object.keys(obElement)) {
+                                if ( k === '@id') {
+                                    aaa = obElement['@type'].concat(obElement['@id']);
+                                    bbb = aaa.split('.')[aaa.split('.').length - 1];
+                                } else if (k === '@ref') {
+                                    aaa = obElement['@type'].concat(obElement['@ref']);
+                                    bbb = aaa.split('.')[aaa.split('.').length - 1];
+                                }
                             }
-                        }
-                        /*temp.children.push(
-                            this.makeRootNode(
-                                bbb, JSON.parse(sessionStorage.getItem(bbb.toString())), this.InputTypeMap[obElement['@type']]
-                            )
-                        );*/
-                        /*console.log('1');
-                        console.log('this.formValueMap: ', this.formValueMap);
-                        console.log('this.InputTypeMap[obElement[@type]]: ', this.InputTypeMap[obElement['@type']]);
-                        console.log('this.formValueMap.get(bbb)', this.formValueMap.get(bbb));*/
-                        temp.children.push(
-                            this.makeRootNode(
-                                bbb, obElement, JSON.parse(this.InputTypeMap[obElement['@type']]), JSON.parse(this.formValueMap.get(bbb))
-                            )
-                        );
-                        if (count !== length) {
-                            viewNameTemp = viewNameTemp + bbb + ', ';
-                            count++;
-                        } else {
-                            viewNameTemp = viewNameTemp + bbb;
+                            /*temp.children.push(
+                                this.makeRootNode(
+                                    bbb, JSON.parse(sessionStorage.getItem(bbb.toString())), this.InputTypeMap[obElement['@type']]
+                                )
+                            );*/
+                            /*console.log('1');
+                            console.log('this.formValueMap: ', this.formValueMap);
+                            console.log('this.InputTypeMap[obElement[@type]]: ', this.InputTypeMap[obElement['@type']]);*/
+                            console.log('this.formValueMap.get(bbb)', this.formValueMap.get(bbb));
+                            temp.children.push(
+                                this.makeRootNode(
+                                    bbb, obElement,
+                                    JSON.parse(this.InputTypeMap[obElement['@type']]), JSON.parse(this.formValueMap.get(bbb))
+                                )
+                            );
+                            if (count !== length) {
+                                viewNameTemp = viewNameTemp + bbb + ', ';
+                                count++;
+                            } else {
+                                viewNameTemp = viewNameTemp + bbb;
+                            }
+                        } else if (obElement instanceof Array) {
+                        } else {    // array of value
+                            if (count !== length) {
+                                viewNameTemp = viewNameTemp + obElement.toString() + ', ';
+                                count++;
+                            } else {
+                                viewNameTemp = viewNameTemp + obElement.toString();
+                            }
                         }
                     }
                     temp.name = key + ': ' + viewNameTemp;
                     temp.editVal = viewNameTemp;
-                    // array of value, need
                     // array of array, need
                     reArray.push(
                         temp
@@ -288,20 +302,20 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                             canEdit: true,
                             children: []
                         };
-                        console.log('value: ', value);
-                        console.log('value[@type]: ', value['@type'], '\nvalue[@id]: ', value['@id'], '\nvalue[@ref]: ', value['@ref']);
+                        // console.log('value: ', value);
+                        // console.log('value[@type]: ', value['@type'], '\nvalue[@id]: ', value['@id'], '\nvalue[@ref]: ', value['@ref']);
                         const childType = this.InputTypeMap[value['@type']];
-                        console.log('childType: ', childType);
+                        // console.log('childType: ', childType);
                         let aaa;
                         if (value['@id'] === undefined) {
                             aaa = value['@type'].concat(value['@ref']);
-                            console.log('ref');
+                            // console.log('ref');
                         } else {
                             aaa = value['@type'].concat(value['@id']);
-                            console.log('id');
+                            // console.log('id');
                         }
                         const bbb = aaa.split('.')[aaa.split('.').length - 1];
-                        console.log('bbb: ', bbb);
+                        // console.log('bbb: ', bbb);
 
                         temp.name = key + ': ' + bbb;
                         temp.editVal = bbb;
@@ -310,7 +324,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                         temp.children.push( this.makeRootNode(bbb, value, JSON.parse(childType), JSON.parse(this.formValueMap.get(bbb))) );
                         reArray.push(temp);
                     } else {    // just value
-                        if (typeTemp === null) {
+                        if (typeTemp === null) {    // no value
                             typeTemp = 'null';
                             reArray.push(
                                 {
@@ -342,13 +356,14 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         return reArray;
     }
 
-    // nodeName: key in sessionStorage, nodeData: object of sessionStorage, childInputType: node's child Input type
+    // nodeName: key in sessionStorage\ nodeData: object of sessionStorage\ childInputType: node's child Input type
     makeRootNode (nodeName: string, nodeData: Object, childInputType: Object, rootFormValue: string) {
         const node = {    // root node
             name: '',
             pureName: '',
             // val: nodeData,
-            val: rootFormValue,
+            // val: rootFormValue,
+            val: JSON.parse(sessionStorage.getItem(nodeName)),
             editVal: '',
             formVal: rootFormValue,
             style: '',
@@ -421,7 +436,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     onEditClick() {
         /*this.sessionStorageTemp = a;
         this.data.editSessionStorage(JSON.parse(this.sessionStorageTemp.toString()));*/
-        console.log('edit Object: ', a);
+        // console.log('edit Object: ', a);
         this.formDataService.editSessionStorage(a);
     }
 
@@ -432,7 +447,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     // copy the contextNode's editVal
     copyValue = () => {
         if (this.isRoot()) {    // for root node, copy its name to represent the whole object
-            console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
+            // console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
             document.addEventListener('copy', (e: ClipboardEvent) => {
                 e.clipboardData.setData('text/plain', (this.contextMenu.node.data.name));
                 e.preventDefault();
@@ -492,9 +507,8 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         const newKeyName = this.contextMenu.node.data.type + timeId;
         sessionStorage.setItem(newKeyName, JSON.stringify(temp));  // need to set an unique seiral id
         const itemCopyFormValue = JSON.parse(this.formValueMap.get(this.contextMenu.node.data.pureName));
-        console.log('itemCopyFormValue: ', itemCopyFormValue);
+        // console.log('itemCopyFormValue: ', itemCopyFormValue);
         itemCopyFormValue['@id'] = timeId.toString();
-        // this.formValueMap.set(this.contextMenu.node.data.name + '123', itemCopyFormValue);
         this.formDataInterface.setFormValue(newKeyName, JSON.stringify(itemCopyFormValue));
         this.closeMenu();
         this.flagReceive = true;
@@ -514,7 +528,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         return true;
     }
 
-    // use to check show 'Delete Value', delete editValue, so check the editVal
+    // to check show 'Delete Value', delete editValue, so check the editVal
     hasVal = () => {
         if (this.contextMenu.node.data.editVal === '') {
             return false;
@@ -523,8 +537,14 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         }
     }
 
+    // (discard)
     deleteObject = (node) => {
-        sessionStorage.removeItem(node.data.name);
+        sessionStorage.removeItem(node.data.pureName);
+        this.formDataInterface.deleteFormValue(node.data.pureName);
+        console.log('this.formValueMap: ', this.formValueMap);
+
+        // make tree to reload
+        this.flagReceive = true;
         this.closeMenu();
     }
 
@@ -606,29 +626,61 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             const [sourceName, sourcePureName, sourceVal] = Object.entries(this.sourceNode.parent.data.children[1]);
             if (val[1].toString() === sourceVal[1].toString()) {
                 if (this.contextMenu.node.data.pureName === this.sourceNode.data.pureName) {
-                    this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
+                    // this.contextMenu.node.data.val = this.sourceNode.data.val;  // node's val
+                    this.contextMenu.node.parent.data.formVal[this.contextMenu.node.data.pureName] = this.sourceNode.data.editVal;
+                    // this.contextMenu.node.parent.data.val[this.contextMenu.node.data.pureName] = this.sourceNode.data.val;
+                    console.log('this.contextMenu.node.parent.data.formVal: ', this.contextMenu.node.parent.data.formVal);
+                    this.formDataInterface.setFormValue(this.contextMenu.node.parent.data.pureName,
+                        JSON.stringify(this.contextMenu.node.parent.data.formVal));
                     // node's view
-                    this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
+                    // this.contextMenu.node.data.name = this.contextMenu.node.data.pureName + ': ' + this.contextMenu.node.data.val;
                     const temp = {};
-                    // console.log('sessionStorage.getItem(this.contextMenu.node.parent.data.name: ',
-                    // sessionStorage.getItem(this.contextMenu.node.parent.data.name));
                     for ( let [key, value] of Object.entries(
-                        JSON.parse(sessionStorage.getItem(this.contextMenu.node.parent.data.name)))) {
+                        JSON.parse(sessionStorage.getItem(this.contextMenu.node.parent.data.pureName)))) {
                         if (key === this.contextMenu.node.data.pureName) {
                             value = this.sourceNode.data.val;
                         }
                         temp[key] = value;
                     }
-                    sessionStorage.setItem(this.contextMenu.node.parent.data.name, JSON.stringify(temp));
+                    sessionStorage.setItem(this.contextMenu.node.parent.data.pureName, JSON.stringify(temp));
                     this.doCut = false;
                     this.sourceNode = null;
                 } else {
-                    alert('not the same attribute');
+                    alert('same object\n but not the same attribute');
                 }
             } else {
                 alert('not the same type object');
             }
         }
+
+
+        let virtualRoot = this.contextMenu.node.parent;
+        while (virtualRoot.parent !== null) {
+            virtualRoot = virtualRoot.parent;
+        }
+
+        for (const element of virtualRoot.data.children) {
+            if (element.pureName === this.contextMenu.node.parent.data.pureName) {
+                element.formVal = this.contextMenu.node.parent.data.formVal;
+            }
+            this.checkMap.clear();
+            const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+            let formValueTemp = this.CheckStrToNum(element.formVal);
+            formValueTemp = this.jsogGen(formValueTemp, typeTemp);
+            console.log('formValueTemp: ', formValueTemp);
+            sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
+        }
+
+        // make tree to reload
+        this.flagReceive = true;
+
+        /*
+         * change log:
+         * parse into jsog when store.
+         * every ob contain other ob, need to check whether it had been used or not, then clear the map.
+        */
+        this.checkMap.clear();
+
         this.closeMenu();
     }
 
@@ -650,9 +702,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             JSON.parse(sessionStorage.getItem(this.editNode.parent.data.pureName)))) {
             if (key === this.editNode.data.pureName) {
                 // edit for view & formVal
-                this.editNode.data.name = this.editNode.data.pureName + ': ' + this.editNode.data.editVal;
+                this.editNode.data.name = this.editNode.data.pureName + ': ' + this.editNode.data.editVal.toString();
                 this.editNode.data.val = this.editNode.data.editVal;
-                this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal;
+                this.editNode.parent.data.formVal[this.editNode.data.pureName] = this.editNode.data.editVal.toString();
                 console.log('this.editNode.parent.data.formVal: ', this.editNode.parent.data.formVal);
                 // this.formValueMap.set(this.editNode.parent.data.pureName.toString(), JSON.stringify(this.editNode.parent.data.formVal));
                 this.formDataInterface.setFormValue(this.editNode.parent.data.pureName,
@@ -901,7 +953,17 @@ export class AngularTreeComponent implements OnInit, DoCheck {
 
     clearSession() {
         sessionStorage.clear();
+        this.formDataInterface.cleanFormValue();
         this.flagReceive = true;
+        console.log('this.formValueMap: ', this.formValueMap);
     }
 
+    onUpdateData(treeComponent: TreeComponent) {
+        /*setTimeout(() => {
+            treeComponent.treeModel.expandAll();
+        }, 1000);*/
+
+            treeComponent.treeModel.expandAll();
+
+    }
 }

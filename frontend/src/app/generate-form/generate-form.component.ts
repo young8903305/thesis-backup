@@ -149,7 +149,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                         if (this.checkMap.has(tempSingleVal[i])) { // used, add as @ref
                             const temp = {};
                             const refType = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@type'];
-                            temp['@ref'] = this.idMap.get(tempSingleVal[i]);
+                            // temp['@ref'] = this.idMap.get(tempSingleVal[i]);
+                            temp['@ref'] = JSON.parse(sessionStorage.getItem(tempSingleVal[i]))['@id'];
                             temp['@type'] = refType;
                             tempListVal[i] = temp;
                             // console.log('tempListVal[i]: ', tempListVal[i]);
@@ -198,7 +199,8 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                     if (this.checkMap.has(StrTempVal)) { // used, add as @ref
                         const temp = {};
                         const refType = JSON.parse(sessionStorage.getItem(StrTempVal))['@type'];
-                        temp['@ref'] = this.idMap.get(StrTempVal);
+                        // temp['@ref'] = this.idMap.get(StrTempVal);
+                        temp['@ref'] = JSON.parse(sessionStorage.getItem(StrTempVal))['@id'];
                         temp['@type'] = refType;
                         reVal = temp;
                     } else {    // haven't used it yet, set checkMap to true, and write it
@@ -278,7 +280,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
     save() {
         console.log('JSON.stringify(this.form_receive.value): ', JSON.stringify(this.form_receive.value));
 
-        this.idMap.clear();
+        /*this.idMap.clear();
         for (let i = 0; i < sessionStorage.length; i++) {
             this.idMap.set(Object.keys(sessionStorage)[i], JSON.parse(Object.values(sessionStorage)[i])['@id']);
             // this.checkMap.set(Object.keys(sessionStorage)[i], false);
@@ -304,7 +306,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
             this.form_receive.value['@id'] = timeId.toString();
             // this.form_receive.value['@id'] = this.storageIndex.toString();
 
-            const temp = this.form_receive.value['@type'].concat(timeId.toString());    // use storage count as id postfix
+            const temp = this.form_receive.value['@type'].concat(timeId.toString());    // use timeID as id postfix
             // const temp = this.form_receive.value['@type'].concat(this.storageIndex);    // use storage count as id postfix
             const key = temp.split('.')[temp.split('.').length - 1];
             // this.formValueMap.set(key, JSON.stringify(this.form_receive.value));
