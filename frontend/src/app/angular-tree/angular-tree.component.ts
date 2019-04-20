@@ -141,6 +141,11 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 },
                 click: (treeModel: TreeModel, treeNode: TreeNode, e: MouseEvent) => {
                     e.preventDefault();
+                    if (treeNode.isCollapsed) {
+                        treeNode.expand();
+                    } else {
+                        treeNode.collapse();
+                    }
                     if ((treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') || treeNode.isRoot) {
                         TREE_ACTIONS.TOGGLE_ACTIVE(treeModel, treeNode, e);
                         console.log('treeNode: ', treeNode);
@@ -584,31 +589,31 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         }
         // console.log('this.javaStorageTypeMap: ', this.javaStorageTypeMap);
         for (let i = 1; i <= virtualRoot.data.children.length; i++) {
-        for (const element of virtualRoot.data.children) {
-            if (element.pureName.includes(i.toString())) {
-            /*console.log('JSON.parse(this.InputTypeMap[element.formVal[@type]]): ',
-            JSON.parse(this.InputTypeMap[element.formVal['@type']]));*/
-            if (element.pureName === node.parent.data.pureName) {
-                element.formVal = node.parent.data.formVal;
-            } /*else {
-                console.log('element.formVal: ', element.formVal);
-                console.log('JSON.parse(this.javaStorageTypeMap[element.formVal[@type]]): ',
-                    JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]));
-                const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
-                let formValueTemp = this.CheckStrToNum(element.formVal);
-                console.log('ValueTemp: ', formValueTemp);
-                formValueTemp = this.jsogGen(formValueTemp, typeTemp);
-                console.log('ValueTemp: ', formValueTemp);
-                sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
-            }*/
-            console.log('element.pureName: ', element.pureName);
-            const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
-            let formValueTemp = this.CheckStrToNum(element.formVal);
-            formValueTemp = this.jsogGen(formValueTemp, typeTemp);
-            sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
+            for (const element of virtualRoot.data.children) {
+                if (element.pureName.includes(i.toString())) {
+                    /*console.log('JSON.parse(this.InputTypeMap[element.formVal[@type]]): ',
+                    JSON.parse(this.InputTypeMap[element.formVal['@type']]));*/
+                    if (element.pureName === node.parent.data.pureName) {
+                        element.formVal = node.parent.data.formVal;
+                    } /*else {
+                        console.log('element.formVal: ', element.formVal);
+                        console.log('JSON.parse(this.javaStorageTypeMap[element.formVal[@type]]): ',
+                            JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]));
+                        const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+                        let formValueTemp = this.CheckStrToNum(element.formVal);
+                        console.log('ValueTemp: ', formValueTemp);
+                        formValueTemp = this.jsogGen(formValueTemp, typeTemp);
+                        console.log('ValueTemp: ', formValueTemp);
+                        sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
+                    }*/
+                    console.log('element.pureName: ', element.pureName);
+                    const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+                    let formValueTemp = this.CheckStrToNum(element.formVal);
+                    formValueTemp = this.jsogGen(formValueTemp, typeTemp);
+                    sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
+                }
+            }
         }
-        }
-    }
 
         // make tree to reload
         this.flagReceive = true;
@@ -940,6 +945,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             console.log('formValueMap: ', response);
         });
 
+        setTimeout( () => {}, 1000);
 
         const all = [];
         for (const value of Object.values(sessionStorage)) {
@@ -959,11 +965,6 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     }
 
     onUpdateData(treeComponent: TreeComponent) {
-        /*setTimeout(() => {
-            treeComponent.treeModel.expandAll();
-        }, 1000);*/
-
-            treeComponent.treeModel.expandAll();
-
+        treeComponent.treeModel.expandAll();
     }
 }

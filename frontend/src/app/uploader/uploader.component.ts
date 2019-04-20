@@ -39,7 +39,7 @@ export class UploaderComponent implements OnInit {
         this.fileList = fileList;
     }
 
-    upload() {
+    open() {
         console.log('fileList', this.fileList);
         this.fileToUpload = this.fileList[0];
         // console.log('this.fileToUpload.name ', this.fileToUpload.name);

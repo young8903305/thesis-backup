@@ -173,6 +173,12 @@ var AngularTreeComponent = /** @class */ (function () {
                     },
                     click: function (treeModel, treeNode, e) {
                         e.preventDefault();
+                        if (treeNode.isCollapsed) {
+                            treeNode.expand();
+                        }
+                        else {
+                            treeNode.collapse();
+                        }
                         if ((treeNode.data.pureName !== '@id' && treeNode.data.pureName !== '@type') || treeNode.isRoot) {
                             angular_tree_component__WEBPACK_IMPORTED_MODULE_2__["TREE_ACTIONS"].TOGGLE_ACTIVE(treeModel, treeNode, e);
                             console.log('treeNode: ', treeNode);
@@ -950,6 +956,7 @@ var AngularTreeComponent = /** @class */ (function () {
         this.ngTreeService.outputFormValueMap(JSON.stringify(mapToJson)).subscribe(function (response) {
             console.log('formValueMap: ', response);
         });
+        setTimeout(function () { }, 1000);
         var all = [];
         for (var _i = 0, _a = Object.values(sessionStorage); _i < _a.length; _i++) {
             var value = _a[_i];
@@ -967,9 +974,6 @@ var AngularTreeComponent = /** @class */ (function () {
         console.log('this.formValueMap: ', this.formValueMap);
     };
     AngularTreeComponent.prototype.onUpdateData = function (treeComponent) {
-        /*setTimeout(() => {
-            treeComponent.treeModel.expandAll();
-        }, 1000);*/
         treeComponent.treeModel.expandAll();
     };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -2418,7 +2422,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"upload()\">\n    <label>\n        choose a json file :\n        <input type=\"file\" size=\"80\" accept=\".json\" />\n    </label>\n    <div class=\"mt-3\">\n        <button class=\"btn btn-info\" type=\"submit\">upload</button>\n    </div>\n</form>\n<br>\n<!--\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n-->"
+module.exports = "<!--<form [formGroup]=\"uploaderForm\" (change)=\"ubmit( $event.target.files )\">\n    <label>\n      choose json file :\n        <input type=\"file\" size=\"60\" accept=\".json\">\n    </label>\n    <button type=\"submit\">Submit and Store</button>\n</form>-->\n\n\n<form [formGroup]=\"uploader\" (change)=\"fileChange( $event.target.files )\" (ngSubmit)=\"open()\">\n    <label>\n        choose a json file :\n        <input type=\"file\" size=\"80\" accept=\".json\" />\n    </label>\n    <div class=\"mt-3\">\n        <button class=\"btn btn-info\" type=\"submit\">Open</button>\n    </div>\n</form>\n<br>\n<!--\n<app-generate-form [generate_form_receive]=\"fileForm\"></app-generate-form>\n-->"
 
 /***/ }),
 
@@ -2465,7 +2469,7 @@ var UploaderComponent = /** @class */ (function () {
     UploaderComponent.prototype.fileChange = function (fileList) {
         this.fileList = fileList;
     };
-    UploaderComponent.prototype.upload = function () {
+    UploaderComponent.prototype.open = function () {
         var _this = this;
         console.log('fileList', this.fileList);
         this.fileToUpload = this.fileList[0];
