@@ -455,7 +455,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         if (this.isRoot()) {    // for root node, copy its name to represent the whole object
             // console.log('this.contextMenu.node.data.name ', this.contextMenu.node.data.name);
             document.addEventListener('copy', (e: ClipboardEvent) => {
-                e.clipboardData.setData('text/plain', (this.contextMenu.node.data.name));
+                e.clipboardData.setData('text/plain', (this.contextMenu.node.data.pureName));
                 e.preventDefault();
                 document.removeEventListener('copy', null);
             });
