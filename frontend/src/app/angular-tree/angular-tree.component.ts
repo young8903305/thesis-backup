@@ -49,6 +49,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     idMap = new Map<string, string>();      // <sessionStorage-key, @id>: store id for @ref-using
     isJsogMap = new Map<string, boolean>(); // <session-key, isJsog>: for jsogForSessionStorage, if it already been jsog or not
     editSession;
+    deletedList = [];   // store deleted object
 
 
     /*nodes = [
@@ -548,6 +549,24 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.formDataInterface.deleteFormValue(node.data.pureName);
         console.log('this.formValueMap: ', this.formValueMap);
 
+        this.deletedList.push(node.data.pureName);
+        let virtualRoot = node.parent;
+        while (virtualRoot.parent !== null) {
+            virtualRoot = virtualRoot.parent;
+        }
+
+        for (const element of virtualRoot.data.children) {
+            if (element.pureName === node.parent.data.pureName) {
+                element.formVal = node.parent.data.formVal;
+            }
+            this.checkMap.clear();
+            const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+            let formValueTemp = this.CheckStrToNum(element.formVal);
+            formValueTemp = this.jsogGen(formValueTemp, typeTemp);
+            console.log('formValueTemp: ', formValueTemp);
+            sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
+        }
+
         // make tree to reload
         this.flagReceive = true;
         this.closeMenu();
@@ -573,7 +592,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
             }
             temp[key] = value;
         }
-        // sessionStorage.setItem(node.parent.data.name, JSON.stringify(temp));
+        sessionStorage.setItem(node.parent.data.pureName, JSON.stringify(temp));
         /*node.data.val = '';
         node.data.editVal = '';
         node.data.name = node.data.pureName + ': ' + node.data.val;
@@ -581,43 +600,30 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         node.parent.data.val[node.data.pureName] = '';
         node.parent.data.formVal[node.data.pureName] = '';*/
 
-        this.formValueMap.set(node.parent.data.pureName, JSON.stringify(node.parent.data.formVal));
+        // this.formValueMap.set(node.parent.data.pureName, JSON.stringify(node.parent.data.formVal));
 
-        let virtualRoot = node.parent;
+        let virtualRoot = this.contextMenu.node.parent;
         while (virtualRoot.parent !== null) {
             virtualRoot = virtualRoot.parent;
         }
-        // console.log('this.javaStorageTypeMap: ', this.javaStorageTypeMap);
-        for (let i = 1; i <= virtualRoot.data.children.length; i++) {
-            for (const element of virtualRoot.data.children) {
-                if (element.pureName.includes(i.toString())) {
-                    /*console.log('JSON.parse(this.InputTypeMap[element.formVal[@type]]): ',
-                    JSON.parse(this.InputTypeMap[element.formVal['@type']]));*/
-                    if (element.pureName === node.parent.data.pureName) {
-                        element.formVal = node.parent.data.formVal;
-                    } /*else {
-                        console.log('element.formVal: ', element.formVal);
-                        console.log('JSON.parse(this.javaStorageTypeMap[element.formVal[@type]]): ',
-                            JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]));
-                        const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
-                        let formValueTemp = this.CheckStrToNum(element.formVal);
-                        console.log('ValueTemp: ', formValueTemp);
-                        formValueTemp = this.jsogGen(formValueTemp, typeTemp);
-                        console.log('ValueTemp: ', formValueTemp);
-                        sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
-                    }*/
-                    console.log('element.pureName: ', element.pureName);
-                    const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
-                    let formValueTemp = this.CheckStrToNum(element.formVal);
-                    formValueTemp = this.jsogGen(formValueTemp, typeTemp);
-                    sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
-                }
+
+        for (const element of virtualRoot.data.children) {
+            if (element.pureName === this.contextMenu.node.parent.data.pureName) {
+                element.formVal = this.contextMenu.node.parent.data.formVal;
             }
+            this.checkMap.clear();
+            const typeTemp = JSON.parse(this.javaStorageTypeMap[element.formVal['@type']]);
+            let formValueTemp = this.CheckStrToNum(element.formVal);
+            formValueTemp = this.jsogGen(formValueTemp, typeTemp);
+            console.log('formValueTemp: ', formValueTemp);
+            sessionStorage.setItem(element.pureName, JSON.stringify(formValueTemp));
         }
 
         // make tree to reload
         this.flagReceive = true;
         this.closeMenu();
+
+        this.checkMap.clear();
     }
 
     // replace the value in sessionStorage directly, edit the name attr of ng-tree directly
@@ -811,6 +817,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         const tempKey = Object.keys(jsonInput); //  age, children
         const tempVal = Object.values(jsonInput);  // 1, [p1, p2], [1, 2], ["1", "2"]
         const tempType = typeCheck[tempKey.toString()]; // long, list PersonDemo, list int, list string
+        console.log('tempKey: ', tempKey, '\ntempType: ', tempType);
 
         if (tempVal.toString() === '') {   // no value, put null
             return null;
@@ -834,6 +841,9 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     return tempListVal; // list have nothing, return empty list
                 }
                 for (let i = 0; i < tempSingleVal.length; i++) {
+                    if (sessionStorage.getItem(tempSingleVal[i]) === null && this.deletedList.includes(tempSingleVal[i])) {
+                        tempListVal[i] = null;
+                    }
                     if (sessionStorage.getItem(tempSingleVal[i]) !== null) {   // sessionStorage has it. [p1, p2] list persondemo
                         if (this.checkMap.has(tempSingleVal[i])) { // used, add as @ref
                             const temp = {};
@@ -879,6 +889,10 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                 return tempListVal;
             } else {    // string represent object
                 const StrTempVal = tempVal.toString();
+                // sessionStorage do not have it
+                if (sessionStorage.getItem(StrTempVal) === null && this.deletedList.includes(StrTempVal)) {
+                    return null;
+                }
                 if (sessionStorage.getItem(StrTempVal) !== null) {   // sessionStorage has it.
                     let reVal: any;
                     if (this.checkMap.has(StrTempVal)) { // used, add as @ref
@@ -898,7 +912,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
                     }
                     // console.log('reVal: ', reVal);
                     return reVal;
-                } else {
+                } else {    // just value
                     return StrTempVal;
                 }
             }
