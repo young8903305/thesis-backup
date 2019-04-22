@@ -987,6 +987,17 @@ var AngularTreeComponent = /** @class */ (function () {
     AngularTreeComponent.prototype.onUpdateData = function (treeComponent) {
         treeComponent.treeModel.expandAll();
     };
+    AngularTreeComponent.prototype.stopServer = function () {
+        var xhttp = new XMLHttpRequest();
+        // let stopResponse;
+        xhttp.onreadystatechange = function () {
+            /*if (this.readyState === 4 && this.status === 200) {
+                stopResponse = xhttp.responseText;
+            }*/
+        };
+        xhttp.open('POST', '/ngStopServer', true);
+        xhttp.send('close');
+    };
     AngularTreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-angular-tree',

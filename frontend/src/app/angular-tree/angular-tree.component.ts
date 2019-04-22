@@ -981,4 +981,16 @@ export class AngularTreeComponent implements OnInit, DoCheck {
     onUpdateData(treeComponent: TreeComponent) {
         treeComponent.treeModel.expandAll();
     }
+
+    stopServer() {
+        const xhttp = new XMLHttpRequest();
+        // let stopResponse;
+        xhttp.onreadystatechange = function () {
+            /*if (this.readyState === 4 && this.status === 200) {
+                stopResponse = xhttp.responseText;
+            }*/
+        };
+        xhttp.open('POST', '/ngStopServer', true);
+        xhttp.send('close');
+    }
 }

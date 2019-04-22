@@ -1636,6 +1636,35 @@ public class Main {
 		}
 	}
 	
+	public static class ngStopServer extends HttpServlet {
+		
+		public void init() throws ServletException{}
+		
+		@Override
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			StringBuilder sb = new StringBuilder();
+		    BufferedReader reader = request.getReader();
+		    try {
+		        String line;
+		        while ((line = reader.readLine()) != null) {
+		            sb.append(line).append('\n');
+		        }
+		    } finally {
+		        reader.close();
+		    }
+		    String stopMessage = sb.toString();
+		    
+		    try {
+	    		if (stopMessage.contains("close")) {
+	    			server.stop();
+	    		}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	// use class name, get class member and send 
 	public static class ngNameCreateForm extends HttpServlet {
 		
@@ -1910,7 +1939,7 @@ public class Main {
 	//private static final Logger LOG = Logger.getLogger(Main.class.getName());
 	
 	private int port;
-	private Server server;
+	private static Server server;
 
 	public Main(int port) {
 		this.port = port;
@@ -1968,6 +1997,8 @@ public class Main {
 		servletContextHandler.addServlet(ngJavaStorageType.class, "/ngJavaStorageType");
 		servletContextHandler.addServlet(ngOutputAll.class, "/ngOutputAll");
 		servletContextHandler.addServlet(ngOutputFormValueMap.class, "/ngOutputFormValueMap");
+		servletContextHandler.addServlet(ngStopServer.class, "/ngStopServer");
+		
 		
 		
 		ServletHolder fileUploadServletHolder = new ServletHolder(new ngUploader());
@@ -2002,6 +2033,7 @@ public class Main {
 
 		// Start Server
 		server.start();
+		server.join();
 		/*Desktop browser = Desktop.getDesktop();
 		browser.browse(new URI("http://localhost:8080/ng"));*/
 
