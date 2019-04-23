@@ -19,12 +19,12 @@ public class SimplePerson {
 			name = "Spouse")
 	private SimplePerson spouse;
 	
-	public void setName(String person_name) {
-		this.person_name = person_name;
+	public String getPerson_name() {
+		return person_name;
 	}
-	
-	public String getName() {
-		return this.person_name;
+
+	public void setPerson_name(String person_name) {
+		this.person_name = person_name;
 	}
 	
 	public void setSpouse(SimplePerson spouse) {
