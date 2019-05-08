@@ -502,7 +502,7 @@ export class AngularTreeComponent implements OnInit, DoCheck {
         this.doCut = false;
         const itemCopy = sessionStorage.getItem(this.contextMenu.node.data.pureName);
         const itemCopyJsog = JSON.parse(itemCopy);
-        const timeId = new Date().getTime();
+        const timeId = Math.floor(new Date().getTime() / 1000);
         const temp = {};
         for (let [k, v] of Object.entries(itemCopyJsog )) {
             if (k === '@id') {

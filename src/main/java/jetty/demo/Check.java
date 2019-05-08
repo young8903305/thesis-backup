@@ -149,7 +149,7 @@ public class Check {
 		// System.out.println("ff.getFather().getEmail(): " + ff.getFather().getEmail());
 		
 		//java -> jsog /////////////////////////////////////////////////////////////
-		Car c = new Car();
+		/*Car c = new Car();
 		CarTires ct = new CarTires();
 		CarTiresBrand ctb = new CarTiresBrand();
 		ctb.setCountry("Taiwan");
@@ -168,7 +168,7 @@ public class Check {
 	    byte[] strToBytes = car.getBytes();
 	    outputStream.write(strToBytes);
 	    outputStream.close();
-	    System.out.println("done.");
+	    System.out.println("done.");*/
 		///////////////////////////////////////////////////////////////////////
 	    
 		String[] a = new String[10];
@@ -180,12 +180,12 @@ public class Check {
 		System.out.println(d.getClass().getSimpleName() + " " + c.getClass().getTypeName().getClass().getSimpleName());*/
 		
 		/////////////////
-		String car_jsog = "{\"@id\":\"9\",\"@type\":\"jetty.demo.Car\",\"tires\":[{\"@id\":\"5\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"1\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"6\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"2\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"7\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"3\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17},{\"@id\":\"8\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"4\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":null},\"name\":\"Michelin\",\"size\":17}],\"carName\":\"KIA\"}";
+		String car_jsog = "{\"@id\":\"1557042925845\",\"@type\":\"jetty.demo.Car\",\"tires\":[{\"@id\":\"1557042891532\",\"@type\":\"jetty.demo.CarTires\",\"brand\": {\"@id\":\"1557042886548\",\"@type\":\"jetty.demo.CarTiresBrand\",\"country\":\"France\",\"color\":\"#000000\"},\"name\":\"Michelin\",\"size\":17},{\"@ref\":\"1557042891532\",\"@type\":\"jetty.demo.CarTires\"}],\"carName\":\"KIA\"}";
 		Car car_check = mapper.readerFor(Car.class).readValue(car_jsog);
 		
 		CarTires[] tires_check = car_check.getTires();
 		for (int i = 0; i < tires_check.length; i++) {
-			// System.out.println(tires_check[i].getBrand().getCountry());
+			System.out.println(tires_check[i].getBrand().getCountry());
 		}
 		///////////////////
         
@@ -196,5 +196,14 @@ public class Check {
     	
     	JsonNode jsogAllObject = mapper.readTree(allObject);
     	allObjectOutputChangeName(jsogAllObject);
+    	
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	CarTiresBrand brand = new CarTiresBrand();
+    	brand.setColor("#ffffff");
+    	brand.setCountry("Taiwan");
+    	objectMapper.writeValueAsString(brand);
+    	
+    	System.out.println(objectMapper.writeValueAsString(brand));
+    	
 	}
 }

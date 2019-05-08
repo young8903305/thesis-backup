@@ -40,7 +40,7 @@ import java.util.Map;
  *
  * @version $Id: Options.java 1754332 2016-07-27 18:47:57Z britter $
  */
-public class CLIOptions implements Serializable
+public class Options implements Serializable
 {
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -65,7 +65,7 @@ public class CLIOptions implements Serializable
      * @param group the OptionGroup that is to be added
      * @return the resulting Options instance
      */
-    public CLIOptions addOptionGroup(OptionGroup group)
+    public Options addOptionGroup(OptionGroup group)
     {
         if (group.isRequired())
         {
@@ -108,7 +108,7 @@ public class CLIOptions implements Serializable
      * @return the resulting Options instance
      * @since 1.3
      */
-    public CLIOptions addOption(String opt, String description)
+    public Options addOption(String opt, String description)
     {
         addOption(opt, null, false, description);
         return this;
@@ -126,7 +126,7 @@ public class CLIOptions implements Serializable
      * @param description Self-documenting description
      * @return the resulting Options instance
      */
-    public CLIOptions addOption(String opt, boolean hasArg, String description)
+    public Options addOption(String opt, boolean hasArg, String description)
     {
         addOption(opt, null, hasArg, description);
         return this;
@@ -145,7 +145,7 @@ public class CLIOptions implements Serializable
      * @param description Self-documenting description
      * @return the resulting Options instance
      */
-    public CLIOptions addOption(String opt, String longOpt, boolean hasArg, String description)
+    public Options addOption(String opt, String longOpt, boolean hasArg, String description)
     {
         addOption(new Option(opt, longOpt, hasArg, description));
         return this;
@@ -173,7 +173,7 @@ public class CLIOptions implements Serializable
      * @return the resulting Options instance
      * @since 1.4
      */
-    public CLIOptions addRequiredOption(String opt, String longOpt, boolean hasArg, String description)
+    public Options addRequiredOption(String opt, String longOpt, boolean hasArg, String description)
     {
         Option option = new Option(opt, longOpt, hasArg, description);
         option.setRequired(true);
@@ -187,7 +187,7 @@ public class CLIOptions implements Serializable
      * @param opt the option that is to be added
      * @return the resulting Options instance
      */
-    public CLIOptions addOption(Option opt)
+    public Options addOption(Option opt)
     {
         String key = opt.getKey();
 
@@ -295,10 +295,10 @@ public class CLIOptions implements Serializable
     }
 
     /**
-     * Returns whether the named {@link Option} is a member of this {@link CLIOptions}.
+     * Returns whether the named {@link Option} is a member of this {@link Options}.
      *
      * @param opt short or long name of the {@link Option}
-     * @return true if the named {@link Option} is a member of this {@link CLIOptions}
+     * @return true if the named {@link Option} is a member of this {@link Options}
      */
     public boolean hasOption(String opt)
     {
@@ -308,10 +308,10 @@ public class CLIOptions implements Serializable
     }
 
     /**
-     * Returns whether the named {@link Option} is a member of this {@link CLIOptions}.
+     * Returns whether the named {@link Option} is a member of this {@link Options}.
      *
      * @param opt long name of the {@link Option}
-     * @return true if the named {@link Option} is a member of this {@link CLIOptions}
+     * @return true if the named {@link Option} is a member of this {@link Options}
      * @since 1.3
      */
     public boolean hasLongOption(String opt)
@@ -322,10 +322,10 @@ public class CLIOptions implements Serializable
     }
 
     /**
-     * Returns whether the named {@link Option} is a member of this {@link CLIOptions}.
+     * Returns whether the named {@link Option} is a member of this {@link Options}.
      *
      * @param opt short name of the {@link Option}
-     * @return true if the named {@link Option} is a member of this {@link CLIOptions}
+     * @return true if the named {@link Option} is a member of this {@link Options}
      * @since 1.3
      */
     public boolean hasShortOption(String opt)

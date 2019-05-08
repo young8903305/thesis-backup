@@ -20,7 +20,7 @@
     <div *ngIf="isRoot()">Menu for {{ contextMenu.node.data.name }}</div>
     <hr>
     <ul>
-        <li (click)="outputObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Output object</a></li>
+        <li (click)="outputObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Store object</a></li>
         <li (click)="editValue()"><a [style.opacity]="notRoot() && 1 || 0.3">Edit value</a></li>
         <li (click)="copyValue()"><a [style.opacity]="hasVal() && 1 || 0.3">Copy value</a></li>
         <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>
@@ -36,7 +36,7 @@
     <div *ngIf="isRoot()">Menu for {{ contextMenu.node.data.name }}</div>
     <hr>
     <ul>
-        <li (click)="outputObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Output object</a></li>
+        <li (click)="outputObject(contextMenu.node)"><a [style.opacity]="isRoot() && 1 || 0.3">Store object</a></li>
         <li (click)="editValue()"><a [style.opacity]="notRoot() && 1 || 0.3">Edit value</a></li>
         <li (click)="copyValue()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy value</a></li>
         <li (click)="copyObj()"><a [style.opacity]="isRoot() && 1 || 0.3">Copy object</a></li>

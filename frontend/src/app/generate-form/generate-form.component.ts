@@ -302,7 +302,7 @@ export class GenerateFormComponent implements OnInit, OnChanges {
                 this.storageMap.set(JSON.stringify(this.form_receive.value['@type']), 1);
                 // this.form_receive.value['@id'] = 1;
             }*/
-            const timeId = new Date().getTime();
+            const timeId = Math.floor(new Date().getTime() / 1000);
             this.form_receive.value['@id'] = timeId.toString();
             // this.form_receive.value['@id'] = this.storageIndex.toString();
 

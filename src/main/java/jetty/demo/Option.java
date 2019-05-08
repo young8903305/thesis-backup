@@ -21,6 +21,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jetty.demo.AnnotationStyle.InputTypeControl;
+
 /**
  * Describes a single command-line option.  It maintains
  * information regarding the short-name of the option, the long-name,
@@ -31,7 +36,7 @@ import java.util.List;
  * an instance of {@link Options}. An Option is required to have
  * at least a short or a long-name.
  * <p>
- * <b>Note:</b> once an {@link CLIOption} has been added to an instance
+ * <b>Note:</b> once an {@link Option} has been added to an instance
  * of {@link Options}, it's required flag may not be changed anymore.
  *
  * @see org.apache.commons.cli.Options
@@ -39,7 +44,9 @@ import java.util.List;
  *
  * @version $Id: Option.java 1756753 2016-08-18 10:18:43Z britter $
  */
-public class CLIOption implements Cloneable, Serializable
+@JsonIdentityInfo(generator = JSOGGenerator.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Option implements Cloneable, Serializable
 {
     /** constant that specifies the number of argument values has not been specified */
     public static final int UNINITIALIZED = -1;
@@ -51,33 +58,42 @@ public class CLIOption implements Cloneable, Serializable
     private static final long serialVersionUID = 1L;
 
     /** the name of the option */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "")
     private final String opt;
 
     /** the long representation of the option */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "")
     private String longOpt;
 
     /** the name of the argument for this option */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "")
     private String argName;
 
     /** description of the option */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "")
     private String description;
 
     /** specifies whether this option is required to be present */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "false") }, name = "")
     private boolean required;
 
     /** specifies whether the argument value of this Option is optional */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "")
     private boolean optionalArg;
 
     /** the number of argument values this option can have */
     private int numberOfArgs = UNINITIALIZED;
 
     /** the type of this Option */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "java.lang.String") }, name = "")
     private Class<?> type = String.class;
 
     /** the list of argument values **/
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "") }, name = "")
     private List<String> values = new ArrayList<String>();
 
     /** the character that is the value separator */
+    @AnnotationForm(style = { @AnnotationStyle(input=InputTypeControl.text, value = "\\u0000") }, name = "")
     private char valuesep;
 
     /**
@@ -85,7 +101,7 @@ public class CLIOption implements Cloneable, Serializable
      * 
      * @param builder builder used to create this option
      */
-    private CLIOption(final Builder builder)
+    private Option(final Builder builder)
     {
         this.argName = builder.argName;
         this.description = builder.description;
@@ -108,7 +124,7 @@ public class CLIOption implements Cloneable, Serializable
      * @throws IllegalArgumentException if there are any non valid
      * Option characters in <code>opt</code>.
      */
-    public CLIOption(String opt, String description) throws IllegalArgumentException
+    public Option(String opt, String description) throws IllegalArgumentException
     {
         this(opt, null, false, description);
     }
@@ -123,7 +139,7 @@ public class CLIOption implements Cloneable, Serializable
      * @throws IllegalArgumentException if there are any non valid
      * Option characters in <code>opt</code>.
      */
-    public CLIOption(String opt, boolean hasArg, String description) throws IllegalArgumentException
+    public Option(String opt, boolean hasArg, String description) throws IllegalArgumentException
     {
         this(opt, null, hasArg, description);
     }
@@ -139,7 +155,7 @@ public class CLIOption implements Cloneable, Serializable
      * @throws IllegalArgumentException if there are any non valid
      * Option characters in <code>opt</code>.
      */
-    public CLIOption(String opt, String longOpt, boolean hasArg, String description)
+    public Option(String opt, String longOpt, boolean hasArg, String description)
            throws IllegalArgumentException
     {
         // ensure that the option is valid
@@ -641,7 +657,7 @@ public class CLIOption implements Cloneable, Serializable
             return false;
         }
 
-        CLIOption option = (CLIOption) o;
+        Option option = (Option) o;
 
 
         if (opt != null ? !opt.equals(option.opt) : option.opt != null)
@@ -682,7 +698,7 @@ public class CLIOption implements Cloneable, Serializable
     {
         try
         {
-            CLIOption option = (CLIOption) super.clone();
+            Option option = (Option) super.clone();
             option.values = new ArrayList<String>(values);
             return option;
         }
@@ -750,7 +766,7 @@ public class CLIOption implements Cloneable, Serializable
     }
     
     /**
-     * Returns a {@link Builder} to create an {@link CLIOption} using descriptive
+     * Returns a {@link Builder} to create an {@link Option} using descriptive
      * methods.  
      * 
      * @return a new {@link Builder} instance
@@ -762,7 +778,7 @@ public class CLIOption implements Cloneable, Serializable
     }
     
     /**
-     * Returns a {@link Builder} to create an {@link CLIOption} using descriptive
+     * Returns a {@link Builder} to create an {@link Option} using descriptive
      * methods.  
      *
      * @param opt short representation of the option
@@ -982,7 +998,7 @@ public class CLIOption implements Cloneable, Serializable
         public Builder hasArg(final boolean hasArg)
         {
             // set to UNINITIALIZED when no arg is specified to be compatible with OptionBuilder
-            numberOfArgs = hasArg ? 1 : CLIOption.UNINITIALIZED;
+            numberOfArgs = hasArg ? 1 : Option.UNINITIALIZED;
             return this;
         }
 
@@ -993,23 +1009,23 @@ public class CLIOption implements Cloneable, Serializable
          */
         public Builder hasArgs()
         {
-            numberOfArgs = CLIOption.UNLIMITED_VALUES;
+            numberOfArgs = Option.UNLIMITED_VALUES;
             return this;
         }
 
         /**
          * Constructs an Option with the values declared by this {@link Builder}.
          * 
-         * @return the new {@link CLIOption}
+         * @return the new {@link Option}
          * @throws IllegalArgumentException if neither {@code opt} or {@code longOpt} has been set
          */
-        public CLIOption build()
+        public Option build()
         {
             if (opt == null && longOpt == null)
             {
                 throw new IllegalArgumentException("Either opt or longOpt must be specified");
             }
-            return new CLIOption(this);
+            return new Option(this);
         }
     }
 }

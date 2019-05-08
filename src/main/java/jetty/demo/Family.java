@@ -20,7 +20,7 @@ public class Family implements Serializable {
 	private PersonDemo mother;
 	
 	@AnnotationForm(style = { @AnnotationStyle(textarea = "true", value = "") }, name = "")
-	private List<PersonDemo> children = new ArrayList<PersonDemo>();
+	private List<PersonDemo> children;
 	
 	public Family(PersonDemo father, PersonDemo mother, List<PersonDemo> children ) {
 		setFather(father);

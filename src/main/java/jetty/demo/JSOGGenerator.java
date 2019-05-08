@@ -51,14 +51,16 @@ public class JSOGGenerator extends ObjectIdGenerator<JSOGRef> {
 
 	/** 
 	 * change int argument to long for date.getTime()
+	 * and change type into String
 	 * */
 	@Override
 	public JSOGRef generateId(Object forPojo) {
         /* int id = _nextValue;
         ++_nextValue;*/
 		Date date = new Date();
+		String id = String.format("%.0f", Math.floor(date.getTime()/1000));
         String inputType = forPojo.getClass().getName();
-        return new JSOGRef(date.getTime(), inputType);
+        return new JSOGRef(id, inputType);
 	}
 
     @Override

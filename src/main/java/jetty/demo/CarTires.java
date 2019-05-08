@@ -10,43 +10,36 @@ import jetty.demo.AnnotationStyle.InputTypeControl;
 public class CarTires {
 	
 	@AnnotationForm(
-			style = { @AnnotationStyle(input=InputTypeControl.text, value = "(put CarTiresBrand here)") },
+			style = { @AnnotationStyle(input=InputTypeControl.text,
+					  value = "(put CarTiresBrand here)") },
 			name = "Tire's Brand")
 	private CarTiresBrand brand;
 	
 	@AnnotationForm(
-			style = { @AnnotationStyle(input=InputTypeControl.text, value = "Michelin") },
+			style = { @AnnotationStyle(input=InputTypeControl.text,
+					  value = "Michelin") },
 			name = "Tire's Name")
 	private String name;
 	
 	@AnnotationForm(
-			style = { @AnnotationStyle(input=InputTypeControl.number, value = "17") },
+			style = { @AnnotationStyle(input=InputTypeControl.number,
+					  value = "17") },
 			name = "Diameter")
 	private int size; 
 	
 	public CarTires() {}
 	
-	public void setBrand(CarTiresBrand brand) {
-		this.brand = brand;
-	}
+	public void setBrand(CarTiresBrand brand) { this.brand = brand; }
 	
-	public CarTiresBrand getBrand() {
-		return this.brand;
-	}
+	public CarTiresBrand getBrand() { return this.brand; }
 	
-	public void setName(String name) {
-		this.name = name;
-	}
+	public void setName(String name) { this.name = name; }
 	
-	public String getName() {
-		return this.name;
-	}
+	public String getName() { return this.name; }
 	
-	public void setSize(int size) {
-		this.size = size;
-	}
+	public void setSize(int size) { this.size = size; }
 	
-	public int getSize() {
-		return this.size;
-	}
+	public int getSize() { return this.size; }
 }
+
+

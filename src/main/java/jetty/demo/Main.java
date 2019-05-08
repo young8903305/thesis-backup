@@ -138,6 +138,7 @@ public class Main {
 			for (Field f : fieldlist) {
 				annotation = f.getAnnotation(AnnotationForm.class);
 				var = (AnnotationForm) annotation;
+				if (var != null) {
 				System.out.println(var.style()[0]);
 				if (f.getType().getSimpleName().equals("List")) {
 					ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
@@ -153,6 +154,7 @@ public class Main {
 					viewName = var.name().concat(" (" + complexTypeName + ")");
 				}
 				Source_ViewMap.put(f.getName(), viewName);
+				}
 			}
 	}
 	
@@ -703,6 +705,7 @@ public class Main {
 					for (Field f : fieldlist) {
 						annotation = f.getAnnotation(AnnotationForm.class);
 						var = (AnnotationForm) annotation;
+						if (var != null) {
 						if (f.getType().getSimpleName().equals("List")) {
 							ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
 							Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
@@ -755,6 +758,7 @@ public class Main {
 							styleNode.put(viewName, "textarea");
 						}
 						InputTypeMap.put(arguments[i], styleNode.toString());
+						}
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -799,6 +803,7 @@ public class Main {
 						for (Field f : fieldlist) {
 							annotation = f.getAnnotation(AnnotationForm.class);
 							var = (AnnotationForm) annotation;
+							if (var != null) {
 							if (f.getType().getSimpleName().equals("List")) {
 								ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
 								Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
@@ -851,6 +856,7 @@ public class Main {
 								typeNode.put(viewName, complexTypeName);
 							}
 							javaStorageTypeMap.put(arguments[i], typeNode.toString());
+							}
 						}
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
@@ -911,6 +917,7 @@ public class Main {
 				for (Field f : fieldlist) {
 					annotation = f.getAnnotation(AnnotationForm.class);
 					var = (AnnotationForm) annotation;
+					if (var != null) {
 					if (f.getType().getSimpleName().equals("List")) {
 						ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
 						Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
@@ -969,7 +976,7 @@ public class Main {
 					}else if(var.style()[0].textarea().length() > 0) {
 						styleNode.put(viewName, "textarea");
 						typeNode.put(viewName, complexTypeName);
-					}
+					}}
 				}
 				
 			} catch (ClassNotFoundException e) {
@@ -1035,7 +1042,7 @@ public class Main {
 			fileSizeThreshold = 1024 * 1024 * 2,
 			maxRequestSize = 1024 * 1024 * 10,
 			maxFileSize = 1024 * 1024 * 50
-	)
+	)	// store a single object
 	public static class ngFormOutput extends HttpServlet{
 		
 		JFrame parentFrame = new JFrame();
@@ -1715,6 +1722,7 @@ public class Main {
 				for (Field f : fieldlist) {
 					annotation = f.getAnnotation(AnnotationForm.class);
 					var = (AnnotationForm) annotation;
+					if (var != null) {
 					System.out.println(var.style()[0]);
 					if (f.getType().getSimpleName().equals("List")) {
 						ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
@@ -1859,7 +1867,7 @@ public class Main {
 						} else {
 							typeNode.put(viewName, f.getType().getSimpleName());
 						}*/
-					}
+					} }
 				}
 				
 			} catch (ClassNotFoundException e) {
