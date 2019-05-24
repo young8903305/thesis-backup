@@ -1902,7 +1902,7 @@ public class Main {
 	 * for the jsp engine.
 	 *
 	 */
-	public static class JspStarter extends AbstractLifeCycle
+	/*public static class JspStarter extends AbstractLifeCycle
 			implements ServletContextHandler.ServletContainerInitializerCaller {
 		JettyJasperInitializer sci;
 		ServletContextHandler context;
@@ -1925,7 +1925,7 @@ public class Main {
 			}
 		}
 	}
-
+*/
 	
 	
 	public static void main(String[] args) throws Exception {
@@ -1982,7 +1982,7 @@ public class Main {
 		servletContextHandler.setResourceBase(baseUri.toASCIIString());
 
 		// Since this is a ServletContextHandler we must manually configure JSP support.
-		enableEmbeddedJspSupport(servletContextHandler);
+		// enableEmbeddedJspSupport(servletContextHandler);
 
 		// Add Application Servlets
 		//servletContextHandler.addServlet(DateServlet.class, "/date/");
@@ -2061,7 +2061,7 @@ public class Main {
 	 *            the ServletContextHandler to configure
 	 * @throws IOException
 	 *             if unable to configure
-	 */
+	 *//*
 	private void enableEmbeddedJspSupport(ServletContextHandler servletContextHandler) throws IOException {
 		// Establish Scratch directory for the servlet context (used by JSP compilation)
 		File tempDir = new File(System.getProperty("java.io.tmpdir"));
@@ -2095,7 +2095,7 @@ public class Main {
 		holderJsp.setInitParameter("keepgenerated", "true");
 		servletContextHandler.addServlet(holderJsp, "*.jsp");
 	}
-
+*/
 	private URI getWebRootResourceUri() throws FileNotFoundException, URISyntaxException {
 		URL indexUri = this.getClass().getResource(WEBROOT_INDEX);
 		if (indexUri == null) {
