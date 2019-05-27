@@ -108,7 +108,7 @@ import org.eclipse.jetty.webapp.Configuration;
  */
 public class Main {
 	// Resource path pointing to where the WEBROOT is
-	private static final String WEBROOT_INDEX = "/webroot/";
+	private static final String WEBROOT_INDEX = "/ng/";
 	
 	private static String[] arguments;
 	
@@ -159,445 +159,6 @@ public class Main {
 	}
 	
 
-	@SuppressWarnings("serial")
-	public static class OutputFilePath extends HttpServlet {
-		
-		String text = "";
-		JFileChooser chooser = new JFileChooser();
-		
-		@Override
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			
-			chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-			chooser.setDialogTitle("choosertitle");
-			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			// JFileChooser.FILES_ONLY, JFileChooser.DIRECTORIES_ONLY,
-			// JFileChooser.FILES_AND_DIRECTORIES
-			chooser.setAcceptAllFileFilterUsed(false);
-			chooser.setMultiSelectionEnabled(true);
-
-			
-			if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {	// verify if selected file or not
-				File selectedFolder = chooser.getSelectedFile();
-				//System.out.println("Selected file: " + selectedFolder.getAbsolutePath());
-				text = selectedFolder.getAbsolutePath();
-			}else {
-				text = "";
-			}
-
-			response.setContentType("text/plain");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(text);
-		}
-
-		@Override
-		protected void doGet(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			doPost(request, response);
-		}
-	}
-	
-	@SuppressWarnings("serial")
-	public static class InputFilePath extends HttpServlet {
-		
-		JFileChooser chooser = new JFileChooser();
-		String text = "";
-		
-		@Override
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			
-			response.setStatus(HttpServletResponse.SC_OK);
-	        response.flushBuffer();
-			
-			
-			chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-			chooser.setDialogTitle("choosertitle");
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			// JFileChooser.FILES_AND_DIRECTORIES, JFileChooser.DIRECTORIES_ONLY,
-			// JFileChooser.FILES_AND_DIRECTORIES
-			chooser.setAcceptAllFileFilterUsed(false);
-			chooser.setMultiSelectionEnabled(true);
-
-			
-			// verify if selected file or not
-			if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				File selectedFolder = chooser.getSelectedFile();
-				//System.out.println("Selected file: " + selectedFolder.getAbsolutePath());
-				text = selectedFolder.getAbsolutePath();
-			}else {
-				text = "";
-			}
-
-			response.setContentType("text/plain"); // response.setContentType("text/json");
-			response.setCharacterEncoding("UTF-8");
-			response.addHeader("Access-Control-Allow-Origin", "*");
-			response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-			response.addHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, X-Codingpedia");
-			response.getWriter().write(text); // response.getWriter().write(jsonString);
-		}
-
-		@Override
-		protected void doGet(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			doPost(request, response);
-		}
-	}
-
-	public static class GenServlet extends HttpServlet {
-
-		public void init() throws ServletException {
-		}
-
-		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-			// get class
-			// Class<?> pClass = Person.class;
-			Class<?> pClass = null;
-			try {
-				pClass = Class.forName("jetty.demo.Person");
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-
-			// get constructor
-			Constructor<?>[] allConstructors = pClass.getDeclaredConstructors(); // 獲取所有的建構函式，包括私有的，不包括父類的
-			//System.out.println(allConstructors);
-
-			// Field
-			Field[] fieldlist = pClass.getDeclaredFields();
-
-			// create object with annotation
-			String className = pClass.getName();
-			String[] fieldName = new String[fieldlist.length];
-			String[] layout = new String[fieldlist.length];
-			Object[] type = new Object[fieldlist.length];
-			
-			// Field Annotation
-			int index = 0;
-			Object person_gen;
-			Annotation annotation;
-			for (Field field : fieldlist) {
-				annotation = field.getAnnotation(AnnotationForm.class);
-				AnnotationForm var = (AnnotationForm) annotation;
-				fieldName[index] = field.getName();
-				type[index] = field.getType();
-				//layout[index] = var.memberType();
-				index++;
-			}
-			
-			// set for submitServlet to catch className
-			ServletContext context = this.getServletContext();
-			context.setAttribute("className", className);
-			
-			// set for generate.jsp to get required objects
-			request.setAttribute("className", className);
-			request.setAttribute("layout", layout);
-			request.setAttribute("fieldName", fieldName);
-			request.setAttribute("type", type);
-			request.setAttribute("allConstructors", allConstructors);
-
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/generate.jsp");
-			dispatcher.forward(request, response);
-		}
-
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			doGet(request, response);
-		}
-	}
-
-	public static class SubmitServlet extends HttpServlet {
-
-		public void init() throws ServletException {}
-
-		protected void doGet(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			
-			// get class
-			//Class<?> pClass = Person.class;
-			Class<?> pClass = null;
-			ServletContext context = this.getServletContext();
-			String className = (String) context.getAttribute("className");
-			try {
-				pClass = Class.forName(className);
-			} catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
-			}
-
-			// get constructor
-			//Constructor<?>[] allConstructors = pClass.getDeclaredConstructors();//獲取所有的建構函式，包括私有的，不包括父類的
-			Constructor<?> nullConstructor = null;
-			try {
-				nullConstructor = pClass.getConstructor(int.class, String.class, String.class);		//select which constructor we need to use
-				nullConstructor.setAccessible(true); 	// 設定是否可訪問，因為該構造器是private的，所以要手動設定允許訪問，如果構造器是public的就不用設定
-			} catch (NoSuchMethodException | SecurityException e1) {
-				e1.printStackTrace();
-			}
-			
-			// catch parameter value to String array
-			Enumeration<String> paramNames = request.getParameterNames();
-			String[] paramValues = null;
-			while (paramNames.hasMoreElements()) {
-				String paramName = (String) paramNames.nextElement();
-				paramValues = request.getParameterValues(paramName);
-			}
-			
-			for(int i = 0; i < paramValues.length; i++) {
-				System.out.println(paramValues[i]);
-			}
-			
-			//if no checkbox for path, need to specify requested parameter name to get path string 
-			String path_text = request.getParameter("path-text");
-			
-			//construct a new object
-			Object instance = null;
-			try {
-				instance = nullConstructor.newInstance(Integer.parseInt(paramValues[0]), paramValues[1], paramValues[2]);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e1) {
-				e1.printStackTrace();
-			}
-			
-			if(instance != null) {
-			try {
-				// Serializable, primitive java object output
-				FileOutputStream f = new FileOutputStream(new File( path_text + "/myObjects_gen.txt"));
-				//FileOutputStream f = new FileOutputStream(new File( "myObjects.txt"));		// will output to webapp folder
-				ObjectOutputStream o = new ObjectOutputStream(f);
-
-				o.writeObject(instance);
-				o.close();
-				f.close();
-
-				// JSON type output
-				ObjectMapper mapper = new ObjectMapper();
-				mapper.writeValue(new File( path_text + "/jsonObjects_gen.json"), instance);
-				//mapper.writeValue(new File( "jsonObjects.json"), instance);	// will output to webapp root folder
-
-				// convert java object to json string and pretty print
-				//String jsonString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(instance);
-				//System.out.println(jsonString);
-				
-				// direct to finished html page
-				response.sendRedirect("submit.html");
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			}else {
-				System.out.println("null object");
-			}
-			
-			// read the object from file to check out whether fail or success
-			/*Person pIn; 
-			try {
-				FileInputStream fi = new FileInputStream(new File( path_text + "/myObjects.txt"));
-				ObjectInputStream oi = new ObjectInputStream(fi);
-				pIn = (Person) oi.readObject();
-				System.out.println(pIn.toString());
-			} catch (FileNotFoundException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}*/
-			 
-		}
-
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			doGet(request, response);
-		}
-	}
-	
-	public static class Edit0Servlet extends HttpServlet {
-		
-		public void init() throws ServletException {}
-		
-		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			/*RequestDispatcher dispatcher = request.getRequestDispatcher("/edit0.jsp");
-			dispatcher.forward(request, response);*/
-			
-			request.getRequestDispatcher("/edit0.jsp").forward(request, response);
-			return ;
-		}
-		
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			doGet(request, response);
-		}
-	}
-	
-	/* edit from json file : parse json, then set attribute to arrange form and value  
-	 * */
-	public static class Edit1Servlet extends HttpServlet {
-		
-		String className_forEdit = "";
-		String path_text = "";
-		String jsTreeString = "";
-		List<String> variable = new ArrayList<String>();
-		List<String> value = new ArrayList<String>();
-		Object[] type_forEdit;
-		String[] layout;
-		
-		public void init() throws ServletException {}
-		
-		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			path_text = request.getParameter("path-text");
-			Integer Level = 0;
-			
-			ObjectMapper mapper = new ObjectMapper();
-			String jsogInput = new String(Files.readAllBytes(Paths.get(path_text)));
-			//System.out.println(jsogInput);
-			
-			// parse jsog to jsTree's data format
-			JsonNode node = mapper.readTree(jsogInput);
-			String defaultJStreeState = "\"state\": {\n\"disabled\": false,\n\"opened\": true,\n\"selected\": false\n},\n";
-			String head = "{\n" + defaultJStreeState + "\"children\":[";
-			String tail ="\n]}";
-			jsTreeString = head + JStree.traverseJson3(node, Level) + tail;
-			//System.out.println(jsTreeString);
-			
-			// parse jsog variable/value/@type to String List, then setAttribute for edit1.jsp
-			className_forEdit = node.get("@type").asText();
-			Class<?> pClass = null;
-			try {
-				pClass = Class.forName(className_forEdit);
-			} catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
-			}
-			// Field Annotations
-			Field[] fieldlist = pClass.getDeclaredFields();
-			// create object with annotation
-			type_forEdit = new Object[fieldlist.length];
-			layout = new String[fieldlist.length];
-
-			int index = 0;
-			Annotation annotation;
-			AnnotationForm var;
-			for (Field field : fieldlist) {
-				annotation = field.getAnnotation(AnnotationForm.class);
-				var = (AnnotationForm) annotation;
-				type_forEdit[index] = field.getType();
-				//layout[index] = var.memberType();
-				index++;
-			}
-			
-			Iterator<Entry<String, JsonNode>> jsonNodes = node.fields();
-			//String[] variable = new String[node.size()];
-			//String[] value = new String[node.size()];
-			
-		    while (jsonNodes.hasNext()) {  
-		        Entry<String, JsonNode> innerNode = jsonNodes.next();  
-		        //System.out.println(innerNode.getKey());  
-		        //System.out.println(innerNode.getValue().toString());
-		        if(!innerNode.getKey().equals("@id") && !innerNode.getKey().equals("@type")) {
-			        variable.add(innerNode.getKey());
-			        value.add(innerNode.getValue().toString());
-		        }
-		    }
-			
-			
-			// set required objects for edit1.jsp use
-		    request.setAttribute("className_forEdit", className_forEdit);
-			request.setAttribute("jsTreeString", jsTreeString);
-			request.setAttribute("variable", variable);
-			request.setAttribute("value", value);
-			request.setAttribute("type_forEdit", type_forEdit);
-			request.setAttribute("path_text", path_text);
-			request.setAttribute("layout", layout);
-			
-			// set attribute and directed to edit1.jsp
-			request.getRequestDispatcher("/edit1.jsp").forward(request, response);
-			return;
-		}
-		
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			doGet(request, response);
-		}
-	}
-	
-	public static class EditFinish extends HttpServlet{
-		
-		String className_forEdit = "";
-		String path_text = "";
-		
-		public void init() throws ServletException {}
-		
-		@Override
-		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
-			HttpSession session = request.getSession();
-			path_text = String.valueOf(session.getAttribute("path_text"));
-			
-			// get class
-			// Class<?> pClass = Person.class;
-			Class<?> pClass = null;
-			className_forEdit = String.valueOf(session.getAttribute("className_forEdit"));
-			try {
-				pClass = Class.forName(className_forEdit);
-			} catch (ClassNotFoundException e2) {
-				e2.printStackTrace();
-			}
-
-			// get constructor
-			// Constructor<?>[] allConstructors =
-			// pClass.getDeclaredConstructors();//獲取所有的建構函式，包括私有的，不包括父類的
-			Constructor<?> nullConstructor = null;
-			try {
-				nullConstructor = pClass.getConstructor(int.class, String.class, String.class); // select which constructor we need to use
-				nullConstructor.setAccessible(true); // 設定是否可訪問，因為該構造器是private的，所以要手動設定允許訪問，如果構造器是public的就不用設定
-			} catch (NoSuchMethodException | SecurityException e1) {
-				e1.printStackTrace();
-			}
-
-			// catch parameter value to String array
-			Enumeration<String> paramNames = request.getParameterNames();
-			String[] paramValues = null;
-			while (paramNames.hasMoreElements()) {
-				String paramName = (String) paramNames.nextElement();
-				paramValues = request.getParameterValues(paramName);
-			}
-			
-			Collections.list(request.getParameterNames())
-	           .stream()
-	           .map(request::getParameter)
-	           .forEach(System.out::println);
-
-			// construct a new object
-			Object instance = null;
-			try {
-				instance = nullConstructor.newInstance(Integer.parseInt(paramValues[0]), paramValues[1], paramValues[2]);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e1) {
-				e1.printStackTrace();
-			}
-
-			try {
-
-				// JSON type output
-				ObjectMapper mapper = new ObjectMapper();
-				mapper.writeValue(new File(path_text ), instance);
-				// mapper.writeValue(new File( "jsonObjects.json"), instance); // will output to webapp root folder
-
-				// direct to finished html page
-				response.sendRedirect("submit.html");
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			// set required objects for edit1.jsp use
-		    request.setAttribute("path_text", path_text);
-			
-			// set attribute and directed to editFinish.jsp
-			request.getRequestDispatcher("/editFinish.jsp").forward(request, response);
-		}
-	}
-	
-	
 	/* file upload:
 	 * Get the file part and readin the jsog string, then send to ng-uploader-component
 	 * May have multiple objects or single object
@@ -1078,9 +639,6 @@ public class Main {
 			    output_Jsog = "{" + parse(jsog, source, view) + "}";
 			    jsog = mapper.readTree(output_Jsog);
 			}
-			// System.out.println("Map: " + ViewToSourceMap);
-			// System.out.println("form value: " + str);
-			// System.out.println("final value: " + re);
 			
 		    
 		    fileChooser.setDialogTitle("Specify a file to save");   
@@ -1095,15 +653,11 @@ public class Main {
 		    }
 		    
 		    // write json string out to the file
-			//FileOutputStream outputStream = new FileOutputStream("/Users/yang/Desktop/output.json");
 			FileOutputStream outputStream = new FileOutputStream(fileToSave.getAbsolutePath());
 		    byte[] strToBytes = output_Jsog.getBytes();
 		    outputStream.write(strToBytes);
 		    outputStream.close();
 		    System.out.println("done.");
-		    
-		    
-		    
 		    
 			response.setHeader("Access-Control-Allow-Origin", "*");	// enable CORS
 			response.setContentType("text/json");
@@ -1321,7 +875,11 @@ public class Main {
 		    	System.out.println(k + ": " + v.getClass());
 		    });
 		    
-		    // formValueMap;
+		    /*
+		     * formValueMap;
+		     * 
+		     * modified output object in a array, make their references been connected if they had. 
+		     */
 		    objectMap.forEach((key, ob_value) -> {
 		    	ObjectMapper obMapper = new ObjectMapper();
 		    	try {
@@ -1368,7 +926,7 @@ public class Main {
 				}
 		    });
 
-		    /*
+		    /*  // test function, make sure objects are connected to their member object
 		    int brandIndex = 0;
 			int tiresIndex = 0;
 			int carIndex = 0;
@@ -1599,8 +1157,6 @@ public class Main {
 			
 			String valuemapjson = ob.writeValueAsString(valueMap);
 			String viewmapjson = ob.writeValueAsString(viewMap);
-			/*String c = viewmapjson + "," + valuemapjson;
-			System.out.println("c: "+ c);*/
 			String bigmapjson = ob.writerWithDefaultPrettyPrinter().writeValueAsString(bigMap);
 			
 			System.out.println("valuemap: " + valuemapjson);
@@ -1627,13 +1183,6 @@ public class Main {
 			
 			ObjectMapper ob = new ObjectMapper();
 			String arjson = ob.writeValueAsString(arguments);
-			
-			// construct TypeMap for ng-tree in ngType-servlet
-			
-			/* TypeMap.forEach( (k, v) -> {
-				System.out.println(k + v);
-			}); */
-			
 			
 			response.setContentType("text/json");
 			response.setCharacterEncoding("UTF-8");
@@ -1749,106 +1298,41 @@ public class Main {
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "date");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
 								break;
 							case email:
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "email");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
 								break;
 							case month:
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "month");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
 								break;
 							case number:
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "number");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(f.getName(), f.getType().getSimpleName());
-								}*/
 								break;
 							case password :
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "password");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
 								break;
 							case text :
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, var.style()[0].input().toString());	// var.style()[0].input().toString() = "text"
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
-								// typeNode.put(f.getName(), f.getType().getSimpleName());
 								break;
 							case time :
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "time");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
 								break;
 							case week :
 								defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 								styleNode.put(viewName, "week");
 								typeNode.put(viewName, complexTypeName);
-								/*if (f.getType().getSimpleName().equals("List")) {
-									ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-									Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-									String complexType = "List".concat(" " + stringListClass.getSimpleName());
-									typeNode.put(viewName, complexType );
-								} else {
-									typeNode.put(viewName, f.getType().getSimpleName());
-								}*/
 								break;
 							case none :
 								break;
@@ -1859,14 +1343,6 @@ public class Main {
 						defaultValueNode.put(viewName, var.style()[0].value()[0].toString());
 						styleNode.put(viewName, "textarea");
 						typeNode.put(viewName, complexTypeName);
-						/*if (f.getType().getSimpleName().equals("List")) {
-							ParameterizedType stringListType = (ParameterizedType) f.getGenericType();
-							Class<?> stringListClass = (Class<?>) stringListType.getActualTypeArguments()[0];
-							String complexType = "List".concat(" " + stringListClass.getSimpleName());
-							typeNode.put(viewName, complexType );
-						} else {
-							typeNode.put(viewName, f.getType().getSimpleName());
-						}*/
 					} }
 				}
 				
@@ -1893,50 +1369,13 @@ public class Main {
 		}
 	}
 
-	/**
-	 * JspStarter for embedded ServletContextHandlers
-	 * 
-	 * This is added as a bean that is a jetty LifeCycle on the
-	 * ServletContextHandler. This bean's doStart method will be called as the
-	 * ServletContextHandler starts, and will call the ServletContainerInitializer
-	 * for the jsp engine.
-	 *
-	 */
-	/*public static class JspStarter extends AbstractLifeCycle
-			implements ServletContextHandler.ServletContainerInitializerCaller {
-		JettyJasperInitializer sci;
-		ServletContextHandler context;
-
-		public JspStarter(ServletContextHandler context) {
-			this.sci = new JettyJasperInitializer();
-			this.context = context;
-			this.context.setAttribute("org.apache.tomcat.JarScanner", new StandardJarScanner());
-		}
-
-		@Override
-		protected void doStart() throws Exception {
-			ClassLoader old = Thread.currentThread().getContextClassLoader();
-			Thread.currentThread().setContextClassLoader(context.getClassLoader());
-			try {
-				sci.onStartup(null, context.getServletContext());
-				super.doStart();
-			} finally {
-				Thread.currentThread().setContextClassLoader(old);
-			}
-		}
-	}
-*/
+	
 	
 	
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
-		//LoggingUtil.config();
 		
 		arguments = args;
-		for (String ar : arguments) {
-			System.out.println("ar: " + ar);
-			ConstructViewToSourceMap(ar);
-		}
 		
 		Main main = new Main(port);
 		main.start();
@@ -1988,13 +1427,6 @@ public class Main {
 		//servletContextHandler.addServlet(DateServlet.class, "/date/");
 
 		// try to add servlet
-		servletContextHandler.addServlet(OutputFilePath.class, "/OutputFilePath");
-		servletContextHandler.addServlet(GenServlet.class, "/Gen0Servlet");
-		servletContextHandler.addServlet(SubmitServlet.class, "/SubmitServlet");
-		servletContextHandler.addServlet(Edit0Servlet.class, "/Edit0Servlet");
-		servletContextHandler.addServlet(Edit1Servlet.class, "/Edit1Servlet");
-		servletContextHandler.addServlet(InputFilePath.class, "/InputFilePath");
-		servletContextHandler.addServlet(EditFinish.class, "/EditFinish");
 		servletContextHandler.addServlet(ngEdit.class, "/ngEdit");
 		servletContextHandler.addServlet(ngClassNames.class, "/ngClassNames");
 		servletContextHandler.addServlet(ngNameCreateForm.class, "/ngNameCreateForm");
@@ -2051,51 +1483,7 @@ public class Main {
 		//}
 	}
 
-	/**
-	 * Setup JSP Support for ServletContextHandlers.
-	 * <p>
-	 * NOTE: This is not required or appropriate if using a WebAppContext.
-	 * </p>
-	 *
-	 * @param servletContextHandler
-	 *            the ServletContextHandler to configure
-	 * @throws IOException
-	 *             if unable to configure
-	 *//*
-	private void enableEmbeddedJspSupport(ServletContextHandler servletContextHandler) throws IOException {
-		// Establish Scratch directory for the servlet context (used by JSP compilation)
-		File tempDir = new File(System.getProperty("java.io.tmpdir"));
-		File scratchDir = new File(tempDir.toString(), "embedded-jetty-jsp");
-
-		if (!scratchDir.exists()) {
-			if (!scratchDir.mkdirs()) {
-				throw new IOException("Unable to create scratch directory: " + scratchDir);
-			}
-		}
-		servletContextHandler.setAttribute("javax.servlet.context.tempdir", scratchDir);
-
-		// Set Classloader of Context to be sane (needed for JSTL)
-		// JSP requires a non-System classloader, this simply wraps the
-		// embedded System classloader in a way that makes it suitable
-		// for JSP to use
-		ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
-		servletContextHandler.setClassLoader(jspClassLoader);
-
-		// Manually call JettyJasperInitializer on context startup
-		servletContextHandler.addBean(new JspStarter(servletContextHandler));
-
-		// Create / Register JSP Servlet (must be named "jsp" per spec)
-		ServletHolder holderJsp = new ServletHolder("jsp", JettyJspServlet.class);
-		holderJsp.setInitOrder(0);
-		holderJsp.setInitParameter("logVerbosityLevel", "DEBUG");
-		holderJsp.setInitParameter("fork", "false");
-		holderJsp.setInitParameter("xpoweredBy", "false");
-		holderJsp.setInitParameter("compilerTargetVM", "1.8");
-		holderJsp.setInitParameter("compilerSourceVM", "1.8");
-		holderJsp.setInitParameter("keepgenerated", "true");
-		servletContextHandler.addServlet(holderJsp, "*.jsp");
-	}
-*/
+	
 	private URI getWebRootResourceUri() throws FileNotFoundException, URISyntaxException {
 		URL indexUri = this.getClass().getResource(WEBROOT_INDEX);
 		if (indexUri == null) {

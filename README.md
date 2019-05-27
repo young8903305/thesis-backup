@@ -1,6 +1,7 @@
-Example: Embedded Jetty w/ JSP Support 
+Example: Embedded Jetty w/ JSP Support
 ======================================
 
+(This project had been edited. The instruction below is useless.)
 This is a maven project, to build it:
 
     $ mvn clean package
@@ -32,31 +33,6 @@ automatically added by the JSP implementation for loading the compiled JSP class
 
 ```java
 context.setAttribute("javax.servlet.context.tempdir",scratchDir);
-```
-
-**Set a non-System Classloader**
-
-The JSP implementation will refuse to the System Classloader (per JSTL + JSP spec),
-this will wrap the system classloader in a simple URLClassLoader suitable
-for use by the JSP implementation.
-
-```java
-// Set Classloader of Context to be sane (needed for JSTL)
-// JSP requires a non-System classloader, this simply wraps the
-// embedded System classloader in a way that makes it suitable
-// for JSP to use
-ClassLoader jspClassLoader = new URLClassLoader(new URL[0], this.getClass().getClassLoader());
-context.setClassLoader(jspClassLoader);
-```
-
-**Jsp Servlet must be named `"jsp"`**
-
-The JspServlet must be named "jsp" (per JSP spec).
-
-```java
-// Add JSP Servlet (must be named "jsp")
-ServletHolder holderJsp = new ServletHolder("jsp",JspServlet.class);
-holderJsp.setInitOrder(0);
 ```
 
 **Default Servlet must exist**
