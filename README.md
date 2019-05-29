@@ -1,50 +1,30 @@
-Example: Embedded Jetty w/ JSP Support
+Rapid Generation of Editing Systems for Application Objects Based on Java and Web Browsers
 ======================================
+Put your Java classes in this project's package folder:  jetty.demo
+The classes you add in package folder can set as arguments to start this service.
 
-(This project had been edited. The instruction below is useless.)
 This is a maven project, to build it:
 
-    $ mvn clean package
+    $ mvn clean compile
 
-To run the example `org.eclipse.jetty.demo.Main`:
+(1)To run the `org.eclipse.jetty.demo.Main`:
 
-    $ mvn exec:exec
+    $ mvn exec:java -Dexec.mainClass=jetty.demo.Main -Dexec.args="jetty.demo.PersonDemo jetty.demo.Family jetty.demo.Student jetty.demo.Car jetty.demo.CarTires  jetty.demo.CarTiresBrand jetty.demo.SimplePerson jetty.demo.Brand"
+
+(2)Before running the jar file in target:
+
+    $ mvn package
+
+(2.1)Then, in target folder:
+
+    $ java -jar embedded-jetty-develop-1-SNAPSHOT-jar-with-dependencies.jar jetty.demo.PersonDemo jetty.demo.Family jetty.demo.Student jetty.demo.Car jetty.demo.CarTires  jetty.demo.CarTiresBrand jetty.demo.SimplePerson jetty.demo.Brand
 
 Open your web browser to:
 
     http://localhost:8080/  
 
-To stop Jetty:
+To stop this service:
 
   use <kbd>CTRL</kbd>+<kbd>C</kbd>
 
-
-Code Of Interest
-----------------
-
-See [org.eclipse.jetty.demo.Main](src/main/java/org/eclipse/jetty/demo/Main.java)
-
-**Set a Servlet Temp Directory**
-
-It is important for JSP to define a temp directory suitable for managing itself.
-Such a directory will be used for converting the JSP source into a java file and
-then compiling it into a class.  A sub directory in this temp directory will be
-automatically added by the JSP implementation for loading the compiled JSP classes.
-
-```java
-context.setAttribute("javax.servlet.context.tempdir",scratchDir);
-```
-
-**Default Servlet must exist**
-
-The JSP implementation relies on various Servlet Spec requirements,
-but mainly the fact that a "default" named servlet must exist.
-
-```java
-// Add Default Servlet (must be named "default")
-ServletHolder holderDefault = new ServletHolder("default",DefaultServlet.class);
-holderDefault.setInitParameter("resourceBase",baseUri.toASCIIString());
-holderDefault.setInitParameter("dirAllowed","true");
-context.addServlet(holderDefault,"/");
-```
 
