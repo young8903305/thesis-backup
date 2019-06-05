@@ -10,7 +10,6 @@ import { EditComponent } from './edit/edit.component';
 import { CreateComponent } from './create/create.component';
 import { UploaderComponent } from './uploader/uploader.component';
 import { GenerateFormComponent } from './generate-form/generate-form.component';
-import { JstreeComponent } from './jstree/jstree.component';
 import { TreeModule } from 'angular-tree-component';
 import { AngularTreeComponent } from './angular-tree/angular-tree.component';
 import { FormDataService } from './form-data.service';
@@ -26,7 +25,6 @@ import { FormDataInterface } from './form-data-interface';
         CreateComponent,
         UploaderComponent,
         GenerateFormComponent,
-        JstreeComponent,
         AngularTreeComponent,
         ContextmenuComponent,
     ],
