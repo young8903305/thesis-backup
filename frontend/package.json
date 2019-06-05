@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^7.1.4",
     "@angular/router": "^7.1.4",
     "@ng-bootstrap/ng-bootstrap": "^4.0.1",
-    "@types/jquery": "^3.3.29",
+    "@types/jquery": "^3.4.0",
     "@types/jstree": "^3.3.37",
     "angular-tree-component": "^8.2.0",
     "bootstrap": "^4.2.1",

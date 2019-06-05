@@ -1241,16 +1241,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _create_create_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./create/create.component */ "./src/app/create/create.component.ts");
 /* harmony import */ var _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./uploader/uploader.component */ "./src/app/uploader/uploader.component.ts");
 /* harmony import */ var _generate_form_generate_form_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./generate-form/generate-form.component */ "./src/app/generate-form/generate-form.component.ts");
-/* harmony import */ var _jstree_jstree_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./jstree/jstree.component */ "./src/app/jstree/jstree.component.ts");
-/* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
-/* harmony import */ var _angular_tree_angular_tree_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./angular-tree/angular-tree.component */ "./src/app/angular-tree/angular-tree.component.ts");
-/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./form-data.service */ "./src/app/form-data.service.ts");
-/* harmony import */ var _contextmenu_contextmenu_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./contextmenu/contextmenu.component */ "./src/app/contextmenu/contextmenu.component.ts");
-/* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ng-drag-drop */ "./node_modules/ng-drag-drop/index.js");
-/* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./angular-tree/angular-tree.service */ "./src/app/angular-tree/angular-tree.service.ts");
-/* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./form-data-interface */ "./src/app/form-data-interface.ts");
-
+/* harmony import */ var angular_tree_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! angular-tree-component */ "./node_modules/angular-tree-component/dist/angular-tree-component.js");
+/* harmony import */ var _angular_tree_angular_tree_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./angular-tree/angular-tree.component */ "./src/app/angular-tree/angular-tree.component.ts");
+/* harmony import */ var _form_data_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./form-data.service */ "./src/app/form-data.service.ts");
+/* harmony import */ var _contextmenu_contextmenu_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./contextmenu/contextmenu.component */ "./src/app/contextmenu/contextmenu.component.ts");
+/* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ng-drag-drop */ "./node_modules/ng-drag-drop/index.js");
+/* harmony import */ var ng_drag_drop__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(ng_drag_drop__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./angular-tree/angular-tree.service */ "./src/app/angular-tree/angular-tree.service.ts");
+/* harmony import */ var _form_data_interface__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./form-data-interface */ "./src/app/form-data-interface.ts");
 
 
 
@@ -1280,23 +1278,22 @@ var AppModule = /** @class */ (function () {
                 _create_create_component__WEBPACK_IMPORTED_MODULE_8__["CreateComponent"],
                 _uploader_uploader_component__WEBPACK_IMPORTED_MODULE_9__["UploaderComponent"],
                 _generate_form_generate_form_component__WEBPACK_IMPORTED_MODULE_10__["GenerateFormComponent"],
-                _jstree_jstree_component__WEBPACK_IMPORTED_MODULE_11__["JstreeComponent"],
-                _angular_tree_angular_tree_component__WEBPACK_IMPORTED_MODULE_13__["AngularTreeComponent"],
-                _contextmenu_contextmenu_component__WEBPACK_IMPORTED_MODULE_15__["ContextmenuComponent"],
+                _angular_tree_angular_tree_component__WEBPACK_IMPORTED_MODULE_12__["AngularTreeComponent"],
+                _contextmenu_contextmenu_component__WEBPACK_IMPORTED_MODULE_14__["ContextmenuComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_5__["ReactiveFormsModule"],
-                angular_tree_component__WEBPACK_IMPORTED_MODULE_12__["TreeModule"].forRoot(),
-                ng_drag_drop__WEBPACK_IMPORTED_MODULE_16__["NgDragDropModule"].forRoot(),
+                angular_tree_component__WEBPACK_IMPORTED_MODULE_11__["TreeModule"].forRoot(),
+                ng_drag_drop__WEBPACK_IMPORTED_MODULE_15__["NgDragDropModule"].forRoot(),
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_6__["AppRoutingModule"],
             ],
             providers: [
-                _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"],
-                _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_17__["AngularTreeService"],
-                { provide: _form_data_interface__WEBPACK_IMPORTED_MODULE_18__["FormDataInterface"], useExisting: _form_data_service__WEBPACK_IMPORTED_MODULE_14__["FormDataService"] }
+                _form_data_service__WEBPACK_IMPORTED_MODULE_13__["FormDataService"],
+                _angular_tree_angular_tree_service__WEBPACK_IMPORTED_MODULE_16__["AngularTreeService"],
+                { provide: _form_data_interface__WEBPACK_IMPORTED_MODULE_17__["FormDataInterface"], useExisting: _form_data_service__WEBPACK_IMPORTED_MODULE_13__["FormDataService"] }
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]],
         })
@@ -2344,82 +2341,6 @@ var GenerateFormService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], GenerateFormService);
     return GenerateFormService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/jstree/jstree.component.css":
-/*!*********************************************!*\
-  !*** ./src/app/jstree/jstree.component.css ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2pzdHJlZS9qc3RyZWUuY29tcG9uZW50LmNzcyJ9 */"
-
-/***/ }),
-
-/***/ "./src/app/jstree/jstree.component.html":
-/*!**********************************************!*\
-  !*** ./src/app/jstree/jstree.component.html ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<div id=\"using_json\"></div>\n"
-
-/***/ }),
-
-/***/ "./src/app/jstree/jstree.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/jstree/jstree.component.ts ***!
-  \********************************************/
-/*! exports provided: JstreeComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "JstreeComponent", function() { return JstreeComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var JstreeComponent = /** @class */ (function () {
-    function JstreeComponent() {
-    }
-    JstreeComponent.prototype.ngOnInit = function () { };
-    JstreeComponent.prototype.ngAfterViewInit = function () {
-        $('#using_json').jstree({
-            'core': {
-                'check_callback': true,
-                'data': [
-                    'Simple root node',
-                    {
-                        'text': 'Root node 2',
-                        'state': {
-                            'opened': true,
-                            'selected': true
-                        },
-                        'children': [
-                            { 'text': 'Child 1' },
-                            'Child 2'
-                        ]
-                    }
-                ]
-            }
-        });
-    };
-    JstreeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-jstree',
-            template: __webpack_require__(/*! ./jstree.component.html */ "./src/app/jstree/jstree.component.html"),
-            styles: [__webpack_require__(/*! ./jstree.component.css */ "./src/app/jstree/jstree.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
-    ], JstreeComponent);
-    return JstreeComponent;
 }());
 
 
