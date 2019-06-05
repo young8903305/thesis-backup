@@ -11,7 +11,7 @@ This is a maven project, to build it:
 
     $ mvn exec:java -Dexec.mainClass=jetty.demo.Main -Dexec.args="jetty.demo.PersonDemo jetty.demo.Family jetty.demo.Student jetty.demo.Car jetty.demo.CarTires  jetty.demo.CarTiresBrand jetty.demo.SimplePerson jetty.demo.Brand"
 
-(2)Before running the jar file in target:
+(2)To run the jar file, you must pacckage it as jar first:
 
     $ mvn package
 
@@ -21,7 +21,7 @@ This is a maven project, to build it:
 
 Open your web browser to:
 
-    http://localhost:8080/  
+    http://localhost:8080  
 
 To stop this service:
 
